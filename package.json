@@ -1,0 +1,26 @@
+{
+  "name": "covid-simulator",
+  "version": "1.0.0",
+  "description": "visual simulation tasks for covid ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haridecoded/covid-simulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haridecoded/covid-simulator/issues"
+  },
+  "homepage": "https://github.com/haridecoded/covid-simulator#readme",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "jquery": "^3.4.1",
+    "jsonfile": "^5.0.0"
+  }
+}

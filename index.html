@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>texSketch</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/skeleton.css" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+    <script type="text/javascript" src="js/lodash.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
+    <div class="container u-full-width u-max-full-width">
+        <div class="row panel" id="panel1">
+            <div class="row">
+                <h1>
+                    You Draw It: How Many Cases Of Coronavirus Will There Be In Your State In The Next Month?
+                </h1>
+            </div>
+            <div class="row">
+                <p>
+                   Draw your guesses on the charts below.
+                </p>
+            </div>
+            <div class="row">
+                <div id="panel1Chart1">
+
+                </div>     
+            </div>
+            <div class="row">
+                <input class="button" type="button" value="Show me how I did!" onpointerdown=""/>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

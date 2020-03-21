@@ -13,13 +13,18 @@ h1{
     text-align:center;
 }
 
-.axis {
-    opacity: .5;
+
+.y.axis text {
+    font-size: 14px;
+}
+
+.x.axis text {
+    font-size: 14px;  
 }
 
 .line {
     fill: none;
-    stroke: black;
+    stroke: #1c93f8;
     stroke-width: 3;
 }
 
@@ -28,7 +33,35 @@ h1{
 }
 
 .your-line {
-    stroke: #f0f;
+    stroke: #33C3F0;
     stroke-width: 3;
     stroke-dasharray: 5 5;
+}
+
+#panel1Chart1{
+    cursor:pointer;
+}
+
+.grid line {
+    stroke: lightgrey !important;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+
+.grid path {
+    stroke-width: 0;
+}
+
+.label{
+    font-weight:bold;
+}
+
+.button-primary{
+    cursor:pointer;
+}
+
+.button-primary[disabled] {
+    background: #ccc !important;
+    border-color: #ccc !important;
+    text-shadow: none;
 }

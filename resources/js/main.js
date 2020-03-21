@@ -78,7 +78,7 @@ function initializeDrawView() {
 
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
-    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveLinear);
 
     var clipRect = c.svg
         .append('clipPath#clip')
@@ -92,6 +92,11 @@ function initializeDrawView() {
     yourDataSel = c.svg.append('path.your-line');
 
 
+    c.svg.append('circle').attrs({
+        "r": 6,
+        "cx": c.x(trendData[5].day),
+        "cy": c.y(trendData[5].cases)
+    }).style("fill", "#ff6a00");
 
     yourData = trendData
         .map(function (d) { return { day: d.day, cases: d.cases, defined: 0 };})
@@ -143,6 +148,7 @@ function initializeDrawView() {
             return;
         }
         clipRect.transition().duration(1000).attr('width', c.x(35));
+
     });
 
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }

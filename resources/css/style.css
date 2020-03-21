@@ -24,7 +24,7 @@ h1{
 
 .line {
     fill: none;
-    stroke: #1c93f8;
+    stroke: #33C3F0;
     stroke-width: 3;
 }
 
@@ -33,7 +33,7 @@ h1{
 }
 
 .your-line {
-    stroke: #33C3F0;
+    stroke: #ff6a00;
     stroke-width: 3;
     stroke-dasharray: 5 5;
 }

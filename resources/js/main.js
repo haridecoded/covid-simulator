@@ -63,7 +63,7 @@ function initializeDrawView() {
 
     c.svg.append("text")
         .attr("class", "label")
-        .attr("transform", "translate(" + width*.42 + "," + (height+margin.top +20) + ")")
+        .attr("transform", "translate(" + width*.4 + "," + (height+margin.top +20) + ")")
         .style("text-anchor", "middle")
         .text("Days since first case of coronavirus");
 

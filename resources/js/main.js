@@ -1,30 +1,31 @@
 var currentStep = 1;
 var simulationData;
-var trendData = []; //TODO: Hari this data needs to come from the model
+var trendData = []; 
 
-$(document).ready(function () {
-    simulationData = window.simulate({
-        "nDays": 30,
+$(window).on('load', function () {
+    simulationData = simulate({
+        "nDays": 35,
         "populationSize": 200,
         "propInfected": 0.01,
         "propImmuComp": 0.028,
         "interactionsPerDay": 10
     });
+    trendData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
 
+        
     initializeDrawView();
 });
 
 
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
-    _.range(6, 36).forEach((v, i) => {
-        trendData.push({ "day": v, "cases": 10 });
-    });//TODO: Hari this data needs to come from the model
+
 
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
+    var y = d3.scalePow().range([height, 0]);
     var margin = { left: 70, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
@@ -40,12 +41,12 @@ function initializeDrawView() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([0, 35]);
-    c.y.domain([0, 100]);
+    c.x.domain([1, d3.max(trendData, function (d) { return d.day; })]);
+    c.y.domain([0, d3.max(trendData, function (d) { return d.cases; })]);
 
 
     c.xAxis.ticks().tickFormat(f());
-    c.yAxis.ticks(5).tickFormat(d => d + '%');
+    c.yAxis.ticks(5).tickFormat(f());
     c.drawAxis(); 
     //add the X gridlines
     c.svg.append("g")
@@ -81,7 +82,7 @@ function initializeDrawView() {
 
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
-    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveLinear);
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
 
     var clipRect = c.svg
         .append('clipPath#clip')
@@ -97,8 +98,8 @@ function initializeDrawView() {
 
     c.svg.append('circle').attrs({
         "r": 6,
-        "cx": c.x(trendData[5].day),
-        "cy": c.y(trendData[5].cases)
+        "cx": c.x(trendData[4].day),
+        "cy": c.y(trendData[4].cases)
     }).style("fill", "#ff6a00");
 
     yourData = trendData
@@ -133,10 +134,18 @@ function initializeDrawView() {
                 if (Math.abs(d.day - day) < .5) {
                     d.cases = cases;
                     d.defined = true;
-                }
+                }                 
             });
 
+            // fix for inbetween gaps
+            yourData.forEach(function (d, i) {
+                if (!d.defined && yourData[i - 1].defined && yourData[i + 1] && yourData[i + 1].defined) {
+                    d.cases = yourData[i - 1].cases + (yourData[i + 1].cases - yourData[i - 1].cases) / 2;
+                    d.defined = true;
+                }
+            });         
             yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
+            
 
             if (!completed && d3.mean(yourData, f('defined')) === 1) {
                 completed = true;

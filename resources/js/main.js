@@ -147,16 +147,16 @@ function initializeDrawView() {
         .attr("stroke-width", 2)
         .attr("stroke", "#ff6a00")
         .attr("x1", c.x(trendData[0].day))
-        .attr("y1", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.2))
+        .attr("y1", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.15))
         .attr("x2", c.x(trendData[trendData.length-1].day))
-        .attr("y2", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.2));
+        .attr("y2", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.15));
 
     // hospital threshold text
     c.svg.append("text")
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.22) + ")")
+        .attr("transform", "translate(" + width * .2 + "," + c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.17) + ")")
         .style("text-anchor", "middle")
         .text("Number of hospital beds available");
 

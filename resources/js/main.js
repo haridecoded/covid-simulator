@@ -20,8 +20,7 @@ $(window).on('load', function () {
 
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
-
-
+    $("#btnNext").hide();
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
@@ -150,6 +149,7 @@ function initializeDrawView() {
             if (!completed && d3.mean(yourData, f('defined')) === 1) {
                 completed = true;
                 document.getElementById("showMe").disabled = false;
+                $("#btnNext").show();
             }
         });
 
@@ -160,9 +160,8 @@ function initializeDrawView() {
             return;
         }
         clipRect.transition().duration(1000).attr('width', c.x(35));
-
+        $("#showMe").hide();
     });
-
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
 
 }

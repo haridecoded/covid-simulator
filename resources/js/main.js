@@ -1,13 +1,16 @@
 var currentStep = 1;
-var trendData = [{ "day": 0, "cases": 1 },
-                 { "day": 1, "cases": 1 },
-                 { "day": 2, "cases": 1 },
-                 { "day": 3, "cases": 2 },
-                 { "day": 4, "cases": 3 },
-                 { "day": 5, "cases": 5 }               
-                 ]; //TODO: Hari this data needs to come from the model
+var simulationData;
+var trendData = []; //TODO: Hari this data needs to come from the model
 
 $(document).ready(function () {
+    simulationData = window.simulate({
+        "nDays": 30,
+        "populationSize": 200,
+        "propInfected": 0.01,
+        "propImmuComp": 0.028,
+        "interactionsPerDay": 10
+    });
+
     initializeDrawView();
 });
 

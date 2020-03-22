@@ -25,13 +25,14 @@ function onBtnNextClick() {
             $(".panel").hide();
             $("#panel" + currentStep).show();
             $("#panel1Chart1").contents().appendTo($("#panel2Chart1"));
+            showThreshold();
             break;
     }
 }
 
 
 
-//PANEL 1
+// PANEL 1
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
     $("#btnNext").hide();
@@ -60,6 +61,7 @@ function initializeDrawView() {
     c.xAxis.ticks().tickFormat(f());
     c.yAxis.ticks(5).tickFormat(f());
     c.drawAxis(); 
+
     //add the X gridlines
     c.svg.append("g")
         .attr("class", "grid")
@@ -67,7 +69,14 @@ function initializeDrawView() {
         .call(make_x_gridlines()
             .tickSize(-height)
             .tickFormat("")
-        );
+    );
+
+    // add x-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days since first case of coronavirus");
 
     // add the Y gridlines
     c.svg.append("g")
@@ -77,12 +86,7 @@ function initializeDrawView() {
             .tickFormat("")
     );
 
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("transform", "translate(" + width*.4 + "," + (height+margin.top +20) + ")")
-        .style("text-anchor", "middle")
-        .text("Days since first case of coronavirus");
-
+    // add y-axis label
     c.svg.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
@@ -107,9 +111,10 @@ function initializeDrawView() {
     correctSel.append('path.line').at({ d: line(trendData) });
     yourDataSel = c.svg.append('path.your-line');
 
-
+    // add circle to indicate draw start
     c.svg.append('circle').attrs({
         "r": 6,
+        "class": "your-line-circle",
         "cx": c.x(trendData[4].day),
         "cy": c.y(trendData[4].cases)
     }).style("fill", "#ff6a00");
@@ -135,6 +140,25 @@ function initializeDrawView() {
             .ticks(10);
     }
 
+    // hospital threshold line
+    c.svg.append("line")             
+        .attr("id", "threshold")
+        .attr("display", "none")  
+        .attr("stroke-width", 2)
+        .attr("stroke", "#ff6a00")
+        .attr("x1", c.x(trendData[0].day))
+        .attr("y1", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.2))
+        .attr("x2", c.x(trendData[trendData.length-1].day))
+        .attr("y2", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.2));
+
+    // hospital threshold text
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("display", "none")
+        .attr("id", "thresholdLabel")
+        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.22) + ")")
+        .style("text-anchor", "middle")
+        .text("Number of hospital beds available");
 
     var completed = false;
 
@@ -186,9 +210,15 @@ function initializeDrawView() {
         $("#btnNext").show();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
-
 }
 
+// PANEL 2
+function showThreshold() {   
+    $("#threshold").fadeIn(2000);
+    $("#thresholdLabel").fadeIn(2000);
+    $(".your-line").fadeOut(500);
+    $(".your-line-circle").fadeOut(500);
+}
 
 
 

@@ -5,19 +5,33 @@ var trendData = [];
 $(window).on('load', function () {
     simulationData = simulate({
         "nDays": 35,
-        "populationSize": 200,
-        "propInfected": 0.01,
+        "populationSize": 500,
+        "propInfected": 0.001,
         "propImmuComp": 0.028,
-        "interactionsPerDay": 10
+        "interactionsPerDay": 1
     });
     trendData = simulationData
         .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
-
         
     initializeDrawView();
+    $(".panel").hide();
+    $("#panel" + currentStep).show();
 });
 
+function onBtnNextClick() {
+    switch (currentStep) {
+        case 1:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            $("#panel1Chart1").contents().appendTo($("#panel2Chart1"));
+            break;
+    }
+}
 
+
+
+//PANEL 1
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
     $("#btnNext").hide();
@@ -36,7 +50,6 @@ function initializeDrawView() {
         height: height,
         margin: margin
     });
-
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
@@ -101,6 +114,8 @@ function initializeDrawView() {
         "cy": c.y(trendData[4].cases)
     }).style("fill", "#ff6a00");
 
+
+
     yourData = trendData
         .map(function (d) { return { day: d.day, cases: d.cases, defined: 0 };})
         .filter(function (d) {
@@ -138,18 +153,24 @@ function initializeDrawView() {
 
             // fix for inbetween gaps
             yourData.forEach(function (d, i) {
-                if (!d.defined && yourData[i - 1].defined && yourData[i + 1] && yourData[i + 1].defined) {
-                    d.cases = yourData[i - 1].cases + (yourData[i + 1].cases - yourData[i - 1].cases) / 2;
-                    d.defined = true;
+                if (!d.defined && yourData[i - 1].defined) {
+
+                    for (j = i + 1; j < yourData.length-1; j++) {
+                        if (yourData[j] && yourData[j].defined) {
+                            d.cases = yourData[i - 1].cases + (yourData[j].cases - yourData[i - 1].cases) / 2;
+                            d.defined = true;
+                            break;
+                        }
+                    }                  
                 }
-            });         
+            });    
+            
             yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
             
 
             if (!completed && d3.mean(yourData, f('defined')) === 1) {
                 completed = true;
-                document.getElementById("showMe").disabled = false;
-                $("#btnNext").show();
+                document.getElementById("showMe").disabled = false;              
             }
         });
 
@@ -160,7 +181,9 @@ function initializeDrawView() {
             return;
         }
         clipRect.transition().duration(1000).attr('width', c.x(35));
+
         $("#showMe").hide();
+        $("#btnNext").show();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
 

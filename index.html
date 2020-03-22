@@ -19,7 +19,7 @@
     <div class="container u-full-width u-max-full-width">
         <div class="row">
             <h1>
-                How Will Social Distancing Help Your Neighborhood?
+                How Will Social Distancing Help Your Neighborhood Fight Coronavirus?
             </h1>
         </div>
        
@@ -28,11 +28,11 @@
                 <div class="eight columns offset-by-two alpha">
                     <p>
                         On December 26, 2019 four unusual cases of pneumonia was noticed by Dr Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified.
-                        Since then, the virus has infected thousands of people all over the world. Coronavirus cases reported each day is increasing exponentially.                     
+                        Since then, the virus has infected thousands of people all over the world at an exponential rate.  
                     </p>
                     <p>
-                        <span  class="emph">How many cases of coronavirus will there be in your neighborhood in the next month?</span><br/>
-                        Draw your guesses on the charts below.
+                        <b>How many cases of coronavirus will there be in your neighborhood in the next month?</b><br/>
+                        <span class="emph">Draw your guesses on the chart below.</span>
                     </p>
                 </div>
             </div>
@@ -46,12 +46,26 @@
             </div>
         </div>
 
-        <div class="row panel">
+        <div class="row panel" id="panel2">
+            <div class="row">
+                <div class="eight columns offset-by-two alpha">
+                    <p>
+                        An <b>urgent</b> problem is that our hopsital systems are unable to manage this exponential growth of infection.
+                        For every <span class="emph">100 patients</span> that are infected, there is <span class="emph">1 bed</span> avaiable in the hospital.
+                        This means, no everyone who is infected gets the treatment they require!
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div id="panel2Chart1">
+
+                </div>
+            </div>
 
         </div>
 
         <div class="row" style="text-align:center;">            
-            <input class="button" id="btnNext" type="button" value="Next" />
+            <input class="button" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()"/>
         </div>
 
     </div>

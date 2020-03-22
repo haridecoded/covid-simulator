@@ -171,8 +171,3 @@ function initializeDrawView() {
 
 
 // HELPER FUNCTIONS
-
-
-
-//https://bl.ocks.org/EE2dev/23bee6f066449d8edc3087ce18ec35fa
-// https://bl.ocks.org/EE2dev/5e553c5b50d2b12d2d3d707c89c849f2

@@ -21655,8 +21655,8 @@
 			// Record the state at the end of this day
 			result.push({
 				day: day + 1,
-				alive: cloneDeep(alive),
-				deceased: cloneDeep(deceased),
+				// alive: cloneDeep(alive),
+				// deceased: cloneDeep(deceased),
 				nInfected: nInfected,
 				nSymptomatic: nSymptomatic,
 				nHospitalized: nHospitalized,

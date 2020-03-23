@@ -48,6 +48,11 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
+            break;
+        case 4:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
             initializeFreeformGraph();
             applyFill(document.querySelector("#ageSlider"));
             applyFill(document.querySelector("#infectedSlider"));
@@ -142,7 +147,7 @@ function initializeDrawView() {
         "class": "your-line-circle",
         "cx": c.x(trendData[4].day),
         "cy": c.y(trendData[4].cases)
-    }).style("fill", "#ff6a00");
+    }).style("fill", "#b9003e");
 
 
 
@@ -172,7 +177,7 @@ function initializeDrawView() {
         .attr("id", "threshold")
         .attr("display", "none")  
         .attr("stroke-width", 2)
-        .attr("stroke", "#ff6a00")
+        .attr("stroke", "#b9003e")
         .attr("x1", c.x(trendData[0].day))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(trendData[trendData.length - 1].day))
@@ -199,7 +204,7 @@ function initializeDrawView() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ffaa8f" });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#b9003e" });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
@@ -371,7 +376,7 @@ function initializeFreeformGraph() {
     c.svg.append("line")
         .attr("id", "threshold")       
         .attr("stroke-width", 2)
-        .attr("stroke", "#ff6a00")
+        .attr("stroke", "#b9003e")
         .attr("x1", c.x(trendData[0].day))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(trendData[trendData.length - 1].day))
@@ -428,7 +433,7 @@ function redraw() {
 
 function applyFill(slider) {
     const settings = {
-        fill: '#33C3F0',
+        fill: '#b9003e',
         background: '#d7dcdf'
     };
 

@@ -25,7 +25,7 @@ h1{
 
 .line {
     fill: none;
-    stroke: #33C3F0;
+    stroke: #3a434c;
     stroke-width: 3;
 }
 
@@ -38,7 +38,7 @@ h1{
 }*/
 
 .your-line {
-    stroke: #ff6a00;
+    stroke: #b9003e;
     stroke-width: 3;
     stroke-dasharray: 5 5;
 }
@@ -72,8 +72,14 @@ h1{
 }
 
 .emph {
-    color: rgb(255, 106, 0);
-    font-weight:bold;
+    color: #b9003e;
+    font-weight: bold;
+}
+
+.parah{
+    border-radius:10px;
+    background: #fff;
+    padding:5px;   
 }
 
 
@@ -94,24 +100,24 @@ h1{
     margin: 0;
 }
 
-.range-slider__range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #2c3e50;
-    cursor: pointer;
-    -webkit-transition: background 0.15s ease-in-out;
-    transition: background 0.15s ease-in-out;
-}
-
-    .range-slider__range::-webkit-slider-thumb:hover {
-        background: #33C3F0;
+    .range-slider__range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #b9003e;
+        cursor: pointer;
+        -webkit-transition: background 0.15s ease-in-out;
+        transition: background 0.15s ease-in-out;
     }
 
+        .range-slider__range::-webkit-slider-thumb:hover {
+            background: #b9003e;
+        }
+
     .range-slider__range:active::-webkit-slider-thumb {
-        background: #33C3F0;
+        background: #b9003e;
     }
 
 .range-slider__range::-moz-range-thumb {
@@ -126,15 +132,15 @@ h1{
 }
 
     .range-slider__range::-moz-range-thumb:hover {
-        background: #33C3F0;
+        background: #b9003e;
     }
 
     .range-slider__range:active::-moz-range-thumb {
-        background: #33C3F0;
+        background: #b9003e;
     }
 
     .range-slider__range:focus::-webkit-slider-thumb {
-        box-shadow: 0 0 0 3px #fff, 0 0 0 6px #33C3F0;
+        box-shadow: 0 0 0 3px #fff, 0 0 0 6px #b9003e;
     }
 
 .range-slider__value {
@@ -145,19 +151,19 @@ h1{
     line-height: 20px;
     text-align: center;
     border-radius: 3px;
-    background: #2c3e50;
+    background: #b9003e;
     padding: 5px 10px;
     margin-left: 8px;
 }
 
-.range-slider__value:after {
-    position: absolute;
-    top: 8px;
-    left: -7px;
-    width: 0;
-    height: 0;
-    border-top: 7px solid transparent;
-    border-right: 7px solid #2c3e50;
-    border-bottom: 7px solid transparent;
-    content: "";
-}
+    .range-slider__value:after {
+        position: absolute;
+        top: 8px;
+        left: -7px;
+        width: 0;
+        height: 0;
+        border-top: 7px solid transparent;
+        border-right: 7px solid #b9003e;
+        border-bottom: 7px solid transparent;
+        content: "";
+    }

@@ -12,7 +12,7 @@ var age = 30;
 var infection = 0.1;
 var isolation = 0.1;
 var covid_all;
-var normalSimulationData;
+var normalSimulationData = [];
 
 
 $(window).on('load', function () {
@@ -304,10 +304,115 @@ function setupNormalSimulation() {
     //var gameWorld = new GameWorld('normalCanvas');
 
     // initialize line graph
+    _.range(1, 30).forEach((v, i) => {
+        normalSimulationData.push({ "day": v, cases: 0 });
+    });
+    drawNormalSimulationChart();
 
 }
 
-function drawNormalSimulationVis() {
+function drawNormalSimulationChart() {
+    $("#panel4Chart2").empty();
+    var width = Math.min($("#panel4Chart2").width(), 700);
+    var height = Math.min($("#panel4Chart2").width() * 0.6, 400);
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scalePow().range([height, 0]);
+    var margin = { left: 70, right: 50, top: 30, bottom: 70 };
+
+    var f = d3.f;
+
+    var sel = d3.select('#panel4Chart2');
+    var c = d3.conventions({
+        parentSel: sel,
+        totalWidth: width,
+        height: height,
+        margin: margin
+    });
+
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+
+    c.x.domain([1, d3.max(normalSimulationData, function (d) { return d.day; })]);
+    //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
+    c.y.domain([0, 250]);
+
+    c.xAxis.ticks().tickFormat(f());
+    c.yAxis.ticks(5).tickFormat(f());
+    c.drawAxis();
+
+    //add the X gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .attr("transform", "translate(0," + height + ")")
+        .call(make_x_gridlines()
+            .tickSize(-height)
+            .tickFormat("")
+        );
+
+    // add x-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days since first case of coronavirus");
+
+    // add the Y gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .call(make_y_gridlines()
+            .tickSize(-width + margin.left + margin.right)
+            .tickFormat("")
+        );
+
+    // add y-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Number of Cases");
+
+
+    var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
+
+    var correctSel = c.svg.append('g').attr('clip-path', 'url(#clip)');
+
+    correctSel.append('path.area').at({ d: area(normalSimulationData) });
+    correctSel.append('path.line').at({ d: line(normalSimulationData) });
+    yourDataSel = c.svg.append('path.your-line');
+
+    // gridlines in x axis function
+    function make_x_gridlines() {
+        return c.xAxis.ticks().tickFormat(f());
+    }
+
+    // gridlines in y axis function
+    function make_y_gridlines() {
+        return d3.axisLeft(y)
+            .ticks(10);
+    }
+
+
+    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
+    // hospital threshold line
+    c.svg.append("line")
+        .attr("id", "threshold")
+        .attr("stroke-width", 2)
+        .attr("stroke", "#b9003e")
+        .attr("x1", c.x(normalSimulationData[0].day))
+        .attr("y1", c.y(threshold))
+        .attr("x2", c.x(normalSimulationData[normalSimulationData.length - 1].day))
+        .attr("y2", c.y(threshold));
+
+    // hospital threshold text
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("id", "thresholdLabel")
+        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold) - 10) + ")")
+        .style("text-anchor", "middle")
+        .text("Number of hospital beds available");
 
 }
 

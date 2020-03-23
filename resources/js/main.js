@@ -274,8 +274,8 @@ function getCovidCount() {
 
 // PANEL 2
 function showThreshold() {   
-    $("#threshold").fadeIn(2000);
-    $("#thresholdLabel").fadeIn(2000);  
+    $("#threshold").fadeIn(3000);
+    $("#thresholdLabel").fadeIn(3000);  
     $(".your-line").fadeOut(500);
     $(".your-line-circle").fadeOut(500);
 }

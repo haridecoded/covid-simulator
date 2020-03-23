@@ -183,7 +183,7 @@ function initializeDrawView() {
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold)-10) + ")")
+        .attr("transform", "translate(" + width * .3 + "," + (c.y(threshold)-10) + ")")
         .style("text-anchor", "middle")
         .text("Number of hospital beds available");
 
@@ -191,7 +191,7 @@ function initializeDrawView() {
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel1")
-        .attr("transform", "translate(" + width * .5 + "," + 100 + ")")
+        .attr("transform", "translate(" + width * .4 + "," + 100 + ")")
         .style("text-anchor", "middle")
         .text("Number of patients without treatment");
 

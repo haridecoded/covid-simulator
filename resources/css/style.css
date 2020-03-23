@@ -73,4 +73,5 @@ h1{
 
 .emph {
     color: rgb(255, 106, 0);
+    font-weight:bold;
 }

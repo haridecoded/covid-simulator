@@ -1,3 +1,9 @@
+///////////////////////// Code adapted from////////////////////
+// https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
+// http://covid19simulator.com/
+///////////////////////////////////////////////////////////////
+
+
 var currentStep = 1;
 var simulationData;
 var trendData = []; 
@@ -6,6 +12,7 @@ var age = 30;
 var infection = 0.1;
 var isolation = 0.1;
 var covid_all;
+var normalSimulationData;
 
 
 $(window).on('load', function () {
@@ -51,6 +58,11 @@ function onBtnNextClick() {
             setupNormalSimulation();
             break;
         case 4:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            break;
+        case 5:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -289,8 +301,16 @@ function showThreshold() {
 // PANEL 4
 function setupNormalSimulation() {
     $("#btnNext").hide();
+    //var gameWorld = new GameWorld('normalCanvas');
+
+    // initialize line graph
 
 }
+
+function drawNormalSimulationVis() {
+
+}
+
 
 function simulateSpreadNormal() {
     $("#btnNext").show();
@@ -298,17 +318,17 @@ function simulateSpreadNormal() {
 
 // PANEL X
 function initializeFreeformGraph() {
-    $("#panel5Chart1").empty();
+    $("#panel6Chart1").empty();
     $("#btnNext").hide();
-    var width = Math.min($("#panel5Chart1").width(), 700);
-    var height = Math.min($("#panel5Chart1").width() * 0.6, 400);
+    var width = Math.min($("#panel6Chart1").width(), 700);
+    var height = Math.min($("#panel6Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 70, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel5Chart1');
+    var sel = d3.select('#panel6Chart1');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,

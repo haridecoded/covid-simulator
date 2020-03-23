@@ -15,6 +15,8 @@
     <script type="text/javascript" src="js/d3v4.js"></script>
     <script type="text/javascript" src="js/lodash.min.js"></script>
     <script type="text/javascript" src="js/model-bundle.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="js/person.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <div class="container u-full-width u-max-full-width">
@@ -23,7 +25,7 @@
                 <h1>
                     How Social Distancing Can Help Your Neighborhood Effectively Fight Coronavirus?
                 </h1>
-            </div>          
+            </div>
         </div>
 
         <div class="row panel" id="panel1">
@@ -44,12 +46,12 @@
                     <div id="panel1Chart1">
 
                     </div>
-                </div>              
+                </div>
             </div>
             <div class="row">
                 <div class="twelve columns">
                     <input class="button-primary" id="showMe" type="button" value="Show me how I did!" />
-                </div>                
+                </div>
             </div>
         </div>
 
@@ -88,18 +90,18 @@
 
                     </div>
                 </div>
-            </div>           
+            </div>
         </div>
 
         <div class="row panel" id="panel4" style="display:none;">
             <div class="row">
                 <div class="row eight columns offset-by-two alpha">
                     <p>
-                        But first, let us tell you some key facts about <b> how the virus spreads. </b>
+                        But first, let us tell you two key facts about <b> how the virus spreads. </b>
                     </p>
                 </div>
             </div>
-            <div  class="row">
+            <div class="row">
                 <div class="four columns offset-by-two alpha">
                     <p class="parah">
                         (1) The virus spreads from person-to-person <span class="emph"> when people are in close contact with one another (within 6 feet).</span>
@@ -113,40 +115,59 @@
                     </p>
                 </div>
             </div>
-           <div class="row">
-                <div class="six columns offset-by-three">                                                            
+            <div class="row">
+                <div class="six columns offset-by-three">
                     <p>
                         <b>We created a model to help you understand this better.</b> <br />
                         In the visualization below, each moving dot represents a person going about their day to day business in the neighborhood. Click the button to
-                        see what happens when an infected person enters the neighborhood. This neighborhood has 500 people. 
+                        see what happens when an infected person enters the neighborhood. This neighborhood has 500 people.
                     </p>
-                </div>               
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <input type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()"/>
                 </div>
             </div>
             <div class="row">
                 <div class="twelve columns">
+                    <input type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="four columns offset-by-two">
                     <div id="panel4Chart1">
+                        <canvas id="normalCanvas" width="100" height="100">
+                            Your browser does not support the HTML5 canvas tag.
+                        </canvas>
+                    </div>
+                </div>
+                <div class="four columns offset-by-one">
+                    <div id="panel4Chart2">
 
                     </div>
                 </div>
             </div>
-
-
-
         </div>
 
-       
-        <div class="row panel" id="panel5" style="display:none;">
+
+        <div class="row panel" id="panel5">
+            <div class="row">
+                <div class="six columns offset-by-three alpha">
+                    <p>
+                        As you can see, if everyone goes about their normal life, the infection spreads very quickly. 
+                        You may have heard in the news media that <span class="emph">social distancing</span> can help slow down the spread of infection.<br/>
+                    </p>
+                    <p>
+
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row panel" id="panel6" style="display:none;">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
                     Some text about what they should do when exploring the effect of different social distancing behavior
                 </div>
                 <div class="row">
-                    <div id="panel5Chart1">
+                    <div id="panel6Chart1">
 
                     </div>
                 </div>
@@ -160,7 +181,7 @@
                                 <input id="ageSlider" class="range-slider__range" type="range" value="30" min="25" max="65" oninput="onAgeInput(this.value)" onchange="onChanged()">
                                 <span id="ageSliderText" class="range-slider__value">30</span>
                             </div>
-                        </div>                       
+                        </div>
                     </div>
                     <div class="three columns">
                         <div class="row" style="text-align:left;">

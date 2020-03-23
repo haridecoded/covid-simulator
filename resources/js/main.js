@@ -171,7 +171,7 @@ function initializeDrawView() {
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel1")
-        .attr("transform", "translate(" + width * .6 + "," + 100 + ")")
+        .attr("transform", "translate(" + width * .5 + "," + 100 + ")")
         .style("text-anchor", "middle")
         .text("Number of patients without treatment");
 

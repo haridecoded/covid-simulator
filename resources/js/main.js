@@ -333,7 +333,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, 31]);
-    c.y.domain([0, 500]);
+    c.y.domain([0, 300]);
     //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
    
 
@@ -397,7 +397,7 @@ function drawNormalSimulationChart() {
     }
 
 
-    var threshold = 50;
+    var threshold = 30;
     // hospital threshold line
     c.svg.append("line")
         .attr("id", "threshold")
@@ -644,7 +644,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = 0.45;
+        let speedMultiplier = 0.3;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;

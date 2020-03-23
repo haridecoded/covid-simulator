@@ -302,13 +302,13 @@ function showThreshold() {
 function setupNormalSimulation() {
     $("#btnNext").hide();   
     // initialize line graph
-    _.range(1, 31).forEach((v, i) => {
-        normalSimulationData.push({ "day": v, cases: 0 });
-    });
+    //_.range(1, 31).forEach((v, i) => {
+    //    normalSimulationData.push({ "day": v, cases: 0 });
+    //});
     drawNormalSimulationChart();
 
     // initialize simulation canvas
-    var simulation = new SimulationWorld('normalCanvas',.2,500,0);
+    var simulation = new SimulationWorld('normalCanvas',.2,500,0, null, null);
 
 }
 
@@ -332,9 +332,10 @@ function drawNormalSimulationChart() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([1, d3.max(normalSimulationData, function (d) { return d.day; })]);
-    //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
+    c.x.domain([1, 31]);
     c.y.domain([0, 250]);
+    //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
+   
 
     c.xAxis.ticks().tickFormat(f());
     c.yAxis.ticks(5).tickFormat(f());
@@ -402,9 +403,9 @@ function drawNormalSimulationChart() {
         .attr("id", "threshold")
         .attr("stroke-width", 2)
         .attr("stroke", "#b9003e")
-        .attr("x1", c.x(normalSimulationData[0].day))
+        .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
-        .attr("x2", c.x(normalSimulationData[normalSimulationData.length - 1].day))
+        .attr("x2", c.x(31))
         .attr("y2", c.y(threshold));
 
     // hospital threshold text
@@ -418,7 +419,14 @@ function drawNormalSimulationChart() {
 }
 
 function simulateSpreadNormal() {
-    var simulation = new SimulationWorld('normalCanvas', .2, 500, 1);
+    function updateChart(day, count) {
+        if (day > 0 && day < 31) {
+            //_.find(normalSimulationData, function (d) { if (d.day === day) { d.cases = count; } });
+            normalSimulationData.push({ "day": day, "cases": count });
+        }
+        drawNormalSimulationChart();
+    }
+    var simulation = new SimulationWorld('normalCanvas', .2, 500, 1, 30, updateChart);
     $("#btnNext").show();
 }
 
@@ -582,12 +590,13 @@ function applyFill(slider) {
 // HELPER FUNCTIONS
 class SimulationWorld {
 
-    constructor(canvasId, percentHome, populationSize, infectedCount) {
+    constructor(canvasId, percentHome, populationSize, infectedCount, days, callback) {
         this.canvas = null;
         this.context = null;
         this.oldTimeStamp = 0;
         this.gameObjects = [];
         this.resetCounter = 0;
+        this.dayCount = 0;
 
         this.updateStatsInterval;
         this.mostRecentDeathIndex = 0;
@@ -598,6 +607,8 @@ class SimulationWorld {
         this.defaultInfectedCount = infectedCount;
 
         this.init(canvasId);
+        this.update = callback;
+        this.days = days;
     }
 
     init(canvasId) {
@@ -656,24 +667,26 @@ class SimulationWorld {
         });
 
         let infected = Array.from(Array(+infectedCount)).map((val, index) => {
-            let rand = (Math.random() * 30) + 25;
             return new Person(this.context, {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: infectedCount === 1 ? 100: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
+                y: infectedCount === 1 ? 100 : Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
                 radius: Math.min(this.canvas.width / 225, 3.4),
                 infectedTime: Date.now(),
                 speedMultiplier
             });
         });
 
+        
+
         this.gameObjects = [...infected, ...moving, ...home];
     }
 
     gameLoop(timeStamp) {
 
+        
         // Calculate how much time has passed
         var secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
         this.oldTimeStamp = timeStamp;
@@ -686,17 +699,33 @@ class SimulationWorld {
             this.detectCollisions();
         }
 
-        //if (this.rafCounter % 3 === 0) {
-        //    this.updateStats();
-        //}
+        if (this.rafCounter % 30 === 0) {
+            let contagiousCount = this.gameObjects.filter(person => person.infectedState === 'sick').length;
+            if (this.update) {
+                this.update.call(this, this.dayCount, contagiousCount);
+            }            
+            this.dayCount++;
+        }
 
         this.rafCounter++;
 
-        this.clearCanvas();
+        
 
         // Loop over all game objects to draw
-        this.gameObjects.forEach(go => go.draw());
+        //if (this.days) {
+        //    if (this.dayCount < this.days) {
+        //        this.clearCanvas();
+        //        this.gameObjects.forEach(go => go.draw());
+        //    }
+        //}
+        // else {
+        //    this.clearCanvas();
+        //    this.gameObjects.forEach(go => go.draw());
+        //}
 
+        this.clearCanvas();
+        this.gameObjects.forEach(go => go.draw());
+      
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
 

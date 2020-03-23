@@ -21,6 +21,7 @@
     "body-parser": "*",
     "express": "*",
     "jquery": "^3.4.1",
-    "jsonfile": "^5.0.0"
+    "jsonfile": "^5.0.0",
+    "novelcovid": "^1.0.7-b3"
   }
 }

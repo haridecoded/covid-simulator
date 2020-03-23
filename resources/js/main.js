@@ -5,6 +5,8 @@ var freeformData = [];
 var age = 30;
 var infection = 0.1;
 var isolation = 0.1;
+var covid_all;
+
 
 $(window).on('load', function () {
     $(".panel").hide();
@@ -21,7 +23,8 @@ $(window).on('load', function () {
     freeformData = simulationData
         .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
         
-    initializeDrawView();    
+    initializeDrawView();
+    getCovidCount();
 });
 
 function onBtnNextClick() {
@@ -252,6 +255,18 @@ function initializeDrawView() {
         $("#btnNext").show();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
+}
+
+function getCovidCount() {
+    $.ajax({
+        url: "/count",
+        type: "post",
+        contentType: "application/json",
+        success: function (data) {
+            covid_all = JSON.parse(data).count;
+            $("#caseCount").text(covid_all);
+        }
+    });
 }
 
 // PANEL 2

@@ -40,6 +40,9 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
+            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
+            $(".diffarea").fadeIn(2000);
+            $("#thresholdLabel1").fadeIn(2000);  
             break;
         case 3:
             currentStep++;
@@ -272,9 +275,7 @@ function getCovidCount() {
 // PANEL 2
 function showThreshold() {   
     $("#threshold").fadeIn(2000);
-    $("#thresholdLabel").fadeIn(2000);
-    $("#thresholdLabel1").fadeIn(2000);
-    $(".diffarea").fadeIn(2000);
+    $("#thresholdLabel").fadeIn(2000);  
     $(".your-line").fadeOut(500);
     $(".your-line-circle").fadeOut(500);
 }

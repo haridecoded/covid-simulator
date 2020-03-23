@@ -22,16 +22,16 @@
                 How Will Social Distancing Help Your Neighborhood Fight Coronavirus?
             </h1>
         </div>
-       
-        <div class="row panel" id="panel1">          
+
+        <div class="row panel" id="panel1">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
                     <p>
                         On December 26, 2019 four unusual cases of pneumonia was noticed by Dr Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified.
-                        Since then, the virus has infected thousands of people all over the world at an exponential rate. 
+                        Since then, the virus has infected thousands of people all over the world at an exponential rate.
                     </p>
                     <p>
-                        <b>How many cases of coronavirus will there be in your neighborhood in the next month?</b><br/>
+                        <b>How many cases of coronavirus will there be in your neighborhood in the next month?</b><br />
                         <span class="emph">Draw your guesses on the chart below.</span>
                     </p>
                 </div>
@@ -46,8 +46,8 @@
             </div>
         </div>
 
-                
-        <div class="row panel" id="panel2">
+
+        <div class="row panel" id="panel2" style="display:none;">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
                     <p>
@@ -66,14 +66,74 @@
 
         </div>
 
-        <div class="row panel" id="panel3">
-            <div class="six columns offset-by-three alpha">
-                <h5><span class="emph">You can help slow down the rate</span> at which coronavirus is spreading. The goal is to ensure that the number of patients are always fewer than the number of hospital beds available.</h5>
+
+        <div class="row panel" id="panel3" style="display:none;">
+            <div class="row">
+                <div class="six columns offset-by-three alpha">
+                    <h5><span class="emph">You can help slow down the rate</span> at which coronavirus is spreading. The goal is to ensure that the number of patients are always fewer than the number of hospital beds available.</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <span>[TODO martini glass 'stem' steps]</span>
+            </div>
+
+        </div>
+
+       
+        <div class="row panel" id="panel4" style="display:none;">
+            <div class="row">
+                <div class="eight columns offset-by-two alpha">
+                    Some text about what they should do when exploring the effect of different social distancing behavior
+                </div>
+                <div class="row">
+                    <div id="panel4Chart1">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" three columns offset-by-one alpha">
+                        <div class="row" style="text-align:left;">
+                            Average Population Age:
+                        </div>
+                        <div class="row">
+                            <div class="range-slider">
+                                <input id="ageSlider" class="range-slider__range" type="range" value="30" min="25" max="65" oninput="onAgeInput(this.value)" onchange="onChanged()">
+                                <span id="ageSliderText" class="range-slider__value">30</span>
+                            </div>
+                        </div>                       
+                    </div>
+                    <div class="three columns">
+                        <div class="row" style="text-align:left;">
+                            Proportion Infected:
+                        </div>
+                        <div class="row">
+                            <div class="range-slider">
+                                <input id="infectedSlider" class="range-slider__range" type="range" value="0.1" min="0" max="1" step="0.1" oninput="onInfectedInput(this.value)" onchange="onChanged()">
+                                <span id="infectedSliderText" class="range-slider__value">0.1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three columns">
+                        <div class="row" style="text-align:left;">
+                            Social Isolation:
+                        </div>
+                        <div class="row">
+                            <div class="range-slider">
+                                <input id="isolationSlider" class="range-slider__range" type="range" value="0.1" min="0" max="1" step="0.1" oninput="onIsolationInput(this.value)" onchange="onChanged()">
+                                <span id="isolationSliderText" class="range-slider__value">0.1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two columns">
+
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row" style="text-align:center;">            
-            <input class="button" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()"/>
+        <div class="row" style="text-align:center;">
+            <input class="button" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
         </div>
 
     </div>

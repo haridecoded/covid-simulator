@@ -1,6 +1,10 @@
 var currentStep = 1;
 var simulationData;
 var trendData = []; 
+var freeformData = [];
+var age = 30;
+var infection = 0.1;
+var isolation = 0.1;
 
 $(window).on('load', function () {
     $(".panel").hide();
@@ -14,9 +18,10 @@ $(window).on('load', function () {
     });
     trendData = simulationData
         .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
+    freeformData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
         
-    initializeDrawView();
-
+    initializeDrawView();    
 });
 
 function onBtnNextClick() {
@@ -33,9 +38,17 @@ function onBtnNextClick() {
             $(".panel").hide();
             $("#panel" + currentStep).show();
             break;
+        case 3:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            initializeFreeformGraph();
+            applyFill(document.querySelector("#ageSlider"));
+            applyFill(document.querySelector("#infectedSlider"));
+            applyFill(document.querySelector("#isolationSlider"));
+            break;
     }
 }
-
 
 
 // PANEL 1
@@ -249,6 +262,163 @@ function showThreshold() {
     $(".diffarea").fadeIn(2000);
     $(".your-line").fadeOut(500);
     $(".your-line-circle").fadeOut(500);
+}
+
+// PANEL X
+function initializeFreeformGraph() {
+    $("#panel4Chart1").empty();
+    $("#btnNext").hide();
+    var width = Math.min($("#panel4Chart1").width(), 700);
+    var height = Math.min($("#panel4Chart1").width() * 0.6, 400);
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scalePow().range([height, 0]);
+    var margin = { left: 70, right: 50, top: 30, bottom: 70 };
+
+    var f = d3.f;
+
+    var sel = d3.select('#panel4Chart1');
+    var c = d3.conventions({
+        parentSel: sel,
+        totalWidth: width,
+        height: height,
+        margin: margin
+    });
+
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+
+    c.x.domain([1, d3.max(freeformData, function (d) { return d.day; })]);
+    c.y.domain([0, d3.max(freeformData, function (d) { return d.cases; })]);
+
+
+    c.xAxis.ticks().tickFormat(f());
+    c.yAxis.ticks(5).tickFormat(f());
+    c.drawAxis();
+
+    //add the X gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .attr("transform", "translate(0," + height + ")")
+        .call(make_x_gridlines()
+            .tickSize(-height)
+            .tickFormat("")
+        );
+
+    // add x-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days since first case of coronavirus");
+
+    // add the Y gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .call(make_y_gridlines()
+            .tickSize(-width + margin.left + margin.right)
+            .tickFormat("")
+        );
+
+    // add y-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Number of Cases");
+
+
+    var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
+
+    var correctSel = c.svg.append('g').attr('clip-path', 'url(#clip)');
+
+    correctSel.append('path.area').at({ d: area(freeformData) });
+    correctSel.append('path.line').at({ d: line(freeformData) });
+    yourDataSel = c.svg.append('path.your-line');
+     
+    // gridlines in x axis function
+    function make_x_gridlines() {
+        return c.xAxis.ticks().tickFormat(f());
+    }
+
+    // gridlines in y axis function
+    function make_y_gridlines() {
+        return d3.axisLeft(y)
+            .ticks(10);
+    }
+
+
+    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
+    // hospital threshold line
+    c.svg.append("line")
+        .attr("id", "threshold")       
+        .attr("stroke-width", 2)
+        .attr("stroke", "#ff6a00")
+        .attr("x1", c.x(trendData[0].day))
+        .attr("y1", c.y(threshold))
+        .attr("x2", c.x(trendData[trendData.length - 1].day))
+        .attr("y2", c.y(threshold));
+
+    // hospital threshold text
+    c.svg.append("text")
+        .attr("class", "label")       
+        .attr("id", "thresholdLabel")
+        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold) - 10) + ")")
+        .style("text-anchor", "middle")
+        .text("Number of hospital beds available");
+}
+
+function onAgeInput(v) {
+    age = parseInt(v);
+    $('#ageSliderText').text(v);   
+    applyFill(document.querySelector("#ageSlider"));
+    
+}
+
+function onInfectedInput(v) {
+    infection = parseFloat(v);
+    $('#infectedSliderText').text(v);
+    applyFill(document.querySelector("#infectedSlider"));
+    redraw();
+}
+
+function onIsolationInput(v) {
+    isolation = parseFloat(v);
+    $('#isolationSliderText').text(v);
+    applyFill(document.querySelector("#isolationSlider"));
+    redraw();
+}
+
+function onChanged() {
+    redraw();
+}
+
+function redraw() {
+
+    simulationData = simulate({
+        "nDays": 35,
+        "populationSize": 500,
+        "propInfected": 0.001,
+        "propImmuComp": 0.028,
+        "interactionsPerDay": 1
+    });
+    freeformData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
+
+    initializeFreeformGraph();
+}
+
+function applyFill(slider) {
+    const settings = {
+        fill: '#33C3F0',
+        background: '#d7dcdf'
+    };
+
+    const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+    const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+    slider.style.background = bg;
 }
 
 

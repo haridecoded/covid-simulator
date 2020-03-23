@@ -418,6 +418,7 @@ function drawNormalSimulationChart() {
 }
 
 function simulateSpreadNormal() {
+    var simulation = new SimulationWorld('normalCanvas', .2, 500, 1);
     $("#btnNext").show();
 }
 

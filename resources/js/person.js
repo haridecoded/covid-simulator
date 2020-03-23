@@ -49,12 +49,12 @@ class Person {
             color = '#555555';
         }
 
-        else if (Date.now() - this.infectedTime > 5000) {
-            this.infectedState = 'recovered';
-            color = '#8b6cff';
-        }
+        //else if (Date.now() - this.infectedTime > 5000) {
+        //    this.infectedState = 'recovered';
+        //    color = '#b9003e';
+        //}
 
-        else if (this.infectedState === 'sick') color = '#ff5c98';
+        else if (this.infectedState === 'sick') color = '#b9003e';
 
         else if (this.movingState === 'home') color = '#CCCCCC'; //'#0099b0';
 

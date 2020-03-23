@@ -13,7 +13,7 @@ var infection = 0.1;
 var isolation = 0.1;
 var covid_all;
 var normalSimulationData = [];
-
+var simulationWorld;
 
 $(window).on('load', function () {
     $(".panel").hide();
@@ -308,7 +308,7 @@ function setupNormalSimulation() {
     drawNormalSimulationChart();
 
     // initialize simulation canvas
-    var simulation = new SimulationWorld('normalCanvas',.2,500,0, null, null);
+    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 0, null, null);
 
 }
 
@@ -333,7 +333,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, 31]);
-    c.y.domain([0, 250]);
+    c.y.domain([0, 400]);
     //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
    
 
@@ -419,6 +419,10 @@ function drawNormalSimulationChart() {
 }
 
 function simulateSpreadNormal() {
+    if ($(this).attr('disabled')) {
+        return;
+    }
+    normalSimulationData = [];
     function updateChart(day, count) {
         if (day > 0 && day < 31) {
             //_.find(normalSimulationData, function (d) { if (d.day === day) { d.cases = count; } });
@@ -426,8 +430,9 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    var simulation = new SimulationWorld('normalCanvas', .2, 500, 1, 30, updateChart);
+    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 2, 30, updateChart);
     $("#btnNext").show();
+    document.getElementById("btnNormalSim").disabled = true;
 }
 
 // PANEL X

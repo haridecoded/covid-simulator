@@ -48,6 +48,7 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
+            setupNormalSimulation();
             break;
         case 4:
             currentStep++;
@@ -285,19 +286,29 @@ function showThreshold() {
     $(".your-line-circle").fadeOut(500);
 }
 
+// PANEL 4
+function setupNormalSimulation() {
+    $("#btnNext").hide();
+
+}
+
+function simulateSpreadNormal() {
+    $("#btnNext").show();
+}
+
 // PANEL X
 function initializeFreeformGraph() {
-    $("#panel4Chart1").empty();
+    $("#panel5Chart1").empty();
     $("#btnNext").hide();
-    var width = Math.min($("#panel4Chart1").width(), 700);
-    var height = Math.min($("#panel4Chart1").width() * 0.6, 400);
+    var width = Math.min($("#panel5Chart1").width(), 700);
+    var height = Math.min($("#panel5Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 70, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel4Chart1');
+    var sel = d3.select('#panel5Chart1');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,

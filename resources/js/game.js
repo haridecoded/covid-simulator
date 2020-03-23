@@ -15,17 +15,17 @@ class GameWorld {
         this.gameObjects = [];
         this.resetCounter = 0;
 
-        this.healthyCountEl = document.querySelector('.stats__healthy-count');
-        this.contagiousCountEl = document.querySelector('.stats__contagious-count');
-        this.recoveredCountEl = document.querySelector('.stats__recovered-count');
-        this.deathCountEl = document.querySelector('.stats__death-count');
-        this.percentContractedEl = document.querySelector('.stats__percent-contracted');
+        //this.healthyCountEl = document.querySelector('.stats__healthy-count');
+        //this.contagiousCountEl = document.querySelector('.stats__contagious-count');
+        //this.recoveredCountEl = document.querySelector('.stats__recovered-count');
+        //this.deathCountEl = document.querySelector('.stats__death-count');
+        //this.percentContractedEl = document.querySelector('.stats__percent-contracted');
 
-        this.statusBarHealthy = document.querySelector('.stats__bar-healthy');
-        this.statusBarContagious = document.querySelector('.stats__bar-contagios');
-        this.statusBarRecovered = document.querySelector('.stats__bar-recovered');
-        this.statusBarDeaths = document.querySelector('.stats__bar-deaths');
-        this.statusBarGotSick = document.querySelector('.stats__bar-got-sick');
+        //this.statusBarHealthy = document.querySelector('.stats__bar-healthy');
+        //this.statusBarContagious = document.querySelector('.stats__bar-contagios');
+        //this.statusBarRecovered = document.querySelector('.stats__bar-recovered');
+        //this.statusBarDeaths = document.querySelector('.stats__bar-deaths');
+        //this.statusBarGotSick = document.querySelector('.stats__bar-got-sick');
 
         this.updateStatsInterval;
         this.mostRecentDeathIndex = 0;
@@ -238,20 +238,20 @@ class GameWorld {
             let percentContractedCount = self.gameObjects.filter(person => person.infectedState == 'sick' || person.infectedState == 'recovered').length / 10;
 
             //if (contagiousCount == 0) alert('The virus was run its course. Now see what happens if more people would have stayed home...')
-            self.updateDeaths(deathCount)
+            //self.updateDeaths(deathCount)
 
-            self.healthyCountEl.textContent = healthyCount
-            self.contagiousCountEl.textContent = contagiousCount;
-            self.recoveredCountEl.textContent = recoveredCount
-            self.deathCountEl.textContent = deathCount;
-            self.percentContractedEl.textContent = (percentContractedCount).toFixed(1) + '%'
+            //self.healthyCountEl.textContent = healthyCount
+            //self.contagiousCountEl.textContent = contagiousCount;
+            //self.recoveredCountEl.textContent = recoveredCount
+            //self.deathCountEl.textContent = deathCount;
+            //self.percentContractedEl.textContent = (percentContractedCount).toFixed(1) + '%'
 
 
-            self.statusBarHealthy.style.width = ((healthyCount / 1000) * 260) + 'px'
-            self.statusBarContagious.style.width = ((contagiousCount / 1000) * 260) + 'px'
-            self.statusBarRecovered.style.width = ((recoveredCount / 1000) * 260) + 'px'
-            self.statusBarDeaths.style.width = ((deathCount / 1000) * 260) + 'px'
-            self.statusBarGotSick.style.width = ((percentContractedCount / 100) * 260) + 'px'
+            //self.statusBarHealthy.style.width = ((healthyCount / 1000) * 260) + 'px'
+            //self.statusBarContagious.style.width = ((contagiousCount / 1000) * 260) + 'px'
+            //self.statusBarRecovered.style.width = ((recoveredCount / 1000) * 260) + 'px'
+            //self.statusBarDeaths.style.width = ((deathCount / 1000) * 260) + 'px'
+            //self.statusBarGotSick.style.width = ((percentContractedCount / 100) * 260) + 'px'
 
 
 

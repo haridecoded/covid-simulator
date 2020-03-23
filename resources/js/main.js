@@ -27,6 +27,11 @@ function onBtnNextClick() {
             $("#panel1Chart1").contents().appendTo($("#panel2Chart1"));
             showThreshold();
             break;
+        case 2:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            break;
     }
 }
 
@@ -140,6 +145,8 @@ function initializeDrawView() {
             .ticks(10);
     }
 
+
+    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
     // hospital threshold line
     c.svg.append("line")             
         .attr("id", "threshold")
@@ -147,18 +154,39 @@ function initializeDrawView() {
         .attr("stroke-width", 2)
         .attr("stroke", "#ff6a00")
         .attr("x1", c.x(trendData[0].day))
-        .attr("y1", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.15))
-        .attr("x2", c.x(trendData[trendData.length-1].day))
-        .attr("y2", c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.15));
+        .attr("y1", c.y(threshold))
+        .attr("x2", c.x(trendData[trendData.length - 1].day))
+        .attr("y2", c.y(threshold));
 
     // hospital threshold text
     c.svg.append("text")
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .2 + "," + c.y(d3.max(trendData, function (d) { return d.cases; }) * 0.17) + ")")
+        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold)-10) + ")")
         .style("text-anchor", "middle")
         .text("Number of hospital beds available");
+
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("display", "none")
+        .attr("id", "thresholdLabel1")
+        .attr("transform", "translate(" + width * .6 + "," + 100 + ")")
+        .style("text-anchor", "middle")
+        .text("Number of patients without treatment");
+
+    // hospital threshold area
+    c.svg.append("defs").append("pattern")
+        .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
+        .append("rect")
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ffaa8f" });
+
+    var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
+    correctSel.append('path.diffarea')
+        .at({ d: diffarea(_.filter(trendData, function (t) { return t.cases >= threshold; })) })
+        .attr("display", "none")
+        .attr("fill","url(#hash4_4)");
+   
 
     var completed = false;
 
@@ -216,6 +244,8 @@ function initializeDrawView() {
 function showThreshold() {   
     $("#threshold").fadeIn(2000);
     $("#thresholdLabel").fadeIn(2000);
+    $("#thresholdLabel1").fadeIn(2000);
+    $(".diffarea").fadeIn(2000);
     $(".your-line").fadeOut(500);
     $(".your-line-circle").fadeOut(500);
 }

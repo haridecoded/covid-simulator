@@ -3,6 +3,8 @@ var simulationData;
 var trendData = []; 
 
 $(window).on('load', function () {
+    $(".panel").hide();
+    $("#panel" + currentStep).show();
     simulationData = simulate({
         "nDays": 35,
         "populationSize": 500,
@@ -14,8 +16,7 @@ $(window).on('load', function () {
         .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
         
     initializeDrawView();
-    $(".panel").hide();
-    $("#panel" + currentStep).show();
+
 });
 
 function onBtnNextClick() {

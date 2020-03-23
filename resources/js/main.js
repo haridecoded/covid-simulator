@@ -333,7 +333,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, 31]);
-    c.y.domain([0, 400]);
+    c.y.domain([0, 500]);
     //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
    
 
@@ -397,7 +397,7 @@ function drawNormalSimulationChart() {
     }
 
 
-    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
+    var threshold = 50;
     // hospital threshold line
     c.svg.append("line")
         .attr("id", "threshold")

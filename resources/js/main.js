@@ -292,8 +292,8 @@ function getCovidCount() {
 
 // PANEL 2
 function showThreshold() {   
-    $("#threshold").fadeIn(3000);
-    $("#thresholdLabel").fadeIn(3000);  
+    $("#threshold").fadeIn(4000);
+    $("#thresholdLabel").fadeIn(4000);  
     $(".your-line").fadeOut(500);
     $(".your-line-circle").fadeOut(500);
 }
@@ -318,7 +318,7 @@ function drawNormalSimulationChart() {
     var height = Math.min($("#panel4Chart2").width() * 0.6, 500);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
-    var margin = { left: 70, right: 50, top: 30, bottom: 70 };
+    var margin = { left: 70, right: 0, top: 30, bottom: 70 };
 
     var f = d3.f;
 
@@ -426,7 +426,7 @@ function simulateSpreadNormal() {
     function updateChart(day, count) {
         if (day > 0 && day < 31) {
             //_.find(normalSimulationData, function (d) { if (d.day === day) { d.cases = count; } });
-            normalSimulationData.push({ "day": day, "cases": count });
+            normalSimulationData.push({ "day": day, "cases": count>300? 300:count });
         }
         drawNormalSimulationChart();
     }

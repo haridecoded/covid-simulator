@@ -461,7 +461,8 @@ function initializeFreeformGraph() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, d3.max(freeformData, function (d) { return d.day; })]);
-    c.y.domain([0, d3.max(freeformData, function (d) { return d.cases; })]);
+    c.y.domain([0, 300]);
+    //c.y.domain([0, d3.max(freeformData, function (d) { return d.cases; })]);
 
 
     c.xAxis.ticks().tickFormat(f());

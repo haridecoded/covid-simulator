@@ -430,7 +430,7 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 1, 30, updateChart);
+    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 2, 30, updateChart);
     $("#btnNext").show();
     document.getElementById("btnNormalSim").disabled = true;
 }

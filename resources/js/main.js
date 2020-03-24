@@ -19,8 +19,8 @@ var defaultSimulationOptions = {
     nDays: 35, // How many days to simulate
     populationSize: 200, // How many people to simulate
     averageHouseSize: 4, // Average number of people per house
-    avgAge: 38.2, // Average age of population
-    isolation: 0.5,
+    avgAge: 35, // Average age of population
+    isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
     propInfected: 0.005, // What proportion of people are infected at the beginning
     propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
     interactionsPerDay: 5, // How many people each person interacts with per day
@@ -30,7 +30,6 @@ var defaultSimulationOptions = {
     }
 };
 var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
-
 
 ////////// Sliders //////////
 var sliders = {
@@ -48,11 +47,26 @@ function initializeSliders(sliders){
     }
 }
 
-function onSliderInput(slider){
-    var v = sliders[slider.id].values[parseInt(slider.value)];
-    currentSimulationOptions[sliders[slider.id].optionName] = v;
-    $("#" + slider.id + "Text").text(v);
-    applyFill(slider);
+function getPossibleSimulationOptions(sliders){
+    return Object.values(sliders).reduce(function(possibleOptions, slider){
+        var options = [];
+        if (!possibleOptions){
+            options = slider.values.map(function(v){
+                var o = {};
+                o[slider.optionName] = v;
+                return o
+            })
+        }else{
+            possibleOptions.forEach(function(o){
+                slider.values.forEach(function(v){
+                    var patch = {};
+                    patch[slider.optionName] = v;
+                    options.push(Object.assign(patch, o));
+                })
+            });
+        }
+        return options
+    }, null)
 }
 ////////// End Sliders //////////
 
@@ -579,7 +593,11 @@ function initializeFreeformGraph() {
 }
 
 function redraw() {
-    simulationData = simulate(currentSimulationOptions);
+    var key = JSON.stringify(currentSimulationOptions);
+    if (!simulationCache.hasOwnProperty(key)){
+        simulationCache[key] = simulate(currentSimulationOptions);
+    }
+    simulationData = simulationCache[key];
     freeformData = simulationData
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     initializeFreeformGraph();
@@ -594,6 +612,14 @@ function applyFill(slider) {
     const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
     const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
     slider.style.background = bg;
+}
+
+function onSliderInput(slider){
+    var v = sliders[slider.id].values[parseInt(slider.value)];
+    currentSimulationOptions[sliders[slider.id].optionName] = v;
+    $("#" + slider.id + "Text").text(v);
+    applyFill(slider);
+    redraw();
 }
 
 // HELPER FUNCTIONS

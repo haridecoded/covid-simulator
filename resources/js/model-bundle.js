@@ -2325,7 +2325,7 @@ var main = ( typeof Buffer === 'function' ) ? Buffer : null; // eslint-disable-l
 module.exports = main;
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":472}],54:[function(require,module,exports){
+},{"buffer":473}],54:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9413,7 +9413,7 @@ var ctor = require( 'buffer' ).Buffer; // eslint-disable-line stdlib/require-glo
 
 module.exports = ctor;
 
-},{"buffer":472}],180:[function(require,module,exports){
+},{"buffer":473}],180:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -33167,6 +33167,7 @@ let arraySample = require('@stdlib/random/sample');
 var normalDist = require('@stdlib/stats/base/dists/normal');
 // let faker = require('faker');
 let cloneDeep = require('lodash.clonedeep');
+let staticData = require('./generate-static-data')
 
 // Set up random generators
 let randomSeed = 7;
@@ -33265,6 +33266,11 @@ function simulateInteraction(personA, personB){
     let carrier = null;
     let other = null;
 
+    // If either one is null or undefined
+    if((!personA) || (!personB)){
+        return
+    }
+
     if (personA.infected){
         carrier = personA;
         other = personB;
@@ -33359,12 +33365,15 @@ function generatePopulation(options) {
     if(people.length > options.populationSize){
         people = people.slice(0, options.populationSize);
     }
-
-
+    // Make sure at least one person is infected
+    if(!people.some(function(p){return p.infected})){
+        // Infect one person at random (excluding the first person, to avoid infecting the user).
+        sample(people.slice(1), {"size": 1})[0].infected = true;
+    }
     return people
 }
 
-function simulate(options){
+function simulate(options, individualData){
     let result = [];
 
     let alive = generatePopulation(options);
@@ -33420,26 +33429,47 @@ function simulate(options){
         stillAlive = [];
 
         // Record the state at the end of this day
-        result.push({
+        let currentResult = {
             day: day + 1,
             summary: {
                 nInfected: nInfected,
                 nSymptomatic: nSymptomatic,
                 nHospitalized: nHospitalized,
                 nCritical: nCritical,
-                nRecovered: nRecovered
-            },
-            individuals: {
+                nRecovered: nRecovered,
+                nAlive: alive.length,
+                nDeceased: deceased.length
+            }
+        };
+        if (individualData){
+            currentResult.individuals = {
                 alive: cloneDeep(alive),
                 deceased: cloneDeep(deceased)
-            }
-        })
+            };
+        }
+        result.push(currentResult)
     }
     return result;
 }
 
 window.onload = function(){
     window.simulate = simulate;
+    // console.log(simulate(
+    //     {
+    //         nDays: 30, // How many days to simulate
+    //         populationSize: 500, // How many people to simulate
+    //         averageHouseSize: 4, // Average number of people per house
+    //         avgAge: 38.2, // Average age of population
+    //         isolation: 0.5,
+    //         propInfected: 0.01, // What proportion of people are infected at the beginning
+    //         propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
+    //         interactionsPerDay: 5, // How many people each person interacts with per day
+    //         user: {
+    //             age: 30, // User Age
+    //             houseSize: 7 // User House Size
+    //         }
+    //     }
+    // ));
     // document.getElementById("sim-params").value = JSON.stringify(
     //     {
     //         nDays: 30, // How many days to simulate
@@ -33488,7 +33518,74 @@ window.onload = function(){
     //     document.getElementById('ind-csv').value = convertToCSV(indiviudals);
     // })
 };
-},{"@stdlib/random/base/bernoulli":305,"@stdlib/random/base/lognormal":315,"@stdlib/random/base/randu":334,"@stdlib/random/sample":341,"@stdlib/stats/base/dists/normal":369,"lodash.clonedeep":469}],471:[function(require,module,exports){
+},{"./generate-static-data":471,"@stdlib/random/base/bernoulli":305,"@stdlib/random/base/lognormal":315,"@stdlib/random/base/randu":334,"@stdlib/random/sample":341,"@stdlib/stats/base/dists/normal":369,"lodash.clonedeep":469}],471:[function(require,module,exports){
+let defaultSimulationOptions = {
+    nDays: 35, // How many days to simulate
+    populationSize: 200, // How many people to simulate
+    averageHouseSize: 4, // Average number of people per house
+    avgAge: 35, // Average age of population
+    isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
+    propInfected: 0.005, // What proportion of people are infected at the beginning
+    propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
+    interactionsPerDay: 5, // How many people each person interacts with per day
+    user: {
+        age: 30, // User Age
+        houseSize: 7 // User House Size
+    }
+};
+
+let sliders = {
+    "ageSlider": {"values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge"},
+    "infectedSlider" :{"values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected"},
+    "isolationSlider" :{"values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation"},
+};
+
+function initializeSliders(sliders){
+    for(const sId in sliders){
+        let s = sliders[sId];
+        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+        $("#" + sId + "Text").text(s.values[s.default]);
+        applyFill(document.getElementById(sId));
+    }
+}
+
+function getPossibleSimulationOptions(sliders){
+    return Object.values(sliders).reduce(function(possibleOptions, slider){
+        let options = [];
+        if (!possibleOptions){
+            options = slider.values.map(function(v){
+                let o = {};
+                o[slider.optionName] = v;
+                return o
+            })
+        }else{
+            possibleOptions.forEach(function(o){
+                slider.values.forEach(function(v){
+                    let patch = {};
+                    patch[slider.optionName] = v;
+                    options.push(Object.assign(patch, o));
+                })
+            });
+        }
+        return options
+    }, null)
+}
+
+function generateStaticData(fName, individualData){
+    let results = {}
+    getPossibleSimulationOptions(sliders).forEach(function(o){
+        results[JSON.stringify(o)] = simulate(Object.assign(o, defaultSimulationOptions), individualData);
+    })
+    // Code adapted from: https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results));
+    let dlAnchorElem = document.getElementById('download-anchor');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", fName);
+    dlAnchorElem.click();
+}
+
+module.exports = {generateStaticData: generateStaticData};
+},{}],472:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -33642,7 +33739,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],472:[function(require,module,exports){
+},{}],473:[function(require,module,exports){
 (function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
@@ -35451,7 +35548,7 @@ var hexSliceLookupTable = (function () {
 })()
 
 }).call(this,require("buffer").Buffer)
-},{"base64-js":471,"buffer":472,"ieee754":473}],473:[function(require,module,exports){
+},{"base64-js":472,"buffer":473,"ieee754":474}],474:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1

@@ -430,7 +430,7 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 2, 30, updateChart);
+    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 1, 30, updateChart);
     $("#btnNext").show();
     document.getElementById("btnNormalSim").disabled = true;
 }
@@ -644,7 +644,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = 0.3;
+        let speedMultiplier = 0.55;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;

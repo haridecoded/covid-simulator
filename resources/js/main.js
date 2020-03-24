@@ -14,6 +14,7 @@ var isolation = 0.1;
 var covid_all;
 var normalSimulationData = [];
 var simulationWorld;
+var pid;
 
 var defaultSimulationOptions = {
     nDays: 35, // How many days to simulate
@@ -29,47 +30,23 @@ var defaultSimulationOptions = {
         houseSize: 7 // User House Size
     }
 };
+
 var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
 
-////////// Sliders //////////
-var sliders = {
-    "ageSlider": {"values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge"},
-    "infectedSlider" :{"values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected"},
-    "isolationSlider" :{"values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation"},
-};
 
-function initializeSliders(sliders){
-    for(const sId in sliders){
-        var s = sliders[sId];
-        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-        $("#" + sId + "Text").text(s.values[s.default]);
-        applyFill(document.getElementById(sId));
-    }
-}
-
-function getPossibleSimulationOptions(sliders){
-    return Object.values(sliders).reduce(function(possibleOptions, slider){
-        var options = [];
-        if (!possibleOptions){
-            options = slider.values.map(function(v){
-                var o = {};
-                o[slider.optionName] = v;
-                return o
-            })
-        }else{
-            possibleOptions.forEach(function(o){
-                slider.values.forEach(function(v){
-                    var patch = {};
-                    patch[slider.optionName] = v;
-                    options.push(Object.assign(patch, o));
-                })
-            });
-        }
-        return options
-    }, null)
-}
-////////// End Sliders //////////
-
+$(window).on('load', function () {
+    $(".panel").hide();
+    $("#panel" + currentStep).show();
+    initializeSliders(sliders);
+    simulationData = simulate(defaultSimulationOptions);
+    trendData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
+    freeformData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
+    pid = new IDGenerator().generate();
+    initializeDrawView();
+    getCovidCount();
+});
 
 function onBtnNextClick() {
     switch (currentStep) {
@@ -86,7 +63,7 @@ function onBtnNextClick() {
             $("#panel" + currentStep).show();
             $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
             $(".diffarea").fadeIn(2000);
-            $("#thresholdLabel1").fadeIn(2000);  
+            $("#thresholdLabel1").fadeIn(2000);
             break;
         case 3:
             currentStep++;
@@ -107,24 +84,6 @@ function onBtnNextClick() {
             break;
     }
 }
-
-
-$(window).on('load', function () {
-    $(".panel").hide();
-    $("#panel" + currentStep).show();
-    initializeSliders(sliders);
-    simulationData = simulate(defaultSimulationOptions);
-    trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
-    freeformData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.summary.nInfected };  });
-        
-    initializeDrawView();
-    getCovidCount();
-});
-
-
-
 
 // PANEL 1
 function initializeDrawView() {
@@ -352,15 +311,10 @@ function showThreshold() {
 // PANEL 4
 function setupNormalSimulation() {
     $("#btnNext").hide();   
-    // initialize line graph
-    //_.range(1, 31).forEach((v, i) => {
-    //    normalSimulationData.push({ "day": v, cases: 0 });
-    //});
     drawNormalSimulationChart();
 
     // initialize simulation canvas
     simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 0, null, null);
-
 }
 
 function drawNormalSimulationChart() {
@@ -384,8 +338,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, 31]);
-    c.y.domain([0, 300]);
-    //c.y.domain([0, d3.max(normalSimulationData, function (d) { return d.cases; })]);
+    c.y.domain([0, 300]);   
    
 
     c.xAxis.ticks().tickFormat(f());
@@ -475,8 +428,7 @@ function simulateSpreadNormal() {
     }
     normalSimulationData = [];
     function updateChart(day, count) {
-        if (day > 0 && day < 31) {
-            //_.find(normalSimulationData, function (d) { if (d.day === day) { d.cases = count; } });
+        if (day > 0 && day < 31) {           
             normalSimulationData.push({ "day": day, "cases": count>300? 300:count });
         }
         drawNormalSimulationChart();
@@ -622,7 +574,65 @@ function onSliderInput(slider){
     redraw();
 }
 
+////////// Sliders //////////
+var sliders = {
+    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge" },
+    "infectedSlider": { "values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected" },
+    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation" }
+};
+
+function initializeSliders(sliders) {
+    for (const sId in sliders) {
+        var s = sliders[sId];
+        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+        $("#" + sId + "Text").text(s.values[s.default]);
+        applyFill(document.getElementById(sId));
+    }
+}
+
+function getPossibleSimulationOptions(sliders) {
+    return Object.values(sliders).reduce(function (possibleOptions, slider) {
+        var options = [];
+        if (!possibleOptions) {
+            options = slider.values.map(function (v) {
+                var o = {};
+                o[slider.optionName] = v;
+                return o;
+            });
+        } else {
+            possibleOptions.forEach(function (o) {
+                slider.values.forEach(function (v) {
+                    var patch = {};
+                    patch[slider.optionName] = v;
+                    options.push(Object.assign(patch, o));
+                });
+            });
+        }
+        return options;
+    }, null);
+}
+////////// End Sliders //////////
+
+
+function logToDB(data) {
+    data.pid = pid;
+    data.time = new Date().toLocaleString();
+
+    $.ajax({
+        url: '/log',
+        type: 'post',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (data) {
+            console.log(data);
+        }
+    });
+}
+
+
 // HELPER FUNCTIONS
+
 class SimulationWorld {
 
     constructor(canvasId, percentHome, populationSize, infectedCount, days, callback) {
@@ -852,4 +862,27 @@ class SimulationWorld {
     }
 
 
+}
+
+function IDGenerator() {
+
+    this.length = 8;
+    this.timestamp = +new Date;
+
+    var _getRandomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    this.generate = function () {
+        var ts = this.timestamp.toString();
+        var parts = ts.split("").reverse();
+        var id = "";
+
+        for (var i = 0; i < this.length; ++i) {
+            var index = _getRandomInt(0, parts.length - 1);
+            id += parts[index];
+        }
+
+        return id;
+    };
 }

@@ -107,7 +107,6 @@ $(window).on('load', function () {
         
     initializeDrawView();
     getCovidCount();
-    onBtnNextClick();
 });
 
 

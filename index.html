@@ -173,7 +173,7 @@
                         </div>
                         <div class="row">
                             <div class="range-slider">
-                                <input id="ageSlider" class="range-slider__range" type="range" value="30" min="25" max="65" oninput="onAgeInput(this.value)" onchange="onChanged()">
+                                <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
                                 <span id="ageSliderText" class="range-slider__value">30</span>
                             </div>
                         </div>
@@ -184,8 +184,8 @@
                         </div>
                         <div class="row">
                             <div class="range-slider">
-                                <input id="infectedSlider" class="range-slider__range" type="range" value="0.1" min="0" max="1" step="0.1" oninput="onInfectedInput(this.value)" onchange="onChanged()">
-                                <span id="infectedSliderText" class="range-slider__value">0.1</span>
+                                <input id="infectedSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="infectedSliderText" class="range-slider__value">0.01</span>
                             </div>
                         </div>
                     </div>
@@ -195,7 +195,7 @@
                         </div>
                         <div class="row">
                             <div class="range-slider">
-                                <input id="isolationSlider" class="range-slider__range" type="range" value="0.1" min="0" max="1" step="0.1" oninput="onIsolationInput(this.value)" onchange="onChanged()">
+                                <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
                                 <span id="isolationSliderText" class="range-slider__value">0.1</span>
                             </div>
                         </div>

@@ -15,24 +15,47 @@ var covid_all;
 var normalSimulationData = [];
 var simulationWorld;
 
-$(window).on('load', function () {
-    $(".panel").hide();
-    $("#panel" + currentStep).show();
-    simulationData = simulate({
-        "nDays": 35,
-        "populationSize": 500,
-        "propInfected": 0.001,
-        "propImmuComp": 0.028,
-        "interactionsPerDay": 1
-    });
-    trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
-    freeformData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
-        
-    initializeDrawView();
-    getCovidCount();
-});
+var defaultSimulationOptions = {
+    nDays: 35, // How many days to simulate
+    populationSize: 200, // How many people to simulate
+    averageHouseSize: 4, // Average number of people per house
+    avgAge: 38.2, // Average age of population
+    isolation: 0.5,
+    propInfected: 0.005, // What proportion of people are infected at the beginning
+    propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
+    interactionsPerDay: 5, // How many people each person interacts with per day
+    user: {
+        age: 30, // User Age
+        houseSize: 7 // User House Size
+    }
+};
+var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
+
+
+////////// Sliders //////////
+var sliders = {
+    "ageSlider": {"values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge"},
+    "infectedSlider" :{"values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected"},
+    "isolationSlider" :{"values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation"},
+};
+
+function initializeSliders(sliders){
+    for(const sId in sliders){
+        var s = sliders[sId];
+        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+        $("#" + sId + "Text").text(s.values[s.default]);
+        applyFill(document.getElementById(sId));
+    }
+}
+
+function onSliderInput(slider){
+    var v = sliders[slider.id].values[parseInt(slider.value)];
+    currentSimulationOptions[sliders[slider.id].optionName] = v;
+    $("#" + slider.id + "Text").text(v);
+    applyFill(slider);
+}
+////////// End Sliders //////////
+
 
 function onBtnNextClick() {
     switch (currentStep) {
@@ -67,12 +90,27 @@ function onBtnNextClick() {
             $(".panel").hide();
             $("#panel" + currentStep).show();
             initializeFreeformGraph();
-            applyFill(document.querySelector("#ageSlider"));
-            applyFill(document.querySelector("#infectedSlider"));
-            applyFill(document.querySelector("#isolationSlider"));
             break;
     }
 }
+
+
+$(window).on('load', function () {
+    $(".panel").hide();
+    $("#panel" + currentStep).show();
+    initializeSliders(sliders);
+    simulationData = simulate(defaultSimulationOptions);
+    trendData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
+    freeformData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected };  });
+        
+    initializeDrawView();
+    getCovidCount();
+    onBtnNextClick();
+});
+
+
 
 
 // PANEL 1
@@ -541,43 +579,10 @@ function initializeFreeformGraph() {
         .text("Number of hospital beds available");
 }
 
-function onAgeInput(v) {
-    age = parseInt(v);
-    $('#ageSliderText').text(v);   
-    applyFill(document.querySelector("#ageSlider"));
-    
-}
-
-function onInfectedInput(v) {
-    infection = parseFloat(v);
-    $('#infectedSliderText').text(v);
-    applyFill(document.querySelector("#infectedSlider"));
-    redraw();
-}
-
-function onIsolationInput(v) {
-    isolation = parseFloat(v);
-    $('#isolationSliderText').text(v);
-    applyFill(document.querySelector("#isolationSlider"));
-    redraw();
-}
-
-function onChanged() {
-    redraw();
-}
-
 function redraw() {
-
-    simulationData = simulate({
-        "nDays": 35,
-        "populationSize": 500,
-        "propInfected": 0.001,
-        "propImmuComp": 0.028,
-        "interactionsPerDay": 1
-    });
+    simulationData = simulate(currentSimulationOptions);
     freeformData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.nSymptomatic }; });
-
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     initializeFreeformGraph();
 }
 

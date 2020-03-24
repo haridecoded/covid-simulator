@@ -21,6 +21,10 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/neighborhood', function (req, res) {
+    res.sendFile(__dirname + '/neighborhood.html');
+});
+
 app.post('/count', function (req, res) {
     (async () => {
         let data = await covid.getAll();

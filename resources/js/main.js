@@ -676,8 +676,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: infectedCount === 1 ? 100: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: infectedCount === 1 ? 100 : Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
                 radius: Math.min(this.canvas.width / 225, 3.4),
                 infectedTime: Date.now(),
                 speedMultiplier

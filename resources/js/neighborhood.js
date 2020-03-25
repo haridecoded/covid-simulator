@@ -152,9 +152,10 @@ class Neighborhood {
         });
 
         // creates houses
-        var hWidth = 40;
-        var hHeight = 40;
-        var hMargin = 10;                       
+        var hWidth = (width - 11 * 12) / 11;
+        var hHeight = (height - 7 * 12) / 7;
+        var hMargin = 10;           
+        
         this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin, width: hWidth, height: hHeight });
         this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight });        
         this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight  });       
@@ -195,7 +196,8 @@ class Neighborhood {
                 .attr("id", h.id);
         });
 
-       
+       // create store
+
 
 
     }       

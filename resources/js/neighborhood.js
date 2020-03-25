@@ -154,230 +154,48 @@ class Neighborhood {
         // creates houses
         var hWidth = 40;
         var hHeight = 40;
-        var hMargin = 10;
-        var id = this.idGen.generate();
-
-        c.svg.append('rect')
-            .at({ x: hMargin, y: hMargin, width: hWidth, height: hHeight })
-             .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin, y: hMargin, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 2 + hWidth, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 2 + hWidth, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 2 + hWidth, y: hMargin, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 2 + hWidth, y: hMargin, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin, y: hMargin * 3 + hHeight*3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 2 + hWidth, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 2 + hWidth, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
+        var hMargin = 10;                       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin, width: hWidth, height: hHeight });
+        this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight });        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin * 2 + hHeight, width: hWidth, height: hHeight  });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin, width: hWidth, height: hHeight });
+        this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight});
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight});      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 2 + hWidth, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 3 + hWidth * 3, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 4 + hWidth * 4, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight});     
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 5 + hWidth * 5, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight  });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 6 + hWidth * 6, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });     
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 7 + hWidth * 7, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 8 + hWidth * 8, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight  });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 9 + hWidth * 10, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight});        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 3 + hWidth * 3, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 4 + hWidth * 4, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight  });      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 5 + hWidth * 5, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight});        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 6 + hWidth * 6, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 7 + hWidth * 7, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 8 + hWidth * 8, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 9 + hWidth * 10, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 3 + hWidth * 3, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight});      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 4 + hWidth * 4, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight  });        
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 5 + hWidth * 5, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight});     
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 6 + hWidth * 6, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });      
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 7 + hWidth * 7, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight  });       
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 8 + hWidth * 8, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
+        this.houses.push({ id: this.idGen.generate(), x: hMargin * 9 + hWidth * 10, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
 
 
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
+        this.houses.forEach(function (h) {
+            c.svg.append('rect')
+                .at({ x: h.x, y: h.y, width: h.width, height: h.height })
+                .attr("class", "house")
+                .attr("id", h.id);
+        });
 
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 2 + hWidth, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 2 + hWidth, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 2 + hWidth, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 2 + hWidth, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 3 + hWidth*3, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 3 + hWidth * 3, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 4 + hWidth * 4, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 4 + hWidth * 4, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 5 + hWidth * 5, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 5 + hWidth * 5, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 6 + hWidth * 6, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 6 + hWidth * 6, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 7 + hWidth * 7, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 7 + hWidth * 7, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 8 + hWidth * 8, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 8 + hWidth * 8, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 9 + hWidth * 10, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 9 + hWidth * 10, y: hMargin * 3 + hHeight * 3, width: hWidth, height: hHeight });
-
-
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 3 + hWidth * 3, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 3 + hWidth * 3, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 4 + hWidth * 4, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 4 + hWidth * 4, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 5 + hWidth * 5, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 5 + hWidth * 5, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 6 + hWidth * 6, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 6 + hWidth * 6, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 7 + hWidth * 7, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 7 + hWidth * 7, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 8 + hWidth * 8, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 8 + hWidth * 8, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 9 + hWidth * 10, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 9 + hWidth * 10, y: hMargin * 4 + hHeight * 4, width: hWidth, height: hHeight });
-
-
-
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 3 + hWidth * 3, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 3 + hWidth * 3, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 4 + hWidth * 4, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 4 + hWidth * 4, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 5 + hWidth * 5, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 5 + hWidth * 5, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 6 + hWidth * 6, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 6 + hWidth * 6, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 7 + hWidth * 7, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 7 + hWidth * 7, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 8 + hWidth * 8, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 8 + hWidth * 8, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
-
-        id = this.idGen.generate();
-        c.svg.append('rect')
-            .at({ x: hMargin * 9 + hWidth * 10, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight })
-            .attr("class", "house")
-            .attr("id", id);
-        this.houses.push({ id: id, x: hMargin * 9 + hWidth * 10, y: hMargin * 5 + hHeight * 6, width: hWidth, height: hHeight });
+       
 
 
     }       

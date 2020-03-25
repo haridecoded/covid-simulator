@@ -75,6 +75,7 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
+            simulationWorld.resetWorld();
             break;
         case 5:
             currentStep++;
@@ -753,28 +754,15 @@ class SimulationWorld {
             this.dayCount++;
         }
 
-        this.rafCounter++;
-
-        
-
-        // Loop over all game objects to draw
-        //if (this.days) {
-        //    if (this.dayCount < this.days) {
-        //        this.clearCanvas();
-        //        this.gameObjects.forEach(go => go.draw());
-        //    }
-        //}
-        // else {
-        //    this.clearCanvas();
-        //    this.gameObjects.forEach(go => go.draw());
-        //}
+        this.rafCounter++;        
 
         this.clearCanvas();
         this.gameObjects.forEach(go => go.draw());
       
         // Keep requesting new frames
-        window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
-
+        if (this.dayCount < 32) {
+            window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+        }         
     }
 
     detectCollisions() {

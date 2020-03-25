@@ -190,6 +190,7 @@ class Neighborhood {
 
 
         this.houses.forEach(function (h) {
+            h.type = "house";
             c.svg.append('rect')
                 .at({ x: h.x, y: h.y, width: h.width, height: h.height })
                 .attr("class", "house")

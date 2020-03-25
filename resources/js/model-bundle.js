@@ -1,4 +1,4 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.covidModel = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2325,7 +2325,7 @@ var main = ( typeof Buffer === 'function' ) ? Buffer : null; // eslint-disable-l
 module.exports = main;
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":473}],54:[function(require,module,exports){
+},{"buffer":472}],54:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9413,7 +9413,7 @@ var ctor = require( 'buffer' ).Buffer; // eslint-disable-line stdlib/require-glo
 
 module.exports = ctor;
 
-},{"buffer":473}],180:[function(require,module,exports){
+},{"buffer":472}],180:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -33167,7 +33167,6 @@ let arraySample = require('@stdlib/random/sample');
 var normalDist = require('@stdlib/stats/base/dists/normal');
 // let faker = require('faker');
 let cloneDeep = require('lodash.clonedeep');
-let staticData = require('./generate-static-data')
 
 // Set up random generators
 let randomSeed = 7;
@@ -33460,81 +33459,14 @@ function simulate(options, individualData){
     return result;
 }
 
-window.onload = function(){
-    window.simulate = simulate;
-};
-},{"./generate-static-data":471,"@stdlib/random/base/bernoulli":305,"@stdlib/random/base/lognormal":315,"@stdlib/random/base/randu":334,"@stdlib/random/sample":341,"@stdlib/stats/base/dists/normal":369,"lodash.clonedeep":469}],471:[function(require,module,exports){
-let defaultSimulationOptions = {
-    nDays: 35, // How many days to simulate
-    populationSize: 1000, // How many people to simulate
-    averageHouseSize: 4, // Average number of people per house
-    avgAge: 35, // Average age of population
-    isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
-    propInfected: 0.001, // What proportion of people are infected at the beginning
-    propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
-    interactionsPerDay: 5, // How many people each person interacts with per day
-    user: {
-        age: 30, // User Age
-        houseSize: 7 // User House Size
-    }
+module.exports = {
+    simulate: simulate,
+    generatePopulation: generatePopulation,
+    simulateInteraction: simulateInteraction,
+    updateStatus: updateStatus
 };
 
-var sliders = {
-    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider"},
-    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
-    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
-};
-
-function initializeSliders(sliders){
-    for(const sId in sliders){
-        let s = sliders[sId];
-		if(s.type == "slider"){
-			$("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-			applyFill(document.getElementById(sId));
-		}
-		$("#" + sId + "Text").text(s.hasOwnProperty("labels") ? s.labels[s.default]: s.values[s.default]);
-    }
-}
-
-function getPossibleSimulationOptions(sliders){
-    return Object.values(sliders).reduce(function(possibleOptions, slider){
-        let options = [];
-        if (!possibleOptions){
-            options = slider.values.map(function(v){
-                let o = {};
-                o[slider.optionName] = v;
-                return o
-            })
-        }else{
-            possibleOptions.forEach(function(o){
-                slider.values.forEach(function(v){
-                    let patch = {};
-                    patch[slider.optionName] = v;
-                    options.push(Object.assign(patch, o));
-                })
-            });
-        }
-        return options
-    }, null)
-}
-
-function generateStaticData(fName, individualData){
-    let results = {}
-    getPossibleSimulationOptions(sliders).forEach(function(o){
-        results[JSON.stringify(o)] = simulate(Object.assign(o, defaultSimulationOptions), individualData);
-    })
-    // Code adapted from: https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
-    let dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(
-        "var simulationCache = " + JSON.stringify(results) + ';'
-        );
-    let dlAnchorElem = document.getElementById('download-anchor');
-    dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", fName);
-    dlAnchorElem.click();
-}
-
-module.exports = {generateStaticData: generateStaticData};
-},{}],472:[function(require,module,exports){
+},{"@stdlib/random/base/bernoulli":305,"@stdlib/random/base/lognormal":315,"@stdlib/random/base/randu":334,"@stdlib/random/sample":341,"@stdlib/stats/base/dists/normal":369,"lodash.clonedeep":469}],471:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -33688,7 +33620,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],473:[function(require,module,exports){
+},{}],472:[function(require,module,exports){
 (function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
@@ -35497,7 +35429,7 @@ var hexSliceLookupTable = (function () {
 })()
 
 }).call(this,require("buffer").Buffer)
-},{"base64-js":472,"buffer":473,"ieee754":474}],474:[function(require,module,exports){
+},{"base64-js":471,"buffer":472,"ieee754":473}],473:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -35583,4 +35515,5 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}]},{},[470]);
+},{}]},{},[470])(470)
+});

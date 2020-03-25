@@ -41,7 +41,7 @@ $(window).on('load', function () {
     initializeSliders(sliders);
     var key = JSON.stringify(defaultSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
-        simulationCache[key] = simulate(defaultSimulationOptions);
+        simulationCache[key] = covidModel.simulate(defaultSimulationOptions);
     }
     simulationData = simulationCache[key];
     trendData = simulationData
@@ -554,7 +554,7 @@ function initializeFreeformGraph() {
 function redraw() {
     var key = JSON.stringify(currentSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
-        simulationCache[key] = simulate(currentSimulationOptions);
+        simulationCache[key] = covidModel.simulate(currentSimulationOptions);
     }
     simulationData = simulationCache[key];
     freeformData = simulationData

@@ -14,7 +14,7 @@
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/d3v4.js"></script>
     <script type="text/javascript" src="js/lodash.min.js"></script>
-    <script type="text/javascript" src="data/simulation-results.js"></script> 
+    <script type="text/javascript" src="data/simulation-cache.js"></script> 
     <script type="text/javascript" src="js/model-bundle.js"></script>   
     <script type="text/javascript" src="js/person.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -174,35 +174,39 @@
                         </div>
                         <div class="row">
                             <div class="range-slider">
-                                <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-                                <span id="ageSliderText" class="range-slider__value">30</span>
+                                <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                                <span id="ageSliderText" class="range-slider__value"></span>
                             </div>
                         </div>
                     </div>
                     <div class="four columns">
                         <div class="row" style="text-align:left;">
-                            Proportion Infected:
+                            Social Distancing:
                         </div>
                         <div class="row">
                             <div class="range-slider">
-                                <input id="infectedSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-                                <span id="infectedSliderText" class="range-slider__value">0.01</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="four columns">
-                        <div class="row" style="text-align:left;">
-                            Social Isolation:
-                        </div>
-                        <div class="row">
-                            <div class="range-slider">
-                                <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-                                <span id="isolationSliderText" class="range-slider__value">0.1</span>
+                                <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                                <span id="isolationSliderText" class="range-slider__value"></span>
                             </div>
                         </div>
                     </div>
                     <div class="two columns">
-
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="four columns">
+                        <div class="row">
+                            <div class="row" style="text-align:left;">
+                                Who stays home?
+                            </div>
+                            <div class="toggle-container">
+                                <label class="switch">
+                                    <input id="symptomIsolationToggle" type="checkbox" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                                    <span class="toggle-slider round"></span>
+                                  </label>
+                                  <span id="symptomIsolationToggleText" class="range-slider__value toggle-text"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

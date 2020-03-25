@@ -33177,6 +33177,13 @@ let randLogNormal = logNormal.factory({'seed': randomSeed});
 let sample = arraySample.factory({'seed': randomSeed});
 // faker.seed(randomSeed);
 
+function resetRandomGenerators(){
+    random = randu.factory({'seed': randomSeed});
+    randBernoulli = bernoulli.factory({'seed': randomSeed});
+    randLogNormal = logNormal.factory({'seed': randomSeed});
+    sample = arraySample.factory({'seed': randomSeed});
+    // faker.seed(randomSeed);
+}
 
 ////////////////////////
 // Virus Properties
@@ -33348,7 +33355,7 @@ function generatePopulation(options) {
                 recovered: false,
                 // name: faker.fake("{{name.firstName}} {{name.lastName}}"),
                 // occupation: faker.name.title(),
-                age: Math.round(randLogNormal(Math.log(38.2), 0.25)),
+                age: Math.round(randLogNormal(Math.log(options.avgAge), 0.25)),
                 immuComp: Boolean(randBernoulli(options.propImmuComp)),
                 pDeath: null,
                 houseId: houseId
@@ -33374,6 +33381,7 @@ function generatePopulation(options) {
 }
 
 function simulate(options, individualData){
+    resetRandomGenerators();
     let result = [];
 
     let alive = generatePopulation(options);
@@ -33454,78 +33462,15 @@ function simulate(options, individualData){
 
 window.onload = function(){
     window.simulate = simulate;
-    // console.log(simulate(
-    //     {
-    //         nDays: 30, // How many days to simulate
-    //         populationSize: 500, // How many people to simulate
-    //         averageHouseSize: 4, // Average number of people per house
-    //         avgAge: 38.2, // Average age of population
-    //         isolation: 0.5,
-    //         propInfected: 0.01, // What proportion of people are infected at the beginning
-    //         propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
-    //         interactionsPerDay: 5, // How many people each person interacts with per day
-    //         user: {
-    //             age: 30, // User Age
-    //             houseSize: 7 // User House Size
-    //         }
-    //     }
-    // ));
-    // document.getElementById("sim-params").value = JSON.stringify(
-    //     {
-    //         nDays: 30, // How many days to simulate
-    //         populationSize: 2000, // How many people to simulate
-    //         propInfected: 0.01, // What proportion of people are infected at the begining
-    //         propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
-    //         interactionsPerDay: 10 // How many people each person interacts with per day
-    //     }, undefined, 4
-    // );
-    // function convertToCSV(objArray) {
-    //     // Code adapted from
-    //     // https://stackoverflow.com/questions/11257062/converting-json-object-to-csv-format-in-javascript
-    //     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    //     var str = Object.keys(array[0]).join(',') + '\r\n';
-        
-    //     for (var i = 0; i < array.length; i++) {
-    //         var line = '';
-    //         for (var index in array[i]) {
-    //             if (line != '') line += ','
-
-    //             line += array[i][index];
-    //         }
-
-    //         str += line + '\r\n';
-    //     }
-
-    //     return str;
-    // }
-
-    // document.getElementById('simulate-button').addEventListener('click', function(){
-    //     let params = JSON.parse(document.getElementById("sim-params").value);
-    //     let result = simulate(params);
-        
-    //     let indiviudals = [];
-    //     result.forEach(function(r){
-    //         [r.alive, r.deceased].forEach(function(people){
-    //             people.forEach(function(p){
-    //                 p.day = r.day;
-    //                 indiviudals.push(p)
-    //             })
-    //         });
-    //         delete r.alive;
-    //         delete r.deceased;
-    //     });
-    //     document.getElementById('main-csv').value = convertToCSV(result);
-    //     document.getElementById('ind-csv').value = convertToCSV(indiviudals);
-    // })
 };
 },{"./generate-static-data":471,"@stdlib/random/base/bernoulli":305,"@stdlib/random/base/lognormal":315,"@stdlib/random/base/randu":334,"@stdlib/random/sample":341,"@stdlib/stats/base/dists/normal":369,"lodash.clonedeep":469}],471:[function(require,module,exports){
 let defaultSimulationOptions = {
     nDays: 35, // How many days to simulate
-    populationSize: 200, // How many people to simulate
+    populationSize: 1000, // How many people to simulate
     averageHouseSize: 4, // Average number of people per house
     avgAge: 35, // Average age of population
     isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
-    propInfected: 0.005, // What proportion of people are infected at the beginning
+    propInfected: 0.001, // What proportion of people are infected at the beginning
     propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
     interactionsPerDay: 5, // How many people each person interacts with per day
     user: {
@@ -33534,18 +33479,20 @@ let defaultSimulationOptions = {
     }
 };
 
-let sliders = {
-    "ageSlider": {"values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge"},
-    "infectedSlider" :{"values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected"},
-    "isolationSlider" :{"values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation"},
+var sliders = {
+    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider"},
+    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
+    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
 };
 
 function initializeSliders(sliders){
     for(const sId in sliders){
         let s = sliders[sId];
-        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-        $("#" + sId + "Text").text(s.values[s.default]);
-        applyFill(document.getElementById(sId));
+		if(s.type == "slider"){
+			$("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+			applyFill(document.getElementById(sId));
+		}
+		$("#" + sId + "Text").text(s.hasOwnProperty("labels") ? s.labels[s.default]: s.values[s.default]);
     }
 }
 
@@ -33577,7 +33524,9 @@ function generateStaticData(fName, individualData){
         results[JSON.stringify(o)] = simulate(Object.assign(o, defaultSimulationOptions), individualData);
     })
     // Code adapted from: https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
-    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results));
+    let dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(
+        "var simulationCache = " + JSON.stringify(results) + ';'
+        );
     let dlAnchorElem = document.getElementById('download-anchor');
     dlAnchorElem.setAttribute("href", dataStr);
     dlAnchorElem.setAttribute("download", fName);

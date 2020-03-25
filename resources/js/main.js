@@ -22,9 +22,10 @@ var defaultSimulationOptions = {
     averageHouseSize: 4, // Average number of people per house
     avgAge: 35, // Average age of population
     isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
-    propInfected: 0.005, // What proportion of people are infected at the beginning
+    propInfected: 0.001, // What proportion of people are infected at the beginning
     propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
-    interactionsPerDay: 5, // How many people each person interacts with per day
+    interactionsPerDay: 2, // How many people each person interacts with per day
+    everyoneIsolates: false,
     user: {
         age: 30, // User Age
         houseSize: 7 // User House Size
@@ -38,7 +39,11 @@ $(window).on('load', function () {
     $(".panel").hide();
     $("#panel" + currentStep).show();
     initializeSliders(sliders);
-    simulationData = simulate(defaultSimulationOptions);
+    var key = JSON.stringify(defaultSimulationOptions);
+    if (!simulationCache.hasOwnProperty(key)){
+        simulationCache[key] = simulate(defaultSimulationOptions);
+    }
+    simulationData = simulationCache[key];
     trendData = simulationData
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     freeformData = simulationData
@@ -339,7 +344,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, 31]);
-    c.y.domain([0, 300]);   
+    c.y.domain([0, defaultSimulationOptions.populationSize]);   
    
 
     c.xAxis.ticks().tickFormat(f());
@@ -462,7 +467,7 @@ function initializeFreeformGraph() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, d3.max(freeformData, function (d) { return d.day; })]);
-    c.y.domain([0, 300]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
     //c.y.domain([0, d3.max(freeformData, function (d) { return d.cases; })]);
 
 
@@ -569,26 +574,38 @@ function applyFill(slider) {
 }
 
 function onSliderInput(slider){
-    var v = sliders[slider.id].values[parseInt(slider.value)];
-    currentSimulationOptions[sliders[slider.id].optionName] = v;
-    $("#" + slider.id + "Text").text(v);
-    applyFill(slider);
+    var i;
+    var s = sliders[slider.id];
+    if (s.type == 'toggle'){
+        i = slider.checked === true ? 1 : 0;
+    } else{
+        i = parseInt(slider.value);
+        applyFill(slider);
+    }
+    var v = s.values[i];
+    currentSimulationOptions[s.optionName] = v;
+    $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
+}
+
+function onSliderChange(){
     redraw();
 }
 
 ////////// Sliders //////////
 var sliders = {
-    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge" },
-    "infectedSlider": { "values": [0.001, 0.01, 0.1], "default": 1, "optionName": "propInfected" },
-    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "default": 0, "optionName": "isolation" }
+    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider"},
+    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
+    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
 };
 
 function initializeSliders(sliders) {
     for (const sId in sliders) {
         var s = sliders[sId];
         $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-        $("#" + sId + "Text").text(s.values[s.default]);
-        applyFill(document.getElementById(sId));
+        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
+        if(s.type == "slider"){
+            applyFill(document.getElementById(sId));
+        }
     }
 }
 

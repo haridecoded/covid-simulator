@@ -55,11 +55,18 @@ $(window).on('load', function () {
 
 function onBtnNextClick() {
     switch (currentStep) {
+        case 1:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            setupNormalSimulation();
+            break;
         case 2:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            $("#panel1Chart1").contents().appendTo($("#panel2Chart1"));
+            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
+            $("#panel2Chart2").contents().appendTo($("#panel3Chart2"));
             showThreshold();
             break;
         case 3:
@@ -69,13 +76,7 @@ function onBtnNextClick() {
             $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
             $(".diffarea").fadeIn(2000);
             $("#thresholdLabel1").fadeIn(2000);
-            break;
-        case 1:
-            currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
-            setupNormalSimulation();
-            break;
+            break;        
         case 4:
             currentStep++;
             $(".panel").hide();
@@ -172,16 +173,6 @@ function initializeDrawView() {
     yourDataSel = c.svg.append('path.your-line');
 
 
-
-
-    // add circle to indicate draw start
-    //c.svg.append('circle').attrs({
-    //    "r": 6,
-    //    "class": "your-line-circle",
-    //    "cx": c.x(trendData[4].day),
-    //    "cy": c.y(trendData[4].cases)
-    //}).style("fill", "#b9003e");
-
     c.svg.append("svg:image")
         .attr("id","pencil")
         .attr('x', c.x(trendData[4].day))
@@ -209,50 +200,7 @@ function initializeDrawView() {
         return d3.axisLeft(y)
             .ticks(10);
     }
-
-
-    var threshold = 20;
-    // hospital threshold line
-    c.svg.append("line")             
-        .attr("id", "threshold")
-        .attr("display", "none")  
-        .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
-        .attr("x1", c.x(trendData[0].day))
-        .attr("y1", c.y(threshold))
-        .attr("x2", c.x(trendData[trendData.length - 1].day))
-        .attr("y2", c.y(threshold));
-
-    // hospital threshold text
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("display", "none")
-        .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold)-10) + ")")
-        .style("text-anchor", "middle")
-        .text("Hospital capacity");
-
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("display", "none")
-        .attr("id", "thresholdLabel1")
-        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(trendData, function (d) { return d.cases; })) + ")")
-        .style("text-anchor", "middle")
-        .text("Patients without treatment");
-
-    // hospital threshold area
-    c.svg.append("defs").append("pattern")
-        .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
-        .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#b9003e" });
-
-    var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
-    correctSel.append('path.diffarea')
-        .at({ d: diffarea(_.filter(trendData, function (t) { return t.cases >= threshold; })) })
-        .attr("display", "none")
-        .attr("fill","url(#hash4_4)");
-   
-
+       
     var completed = false;
 
     var drag = d3.drag()
@@ -330,16 +278,16 @@ function setupNormalSimulation() {
 }
 
 function drawNormalSimulationChart() {
-    $("#panel4Chart2").empty();
-    var width = Math.min($("#panel4Chart2").width(), 700);
-    var height = Math.min($("#panel4Chart2").width() * 0.6, 500);
+    $("#panel2Chart2").empty();
+    var width = Math.min($("#panel2Chart2").width(), 700);
+    var height = Math.min($("#panel2Chart2").width() * 0.6, 500);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 50, right: 0, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel4Chart2');
+    var sel = d3.select('#panel2Chart2');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,
@@ -413,24 +361,51 @@ function drawNormalSimulationChart() {
     }
 
 
-    //var threshold = 30;
-    //// hospital threshold line
-    //c.svg.append("line")
-    //    .attr("id", "threshold")
-    //    .attr("stroke-width", 2)
-    //    .attr("stroke", "#b9003e")
-    //    .attr("x1", c.x(1))
-    //    .attr("y1", c.y(threshold))
-    //    .attr("x2", c.x(31))
-    //    .attr("y2", c.y(threshold));
+    var threshold = 30;
+    // hospital threshold line
+    c.svg.append("line")
+        .attr("id", "threshold")
+        .attr("class", "threshold")
+        .attr("display", "none")
+        .attr("stroke-width", 2)
+        .attr("stroke", "#b9003e")
+        .attr("x1", c.x(1))
+        .attr("y1", c.y(threshold))
+        .attr("x2", c.x(35))
+        .attr("y2", c.y(threshold));
 
-    //// hospital threshold text
-    //c.svg.append("text")
-    //    .attr("class", "label")
-    //    .attr("id", "thresholdLabel")
-    //    .attr("transform", "translate(" + width * .3 + "," + (c.y(threshold) - 10) + ")")
-    //    .style("text-anchor", "middle")
-    //    .text("Number of hospital beds available");
+    // hospital threshold text
+    c.svg.append("text")
+        .attr("class", "label threshold")
+        .attr("display", "none")
+        .attr("id", "thresholdLabel")
+        .attr("transform", "translate(" + width * .25 + "," + (c.y(threshold) + 15) + ")")
+        .style("text-anchor", "middle")
+        .text("Total hospital beds");
+
+    c.svg.append("text")
+        .attr("class", "label threshold")
+        .attr("display", "none")
+        .attr("id", "thresholdLabel1")
+        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(normalSimulationData, function (d) { return d.cases; })) + ")")
+        .style("text-anchor", "middle")
+        .text("Patients without treatment");
+
+    // hospital threshold area
+    c.svg.append("defs").append("pattern")
+        .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
+        .append("rect")
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#b9003e", opacity:0.6 });
+
+    var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
+    correctSel.append('path.diffarea')
+        .at({ d: diffarea(_.filter(normalSimulationData, function (t) { return t.cases >= threshold; })) })
+        .attr("class","threshold")
+        .attr("display", "none")
+        .attr("fill", "url(#hash4_4)");
+
+
+
 
 }
 
@@ -439,26 +414,24 @@ function simulateSpreadNormal() {
         return;
     }
     normalSimulationData = [];
-    function updateChart(day, count) {
-        if (day > 0 && day < 36) {
+    function updateChart(day, count) {       
+        if (day > 0 && day <= 35) {
             normalSimulationData.push({ "day": day, "cases": count });
+        }
+        if (day === 35) {
+            $("#btnNext").show();
         }
         drawNormalSimulationChart();
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 2, 36, updateChart);
-    $("#btnNext").show();
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 2, 36, updateChart);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
 // PANEL 3
 function showThreshold() {   
-    $("#threshold").fadeIn(4000);
-    $("#thresholdLabel").fadeIn(4000);  
-    $(".your-line").fadeOut(500);
-    //$(".your-line-circle").fadeOut(500);
-    $("#pencil").fadeOut(500);
+    $(".threshold").fadeIn(4000);
 }
 
 // PANEL X

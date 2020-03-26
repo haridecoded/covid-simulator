@@ -19,6 +19,11 @@ h1{
     padding-bottom: 100px;
 }
 
+.label{
+    font-size:14px;
+    background:white;
+}
+
 .footer {
     position: fixed;
     left: 0;

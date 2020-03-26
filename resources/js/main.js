@@ -171,14 +171,24 @@ function initializeDrawView() {
     correctSel.append('path.line').at({ d: line(trendData) });
     yourDataSel = c.svg.append('path.your-line');
 
-    // add circle to indicate draw start
-    c.svg.append('circle').attrs({
-        "r": 6,
-        "class": "your-line-circle",
-        "cx": c.x(trendData[4].day),
-        "cy": c.y(trendData[4].cases)
-    }).style("fill", "#b9003e");
 
+
+
+    // add circle to indicate draw start
+    //c.svg.append('circle').attrs({
+    //    "r": 6,
+    //    "class": "your-line-circle",
+    //    "cx": c.x(trendData[4].day),
+    //    "cy": c.y(trendData[4].cases)
+    //}).style("fill", "#b9003e");
+
+    c.svg.append("svg:image")
+        .attr("id","pencil")
+        .attr('x', c.x(trendData[4].day))
+        .attr('y', c.y(trendData[4].cases)-48)
+        .attr('width', 48)
+        .attr('height', 48)
+        .attr("xlink:href", "images/pencil.png");
 
 
     yourData = trendData
@@ -273,7 +283,9 @@ function initializeDrawView() {
             });    
             
             yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
-            
+
+            d3.select("#pencil").attr('x', c.x(day))
+                .attr('y', c.y(cases) - 48);
 
             if (!completed && d3.mean(yourData, f('defined')) === 1) {
                 completed = true;

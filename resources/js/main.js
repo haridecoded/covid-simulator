@@ -13,6 +13,7 @@ var infection = 0.1;
 var isolation = 0.1;
 var covid_all;
 var normalSimulationData = [];
+var sdSimulationData = [];
 var simulationWorld;
 var pid;
 
@@ -393,7 +394,7 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#00BCD4", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ff5722", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
@@ -436,15 +437,135 @@ function showThreshold() {
 // PANEL 4
 function setupSDSimulation() {
     $("#btnNext").hide();
+    drawSDSimulationChart();
     simulationWorld.resetWorld();
     simulationWorld = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 0, null, null);
 }
 function drawSDSimulationChart() {
+    $("#panel4Chart2").empty();
+    var width = Math.min($("#panel4Chart2").width(), 700);
+    var height = Math.min($("#panel4Chart2").width() * 0.6, 500);
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scalePow().range([height, 0]);
+    var margin = { left: 50, right: 0, top: 30, bottom: 70 };
+
+    var f = d3.f;
+
+    var sel = d3.select('#panel4Chart2');
+    var c = d3.conventions({
+        parentSel: sel,
+        totalWidth: width,
+        height: height,
+        margin: margin
+    });
+
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+
+    c.x.domain([1, 36]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
+
+
+    c.xAxis.ticks().tickFormat(f());
+    c.yAxis.ticks(5).tickFormat(f());
+    c.drawAxis();
+
+    //add the X gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .attr("transform", "translate(0," + height + ")")
+        .call(make_x_gridlines()
+            .tickSize(-height)
+            .tickFormat("")
+        );
+
+    // add x-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days since first case of coronavirus");
+
+    // add the Y gridlines
+    c.svg.append("g")
+        .attr("class", "grid")
+        .call(make_y_gridlines()
+            .tickSize(-width + margin.left + margin.right)
+            .tickFormat("")
+        );
+
+    // add y-axis label
+    c.svg.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - height / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Number of Cases");
+
+
+    var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
+
+    var correctSel = c.svg.append('g').attr('clip-path', 'url(#clip)');
+
+    correctSel.append('path.area').at({ d: area(sdSimulationData) });
+    correctSel.append('path.line').at({ d: line(sdSimulationData) });
+    yourDataSel = c.svg.append('path.your-line');
+
+    // gridlines in x axis function
+    function make_x_gridlines() {
+        return c.xAxis.ticks().tickFormat(f());
+    }
+
+    // gridlines in y axis function
+    function make_y_gridlines() {
+        return d3.axisLeft(y)
+            .ticks(10);
+    }
+
+
+    var threshold = 30;
+    // hospital threshold line
+    c.svg.append("line")
+        .attr("id", "threshold")
+        .attr("class", "threshold")      
+        .attr("stroke-width", 2)
+        .attr("stroke", "#b9003e")
+        .attr("x1", c.x(1))
+        .attr("y1", c.y(threshold))
+        .attr("x2", c.x(35))
+        .attr("y2", c.y(threshold));
+
+    // hospital threshold text
+    c.svg.append("text")
+        .attr("class", "label threshold")     
+        .attr("id", "thresholdLabel")
+        .attr("transform", "translate(" + width * .25 + "," + (c.y(threshold) - 10) + ")")
+        .style("text-anchor", "middle")
+        .text("Total hospital beds");
 
 }
 
 function simulateSDSpread() {
-
+    if ($(this).attr('disabled')) {
+        return;
+    }
+    sdSimulationData = [];
+    function updateChart(day, count) {
+        if (day > 0 && day <= 35) {
+            sdSimulationData.push({ "day": day, "cases": count });
+        }
+        if (day === 35) {
+            $("#btnNext").show();
+        }
+        drawSDSimulationChart();
+    }
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 3, 36, updateChart);
+    document.getElementById("btnNormalSim").disabled = true;
 }
 
 // PANEL X

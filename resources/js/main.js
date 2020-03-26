@@ -395,7 +395,7 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#b9003e", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#00BCD4", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
@@ -432,6 +432,7 @@ function simulateSpreadNormal() {
 // PANEL 3
 function showThreshold() {   
     $(".threshold").fadeIn(4000);
+    simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
 }
 
 // PANEL X
@@ -693,6 +694,15 @@ class SimulationWorld {
         this.reset = true;
     }
 
+    showOverflow(number) {
+        var over = this.gameObjects.filter(person => person.infectedState === 'sick');
+        over.forEach(function (p, i) {
+            if (i < number) {
+                p.highlight();
+            }
+        })
+    }
+
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
@@ -704,8 +714,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 12,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 12,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -716,8 +726,8 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 12,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 12,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -728,8 +738,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 12,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 12,
                 radius: Math.max(this.canvas.width / 225, 4),
                 infectedTime: Date.now(),
                 speedMultiplier

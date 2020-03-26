@@ -73,9 +73,7 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
-            $(".diffarea").fadeIn(2000);
-            $("#thresholdLabel1").fadeIn(2000);
+            setupSDSimulation();
             break;        
         case 4:
             currentStep++;
@@ -431,8 +429,22 @@ function simulateSpreadNormal() {
 
 // PANEL 3
 function showThreshold() {   
-    $(".threshold").fadeIn(4000);
+    $(".threshold").fadeIn(2000);
     simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
+}
+
+// PANEL 4
+function setupSDSimulation() {
+    $("#btnNext").hide();
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+}
+function drawSDSimulationChart() {
+
+}
+
+function simulateSDSpread() {
+
 }
 
 // PANEL X

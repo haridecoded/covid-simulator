@@ -147,14 +147,42 @@
 
         <div class="row panel" id="panel4" style="display:none;">
             <div class="row">
-                <div class="six columns offset-by-three alpha">
-                    <p><b>You can help slow down the rate</b> at which coronavirus is spreading. The goal is to ensure that the number of patients are always <span class="emph">fewer</span> than the number of hospital beds available.</p>
+                <div class="eight columns offset-by-two alpha">
+                    <p>
+                        <b>You can help slow down the rate at which coronavirus is spreading by practicing <span class="emph">Social Distancing</span>.</b>
+                    </p>
+                    <p class="pEmph">
+                        Our goal is to ensure that the number of patients are always <b>fewer</b> than the number of hospital beds available.
+                        This gives hospitals enough <b>resources</b> to take care of all sick patients at any give time.
+                        This also gives us enough <b>time</b> to develop vaccines and treatment.
+                    </p>
+                    <p>
+                        <span class="emph">How can you practice social distancing?</span> <br />
+                        (1) Stay put in your home and do not travel for work/school. 
+                        (2) Avoid large gatherings. 
+                        (3) Stay away from public places like the beach or park.
+                        (4) If you go outside like the grocery store, maintain atleast 6 feet distance from others.
+                    </p>
+                    <p>
+                        Click the button below to see how the infection spreads when you practice social distancing.
+                    </p>
                 </div>
             </div>
-            <div></div>
             <div class="row">
                 <div class="twelve columns">
-                    <div id="panel3Chart1">
+                    <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="six columns alpha">
+                    <div class="chart" id="panel4Chart1">
+                        <canvas id="sdCanvas" width="100" height="100" style="margin-top:30px;border:1px solid #171717; background:#fff;">
+                            Your browser does not support the HTML5 canvas tag.
+                        </canvas>
+                    </div>
+                </div>
+                <div class="six columns">
+                    <div class="chart" id="panel4Chart2">
 
                     </div>
                 </div>

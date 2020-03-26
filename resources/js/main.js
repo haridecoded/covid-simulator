@@ -325,7 +325,8 @@ function showThreshold() {
     $("#threshold").fadeIn(4000);
     $("#thresholdLabel").fadeIn(4000);  
     $(".your-line").fadeOut(500);
-    $(".your-line-circle").fadeOut(500);
+    //$(".your-line-circle").fadeOut(500);
+    $("#pencil").fadeOut(500);
 }
 
 // PANEL 4

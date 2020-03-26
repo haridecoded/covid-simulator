@@ -424,7 +424,7 @@ function simulateSpreadNormal() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 3, 36, updateChart);   
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -564,7 +564,7 @@ function simulateSDSpread() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 3, 36, updateChart);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart);
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -859,8 +859,8 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 12,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 12,
+                x: randomIntFromInterval(10, this.canvas.width-10),
+                y: randomIntFromInterval(10, this.canvas.height-10),
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -1050,4 +1050,8 @@ function addCommas(nStr) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
     return x1 + x2;
+}
+
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }

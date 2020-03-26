@@ -98,7 +98,7 @@ function initializeDrawView() {
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(trendData, function (d) { return d.cases; })]);
+    var y = d3.scaleLinear().range([height, 0]).domain([0, 200]);
     var margin = { left: 70, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
@@ -114,12 +114,12 @@ function initializeDrawView() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
     c.x.domain([1, d3.max(trendData, function (d) { return d.day; })]);
-    c.y.domain([0, d3.max(trendData, function (d) { return d.cases; })]);
+    c.y.domain([0, 200]);
 
     $("#infectedText").text((d3.max(trendData, function (d) { return d.cases; }) / 200) * 100 + "%");
 
     c.xAxis.ticks().tickFormat(f());
-    c.yAxis.ticks(5).tickFormat(f());
+    c.yAxis.ticks(8).tickFormat(f());
     c.drawAxis(); 
 
     //add the X gridlines
@@ -136,7 +136,7 @@ function initializeDrawView() {
         .attr("class", "label")
         .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
         .style("text-anchor", "middle")
-        .text("Days since first case of coronavirus");
+        .text("Days since first case ");
 
     // add the Y gridlines
     c.svg.append("g")
@@ -220,15 +220,15 @@ function initializeDrawView() {
         .attr("id", "thresholdLabel")
         .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold)-10) + ")")
         .style("text-anchor", "middle")
-        .text("Number of hospital beds available");
+        .text("Hospital capacity");
 
     c.svg.append("text")
         .attr("class", "label")
         .attr("display", "none")
         .attr("id", "thresholdLabel1")
-        .attr("transform", "translate(" + width * .4 + "," + 100 + ")")
+        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(trendData, function (d) { return d.cases; })) + ")")
         .style("text-anchor", "middle")
-        .text("Number of patients without treatment");
+        .text("Patients without treatment");
 
     // hospital threshold area
     c.svg.append("defs").append("pattern")
@@ -303,7 +303,7 @@ function getCovidCount() {
         contentType: "application/json",
         success: function (data) {
             covid_all = JSON.parse(data).count;
-            $("#caseCount").text(covid_all);
+            $("#caseCount").text(addCommas(covid_all));
         }
     });
 }
@@ -894,4 +894,16 @@ function IDGenerator() {
 
         return id;
     };
+}
+
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
 }

@@ -321,21 +321,12 @@ function getCovidCount() {
 }
 
 // PANEL 2
-function showThreshold() {   
-    $("#threshold").fadeIn(4000);
-    $("#thresholdLabel").fadeIn(4000);  
-    $(".your-line").fadeOut(500);
-    //$(".your-line-circle").fadeOut(500);
-    $("#pencil").fadeOut(500);
-}
-
-// PANEL 4
 function setupNormalSimulation() {
-    $("#btnNext").hide();   
+    $("#btnNext").hide();
     drawNormalSimulationChart();
 
     // initialize simulation canvas
-    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 0, null, null);
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 0, null, null);
 }
 
 function drawNormalSimulationChart() {
@@ -358,9 +349,9 @@ function drawNormalSimulationChart() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([1, 31]);
-    c.y.domain([0, defaultSimulationOptions.populationSize]);   
-   
+    c.x.domain([1, 36]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
+
 
     c.xAxis.ticks().tickFormat(f());
     c.yAxis.ticks(5).tickFormat(f());
@@ -422,24 +413,24 @@ function drawNormalSimulationChart() {
     }
 
 
-    var threshold = 30;
-    // hospital threshold line
-    c.svg.append("line")
-        .attr("id", "threshold")
-        .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
-        .attr("x1", c.x(1))
-        .attr("y1", c.y(threshold))
-        .attr("x2", c.x(31))
-        .attr("y2", c.y(threshold));
+    //var threshold = 30;
+    //// hospital threshold line
+    //c.svg.append("line")
+    //    .attr("id", "threshold")
+    //    .attr("stroke-width", 2)
+    //    .attr("stroke", "#b9003e")
+    //    .attr("x1", c.x(1))
+    //    .attr("y1", c.y(threshold))
+    //    .attr("x2", c.x(31))
+    //    .attr("y2", c.y(threshold));
 
-    // hospital threshold text
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .3 + "," + (c.y(threshold) - 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Number of hospital beds available");
+    //// hospital threshold text
+    //c.svg.append("text")
+    //    .attr("class", "label")
+    //    .attr("id", "thresholdLabel")
+    //    .attr("transform", "translate(" + width * .3 + "," + (c.y(threshold) - 10) + ")")
+    //    .style("text-anchor", "middle")
+    //    .text("Number of hospital beds available");
 
 }
 
@@ -449,14 +440,25 @@ function simulateSpreadNormal() {
     }
     normalSimulationData = [];
     function updateChart(day, count) {
-        if (day > 0 && day < 31) {           
-            normalSimulationData.push({ "day": day, "cases": count>300? 300:count });
+        if (day > 0 && day < 36) {
+            normalSimulationData.push({ "day": day, "cases": count > 300 ? 300 : count });
         }
         drawNormalSimulationChart();
     }
-    simulationWorld = new SimulationWorld('normalCanvas', .2, 500, 2, 30, updateChart);
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 2, 36, updateChart);
     $("#btnNext").show();
     document.getElementById("btnNormalSim").disabled = true;
+}
+
+// PANEL 3
+function showThreshold() {   
+    $("#threshold").fadeIn(4000);
+    $("#thresholdLabel").fadeIn(4000);  
+    $(".your-line").fadeOut(500);
+    //$(".your-line-circle").fadeOut(500);
+    $("#pencil").fadeOut(500);
 }
 
 // PANEL X
@@ -689,6 +691,7 @@ class SimulationWorld {
         this.init(canvasId);
         this.update = callback;
         this.days = days;
+        this.reset = false;
     }
 
     init(canvasId) {
@@ -714,12 +717,13 @@ class SimulationWorld {
 
     resetWorld() {
         this.gameObjects = [];
+        this.reset = true;
     }
 
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = 0.3;
+        let speedMultiplier = 0.5;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;
@@ -779,8 +783,10 @@ class SimulationWorld {
             this.detectCollisions();
         }
 
+        let contagiousCount = this.gameObjects.filter(person => person.infectedState === 'sick').length;
+
         if (this.rafCounter % 30 === 0) {
-            let contagiousCount = this.gameObjects.filter(person => person.infectedState === 'sick').length;
+            
             if (this.update) {
                 this.update.call(this, this.dayCount, contagiousCount);
             }            
@@ -791,11 +797,20 @@ class SimulationWorld {
 
         this.clearCanvas();
         this.gameObjects.forEach(go => go.draw());
-      
-        // Keep requesting new frames
-        if (this.dayCount < 32) {
+
+
+        if (this.days) {
+            if (!this.reset && this.dayCount < this.days) {
+                window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+            }
+        }
+        else if (!this.reset) {
             window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
-        }         
+        }
+        // Keep requesting new frames
+        //if (!this.reset && this.days && this.dayCount < this.days) {
+        //    window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+        //}         
     }
 
     detectCollisions() {

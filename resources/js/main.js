@@ -55,14 +55,14 @@ $(window).on('load', function () {
 
 function onBtnNextClick() {
     switch (currentStep) {
-        case 1:
+        case 2:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
             $("#panel1Chart1").contents().appendTo($("#panel2Chart1"));
             showThreshold();
             break;
-        case 2:
+        case 3:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -70,7 +70,7 @@ function onBtnNextClick() {
             $(".diffarea").fadeIn(2000);
             $("#thresholdLabel1").fadeIn(2000);
             break;
-        case 3:
+        case 1:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();

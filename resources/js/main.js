@@ -441,7 +441,7 @@ function simulateSpreadNormal() {
     normalSimulationData = [];
     function updateChart(day, count) {
         if (day > 0 && day < 36) {
-            normalSimulationData.push({ "day": day, "cases": count > 300 ? 300 : count });
+            normalSimulationData.push({ "day": day, "cases": count });
         }
         drawNormalSimulationChart();
     }
@@ -723,7 +723,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = 0.5;
+        let speedMultiplier = this.canvas.width <= 400 ? 1: 0.5;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;
@@ -733,7 +733,7 @@ class SimulationWorld {
                 infectedState: 'healthy',
                 x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
                 y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
-                radius: Math.min(this.canvas.width / 225, 3.4),
+                radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
         });
@@ -745,7 +745,7 @@ class SimulationWorld {
                 infectedState: 'healthy',
                 x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
                 y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
-                radius: Math.min(this.canvas.width / 225, 3.4),
+                radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
         });
@@ -757,7 +757,7 @@ class SimulationWorld {
                 infectedState: 'sick',
                 x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
                 y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
-                radius: Math.min(this.canvas.width / 225, 3.4),
+                radius: Math.max(this.canvas.width / 225, 4),
                 infectedTime: Date.now(),
                 speedMultiplier
             });

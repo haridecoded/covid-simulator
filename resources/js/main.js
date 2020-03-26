@@ -424,7 +424,7 @@ function simulateSpreadNormal() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart);   
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 2, 36, updateChart);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -564,7 +564,7 @@ function simulateSDSpread() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 2, 36, updateChart);
     document.getElementById("btnNormalSim").disabled = true;
 }
 

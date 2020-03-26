@@ -29,6 +29,12 @@ h1{
     box-shadow: 10px 0 0 rgba(0,0,0,0.4);    
 }
 
+.highlight{
+    border-radius:5px;
+    padding:5px;
+    background:#f3e5e9;
+}
+
 
 .y.axis text {
     font-size: 14px;

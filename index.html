@@ -36,7 +36,7 @@
                         Since then, the virus has infected thousands of people all over the world at an exponential rate. <br/><span class="emph" id="caseCount"></span> cases so far!
                     </p>
                     <p>
-                        <b>How will coronavirus spread in your neighborhood in the next 30 days?</b><br />
+                        <b>Tell us how coronavirus will spread in a neighborhood of <span class="highlight">200 people</span> in the next <span class="highlight">30 days</span>?</b><br />
                         <span class="emph">Draw your guesses on the chart below.</span>
                     </p>
                 </div>
@@ -51,6 +51,13 @@
             <div class="row">
                 <div class="twelve columns">
                     <input class="button-primary" id="showMe" type="button" value="Show me how I did!" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <p class="result" style="display:none;">
+                        That is nearly <span class="emph" id="infectedText"></span> of the neighborhood in 30 days!
+                    </p>
                 </div>
             </div>
         </div>
@@ -142,7 +149,7 @@
         </div>
 
 
-        <div class="row panel" id="panel5">
+        <div class="row panel" id="panel5" style="display:none;">
             <div class="row">
                 <div class="six columns offset-by-three alpha">
                     <p>

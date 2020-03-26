@@ -98,7 +98,7 @@ function initializeDrawView() {
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scalePow().range([height, 0]);
+    var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(trendData, function (d) { return d.cases; })]);
     var margin = { left: 70, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
@@ -116,6 +116,7 @@ function initializeDrawView() {
     c.x.domain([1, d3.max(trendData, function (d) { return d.day; })]);
     c.y.domain([0, d3.max(trendData, function (d) { return d.cases; })]);
 
+    $("#infectedText").text((d3.max(trendData, function (d) { return d.cases; }) / 200) * 100 + "%");
 
     c.xAxis.ticks().tickFormat(f());
     c.yAxis.ticks(5).tickFormat(f());
@@ -200,7 +201,7 @@ function initializeDrawView() {
     }
 
 
-    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
+    var threshold = 20;
     // hospital threshold line
     c.svg.append("line")             
         .attr("id", "threshold")
@@ -289,6 +290,7 @@ function initializeDrawView() {
         clipRect.transition().duration(1000).attr('width', c.x(35));
 
         $("#showMe").hide();
+        $(".result").show();
         $("#btnNext").show();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
@@ -633,6 +635,10 @@ function getPossibleSimulationOptions(sliders) {
 ////////// End Sliders //////////
 
 
+
+
+// HELPER FUNCTIONS
+
 function logToDB(data) {
     data.pid = pid;
     data.time = new Date().toLocaleString();
@@ -648,9 +654,6 @@ function logToDB(data) {
         }
     });
 }
-
-
-// HELPER FUNCTIONS
 
 class SimulationWorld {
 

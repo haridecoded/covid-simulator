@@ -378,7 +378,7 @@ function drawNormalSimulationChart() {
         .attr("class", "label threshold")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .25 + "," + (c.y(threshold) + 15) + ")")
+        .attr("transform", "translate(" + width * .4 + "," + (c.y(threshold) + 15) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -542,7 +542,7 @@ function drawSDSimulationChart() {
     c.svg.append("text")
         .attr("class", "label threshold")     
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .25 + "," + (c.y(threshold) - 10) + ")")
+        .attr("transform", "translate(" + width * .4 + "," + (c.y(threshold) - 10) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 

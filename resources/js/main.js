@@ -839,7 +839,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = this.canvas.width <= 400 ? 1: 0.4;
+        let speedMultiplier = this.canvas.width <= 400 ? 0.4: 0.4;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;
@@ -847,8 +847,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'healthy',
-                x: randomIntFromInterval(10, this.canvas.width - 10),
-                y: randomIntFromInterval(10, this.canvas.height - 10),
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -859,8 +859,8 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: randomIntFromInterval(10, this.canvas.width-10),
-                y: randomIntFromInterval(10, this.canvas.height-10),
+                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -871,8 +871,10 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: randomIntFromInterval(20, this.canvas.width - 20),
-                y: randomIntFromInterval(20, this.canvas.height - 20),
+                //x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
+                //y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: this.canvasRight / 2,
+                y: this.canvasBottom/2,
                 radius: Math.max(this.canvas.width / 225, 4),
                 infectedTime: Date.now(),
                 speedMultiplier

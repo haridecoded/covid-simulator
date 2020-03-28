@@ -839,7 +839,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = this.canvas.width <= 400 ? 0.4: 0.4;
+        let speedMultiplier = this.canvas.width <= 400 ? 0.5: 0.7;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;

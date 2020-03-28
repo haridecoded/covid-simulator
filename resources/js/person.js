@@ -13,8 +13,8 @@ class Person {
         this.x = x;
         this.y = y;
 
-        let rand = (Math.random() * 100) - 50;
-        let oppRand = (Math.random() * 100) - 50;
+        let rand = (Math.random() * 100 +1) - 50;
+        let oppRand = (Math.random() * 100 +1) - 50;
 
         this.speedMultiplier = speedMultiplier;
 
@@ -28,7 +28,12 @@ class Person {
             this.vy = 0;
             this.mass = 10000000000000000;
         }
-
+        if (isNaN(this.x) || isNaN(this.y) || isNaN(this.vx) || isNaN(this.vy)) {
+            console.log("Detected NaN in constructor");
+        }
+        else {
+            console.log("Added person");
+        }
     }
 
     kill() {
@@ -37,6 +42,7 @@ class Person {
         this.vx = 0;
         this.vy = 0;
         this.mass = 10000000000000000;
+        console.log("killed");
     }
 
     highlight() {
@@ -71,7 +77,8 @@ class Person {
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fill();
-
+      
+        
         if (this.name) {
             // this.context.font = "16px Arial";
             // this.context.fillText(this.name, this.x + 7, this.y + 7);
@@ -106,7 +113,13 @@ class Person {
 
     update(secondsPassed) {
         //Move with set velocity
+        if (isNaN(this.x) || isNaN(this.y) || isNaN(this.vx) || isNaN(this.vy)) {
+            console.log("Detected NaN");
+        }
         this.x += this.vx * secondsPassed;
         this.y += this.vy * secondsPassed;
+        if (isNaN(this.x) || isNaN(this.y) || isNaN(this.vx) || isNaN(this.vy)) {
+            console.log("Detected NaN");
+        }
     }
 }

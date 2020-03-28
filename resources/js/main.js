@@ -424,7 +424,7 @@ function simulateSpreadNormal() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 2, 36, updateChart);   
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -564,7 +564,7 @@ function simulateSDSpread() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 2, 36, updateChart);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart);
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -799,6 +799,7 @@ class SimulationWorld {
         this.update = callback;
         this.days = days;
         this.reset = false;
+       
     }
 
     init(canvasId) {
@@ -819,7 +820,8 @@ class SimulationWorld {
             userMode: this.userMode
         });
 
-        window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp);});    
+        window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });
+        console.log(this.canvasRight + " , " + this.canvasBottom);
     }
 
     resetWorld() {
@@ -833,13 +835,13 @@ class SimulationWorld {
             if (i < number) {
                 p.highlight();
             }
-        })
+        });
     }
 
     createWorld({ percentHome, infectedCount, userMode = null }) {
         let homeCount = Math.ceil(this.totalPeople * this.percentHome);
         let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
-        let speedMultiplier = this.canvas.width <= 400 ? 0.5: 0.7;
+        let speedMultiplier = 0.45;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (Math.random() * 100) - 50;
@@ -847,8 +849,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -859,8 +861,8 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
+                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -871,10 +873,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                //x: Math.ceil((Math.random() * this.canvasRight) / 10) * 10,
-                //y: Math.ceil((Math.random() * this.canvasBottom) / 10) * 10,
-                x: this.canvasRight / 2,
-                y: this.canvasBottom/2,
+                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 infectedTime: Date.now(),
                 speedMultiplier
@@ -948,7 +948,7 @@ class SimulationWorld {
                     var vRelativeVelocity = { x: obj1.vx - obj2.vx, y: obj1.vy - obj2.vy };
                     var speed = vRelativeVelocity.x * vCollisionNorm.x + vRelativeVelocity.y * vCollisionNorm.y;
 
-                    if (speed < 0) {
+                    if (speed < 0 || isNaN(speed)) {
                         break;
                     }
 
@@ -957,6 +957,9 @@ class SimulationWorld {
                     obj1.vy -= (impulse * obj2.mass * vCollisionNorm.y);
                     obj2.vx += (impulse * obj1.mass * vCollisionNorm.x);
                     obj2.vy += (impulse * obj1.mass * vCollisionNorm.y);
+                    if (isNaN(obj1.vx) || isNaN(obj1.vy) || isNaN(obj2.vx) || isNaN(obj2.vy)) {
+                        console.log("Detected NaN");
+                    }
 
                     if (obj1.infectedState === 'sick' || obj2.infectedState === 'sick') {
 
@@ -988,6 +991,9 @@ class SimulationWorld {
                 go.vy = -go.vy;
                 go.y = this.canvasTop + go.radius;
             }
+            if (isNaN(go.x) || isNaN(go.y) || isNaN(go.vx) || isNaN(go.vy)) {
+                console.log("Detected NaN in constructor");
+            }
         });
 
     }
@@ -1015,7 +1021,6 @@ class SimulationWorld {
             timer = setTimeout(func, 100, event);
         };
     }
-
 
 }
 

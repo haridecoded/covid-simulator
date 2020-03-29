@@ -46,7 +46,7 @@ $(window).on('load', function () {
     }
     simulationData = simulationCache[key];
     trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected*1.6 }; });
     freeformData = simulationData
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     pid = new IDGenerator().generate();
@@ -301,7 +301,7 @@ function drawNormalSimulationChart() {
 
 
     c.xAxis.ticks().tickFormat(f());
-    c.yAxis.ticks(5).tickFormat(f());
+    c.yAxis.ticks(8).tickFormat(f());
     c.drawAxis();
 
     //add the X gridlines
@@ -467,7 +467,7 @@ function drawSDSimulationChart() {
 
 
     c.xAxis.ticks().tickFormat(f());
-    c.yAxis.ticks(5).tickFormat(f());
+    c.yAxis.ticks(8).tickFormat(f());
     c.drawAxis();
 
     //add the X gridlines

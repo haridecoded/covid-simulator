@@ -944,13 +944,16 @@ class SimulationWorld {
 
                     var vCollision = { x: obj2.x - obj1.x, y: obj2.y - obj1.y };
                     var distance = Math.sqrt((obj2.x - obj1.x) * (obj2.x - obj1.x) + (obj2.y - obj1.y) * (obj2.y - obj1.y));
+                    if (distance === 0) {
+                        distance = 0.2;
+                    }
                     var vCollisionNorm = { x: vCollision.x / distance, y: vCollision.y / distance };
                     var vRelativeVelocity = { x: obj1.vx - obj2.vx, y: obj1.vy - obj2.vy };
                     var speed = vRelativeVelocity.x * vCollisionNorm.x + vRelativeVelocity.y * vCollisionNorm.y;
 
                     if (speed < 0 || isNaN(speed)) {
                         break;
-                    }
+                    }                  
 
                     var impulse = 2 * speed / (obj1.mass + obj2.mass);
                     obj1.vx -= (impulse * obj2.mass * vCollisionNorm.x);

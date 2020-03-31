@@ -19,7 +19,7 @@ var simulationWorld;
 var pid;
 
 var defaultSimulationOptions = {
-    nDays: 35, // How many days to simulate
+    nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
     avgAge: 38.1, // Average age of population
     socialDistancing: {
@@ -272,7 +272,7 @@ function initializeDrawView() {
     var drag = d3.drag()
         .on('drag', function () {
             var pos = d3.mouse(this);
-            var day = clamp(6, 35, c.x.invert(pos[0]));
+            var day = clamp(6, defaultSimulationOptions.nDays, c.x.invert(pos[0]));
             var cases = clamp(0, c.y.domain()[1], c.y.invert(pos[1]));
 
             yourData.forEach(function (d) {
@@ -313,7 +313,7 @@ function initializeDrawView() {
         if ($(this).attr('disabled')) {
             return;
         }
-        clipRect.transition().duration(1000).attr('width', c.x(35));
+        clipRect.transition().duration(1000).attr('width', c.x(defaultSimulationOptions.nDays));
 
         $("#showMe").hide();
         $(".result").show();
@@ -363,7 +363,7 @@ function drawNormalSimulationChart() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([1, 36]);
+    c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
@@ -437,7 +437,7 @@ function drawNormalSimulationChart() {
         .attr("stroke", "#b9003e")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
-        .attr("x2", c.x(35))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
         .attr("y2", c.y(threshold));
 
     // hospital threshold text
@@ -481,17 +481,17 @@ function simulateSpreadNormal() {
     }
     normalSimulationData = [];
     function updateChart(day, count) {       
-        if (day > 0 && day <= 35) {
+        if (day > 0 && day <= defaultSimulationOptions.nDays) {
             normalSimulationData.push({ "day": day, "cases": count });
         }
-        if (day === 35) {
+        if (day === defaultSimulationOptions.nDays) {
             $("#btnNext").show();
         }
         drawNormalSimulationChart();
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart, defaultSimulationOptions);   
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, defaultSimulationOptions);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -532,7 +532,7 @@ function drawSDSimulationChart() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([1, 36]);
+    c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
@@ -605,7 +605,7 @@ function drawSDSimulationChart() {
         .attr("stroke", "#b9003e")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
-        .attr("x2", c.x(35))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
         .attr("y2", c.y(threshold));
 
     // hospital threshold text
@@ -624,17 +624,17 @@ function simulateSDSpread() {
     }
     sdSimulationData = [];
     function updateChart(day, count) {
-        if (day > 0 && day <= 35) {
+        if (day > 0 && day <= defaultSimulationOptions.nDays) {
             sdSimulationData.push({ "day": day, "cases": count });
         }
-        if (day === 35) {
+        if (day === defaultSimulationOptions.nDays) {
             $("#btnNext").show();
         }
         drawSDSimulationChart();
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart, defaultSimulationOptions);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, defaultSimulationOptions);
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -690,7 +690,7 @@ function drawUserSimulationChart() {
 
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
 
-    c.x.domain([1, 36]);
+    c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
@@ -763,7 +763,7 @@ function drawUserSimulationChart() {
         .attr("stroke", "#b9003e")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
-        .attr("x2", c.x(35))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
         .attr("y2", c.y(threshold));
 
     // hospital threshold text

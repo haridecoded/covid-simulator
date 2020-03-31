@@ -649,6 +649,7 @@ function setUpUserSimulation() {
         var s = sliders[sId];
         $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
         $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
+        $("#" + sId + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[s.default] : 'Explanation Not Found');
         if (s.type === "slider") {
             applyFill(document.getElementById(sId));
         }
@@ -915,6 +916,7 @@ function onSliderInput(slider){
     var v = s.values[i];
     currentSimulationOptions[s.optionName] = v;
     $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
+    $("#" + slider.id + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[i] : 'Explanation Not Found');
 }
 
 function onSliderChange(){

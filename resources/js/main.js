@@ -123,6 +123,13 @@ function onBtnNextClick() {
             $("#panel" + currentStep).show();
             setUpUserSimulation();
             break;
+        case 5:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            $("#btnNext").hide();
+            $("#surveyCode").text(pid);
+            break;
     }
 }
 
@@ -610,7 +617,7 @@ function simulateSDSpread() {
 
 function setUpUserSimulation() {
     // disable next button
-    $("#btnNext").hide();
+    //$("#btnNext").hide();
 
     //set up controls   
     for (const sId in sliders) {
@@ -787,6 +794,19 @@ function onSliderChange(){
     redraw();
 }
 
+
+//PANEL 6
+function onCopyCodeClick() {
+    if (!navigator.clipboard) {
+        // Clipboard API not available
+        return;
+    }
+    try {
+        navigator.clipboard.writeText(pid);        
+    } catch (err) {
+        console.error('Failed to copy!', err);
+    }
+}
 
 // HELPER FUNCTIONS
 

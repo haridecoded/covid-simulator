@@ -60,15 +60,18 @@ var sliders = {
         "optionName": "infectionRate",
         "type": "slider"
     },
+    // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
     "ageSlider": {
-        "values": [25, 35, 45, 55, 65],
-        "labels": ["25", "35", "45", "55", "65"],
-        "explanations": ["",
-            "",
-            "",
-            "",
-            ""],
-        "default": 1,
+        "values": [15.4	, 30.9, 38.1, 45.5, 53.1],
+        "labels": ["15.4", "28.1", "38.1", "45.5", "53.1"],
+        "explanations": [
+            "Median age in Niger (youngest country)",
+            "Median age in India (141st oldest country)",
+            "Median age in United States (61st oldest country)",
+            "Median age in Italy (5th cldest country)",
+            "Median age in Monaco (oldest Country)"
+        ],
+        "default": 2,
         "optionName": "avgAge",
         "type": "slider"
     }

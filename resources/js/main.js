@@ -21,16 +21,38 @@ var pid;
 var defaultSimulationOptions = {
     nDays: 35, // How many days to simulate
     populationSize: 200, // How many people to simulate
-    averageHouseSize: 4, // Average number of people per house
-    avgAge: 35, // Average age of population
-    isolation: 0, // How extreme is the social distancing? (0 = no isolation, 1 = total isolation)
+    avgAge: 38.1, // Average age of population
+    socialDistancing: {
+        everyoneStaysHome: false,
+        symptomaticStayHome: false,
+        eldersStayHome: false,
+
+    },
     propInfected: 0.001, // What proportion of people are infected at the beginning
-    propImmuComp: 0.028, // What proportion of people are immunocompromised? Default based on 2.8% immunocompromised population: https://academic.oup.com/ofid/article/3/suppl_1/1439/2635779
-    interactionsPerDay: 2, // How many people each person interacts with per day
-    everyoneIsolates: false,
+    randomSeed: 7,
     user: {
         age: 30, // User Age
         houseSize: 7 // User House Size
+    },
+    neighborhood: {
+        nHouses: 31,
+        events: [
+            {
+                id: "groceryShopping",
+                timesPerMonth: 10, // Average number of times per month people visit
+                pContact: 0.6 // If two people are here at the same time, what is the prob. they interact
+            },
+            {
+                id: "walkInPark",
+                timesPerMonth: 20, 
+                pContact: 0.2
+            },
+            // {
+            //     id: "houseParty",
+            //     timesPerMonth: 2,
+            //     pContact: 0.9
+            // }
+        ]
     }
 };
 
@@ -86,7 +108,7 @@ $(window).on('load', function () {
     $("#panel" + currentStep).show();   
     var key = JSON.stringify(defaultSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
-        simulationCache[key] = covidModel.simulate(defaultSimulationOptions);
+        simulationCache[key] = covidModel.simulateNeighborhood(defaultSimulationOptions);
     }
     simulationData = simulationCache[key];
     trendData = simulationData
@@ -873,7 +895,7 @@ function initializeFreeformGraph() {
 function redraw() {
     var key = JSON.stringify(currentSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
-        simulationCache[key] = covidModel.simulate(currentSimulationOptions);
+        simulationCache[key] = covidModel.simulateNeighborhood(currentSimulationOptions);
     }
     simulationData = simulationCache[key];
     freeformData = simulationData
@@ -1044,7 +1066,8 @@ class SimulationWorld {
         //assign people to objects
         var population = covidModel.generatePopulation(this.modelParam);
         _.forEach(this.gameObjects, function (o, i) {
-            o.data = population[i];
+            o.data = population.people[i];
+            o.data.infected = o.infectedState === 'sick';
         });
 
     }
@@ -1126,9 +1149,18 @@ class SimulationWorld {
                     if (isNaN(obj1.vx) || isNaN(obj1.vy) || isNaN(obj2.vx) || isNaN(obj2.vy)) {
                         console.log("Detected NaN");
                     }
-
+                    //// Uncomment this to use model to determine whether dots get infected on collision.
+                    // covidModel.simulateInteraction(obj1.data, obj2.data);
+                    // if (obj1.data.infected){
+                    //     obj1.infectedState = 'sick';
+                    //     if (!obj1.infectedTime) obj1.infectedTime = Date.now();
+                    // }
+                    // if (obj2.data.infected){
+                    //     obj2.infectedState = 'sick';
+                    //     if (!obj2.infectedTime) obj2.infectedTime = Date.now();
+                    // }
                     if (obj1.infectedState === 'sick' || obj2.infectedState === 'sick') {
-
+                        obj1.data.infected
                         obj2.infectedState = obj1.infectedState = 'sick';
 
                         if (!obj1.infectedTime) obj1.infectedTime = Date.now();

@@ -39,13 +39,13 @@ var defaultSimulationOptions = {
         events: [
             {
                 id: "groceryShopping",
-                timesPerMonth: 10, // Average number of times per month people visit
+                timesPerMonth: 4, // Average number of times per month people visit
                 pContact: 0.6 // If two people are here at the same time, what is the prob. they interact
             },
             {
                 id: "walkInPark",
-                timesPerMonth: 20, 
-                pContact: 0.2
+                timesPerMonth: 21, 
+                pContact: 0.05
             },
             // {
             //     id: "houseParty",
@@ -112,7 +112,7 @@ $(window).on('load', function () {
     }
     simulationData = simulationCache[key];
     trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.summary.nInfected*1.6 }; });
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     freeformData = simulationData
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     pid = new IDGenerator().generate();

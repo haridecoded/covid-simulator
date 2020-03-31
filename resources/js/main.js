@@ -992,8 +992,8 @@ class SimulationWorld {
     }
 
     createWorld({ percentHome, infectedCount, userMode = null }) {
-        let homeCount = Math.ceil(this.totalPeople * this.percentHome);
-        let movingCount = Math.ceil(this.totalPeople * (1 - percentHome));
+        let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
+        let movingCount = this.totalPeople - infectedCount - homeCount;
         let speedMultiplier = 0.5;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {

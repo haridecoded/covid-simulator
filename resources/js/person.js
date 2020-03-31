@@ -9,7 +9,7 @@ class Person {
         this.infectedTime;
         this.radius = radius; //3.4
         //this.isColliding = false;
-
+        this.data = null;
         this.x = x;
         this.y = y;
 

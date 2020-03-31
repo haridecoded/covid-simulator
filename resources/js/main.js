@@ -14,6 +14,7 @@ var isolation = 0.1;
 var covid_all;
 var normalSimulationData = [];
 var sdSimulationData = [];
+var userSimulationData = [];
 var simulationWorld;
 var pid;
 
@@ -33,13 +34,53 @@ var defaultSimulationOptions = {
     }
 };
 
+// user simulation parameters
+var sliders = {    
+    "isolationSlider": {
+        "values": [0, 0.3, 0.5, 0.7, 0.95],
+        "labels": ["None", "Mild", "Moderate", "High", "Lockdown"],
+        "explanations": ["No one practices social distancing",
+            "",
+            "",
+            "",
+            ""],
+        "default": 0,
+        "optionName": "isolation",
+        "type": "slider"
+    },
+    "infectionRateSlider": {
+        "values": [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+        "labels": ["0", "0.2", "0.4", "0.6", "0.8", "1.0"],
+        "explanations": ["",
+            "",
+            "",
+            "",
+            ""],
+        "default": 0,
+        "optionName": "infectionRate",
+        "type": "slider"
+    },
+    "ageSlider": {
+        "values": [25, 35, 45, 55, 65],
+        "labels": ["25", "35", "45", "55", "65"],
+        "explanations": ["",
+            "",
+            "",
+            "",
+            ""],
+        "default": 1,
+        "optionName": "avgAge",
+        "type": "slider"
+    }
+    //"symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
+};
+
 var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
 
 
 $(window).on('load', function () {
     $(".panel").hide();
-    $("#panel" + currentStep).show();
-    initializeSliders(sliders);
+    $("#panel" + currentStep).show();   
     var key = JSON.stringify(defaultSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
         simulationCache[key] = covidModel.simulate(defaultSimulationOptions);
@@ -80,13 +121,7 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            simulationWorld.resetWorld();
-            break;
-        case 5:
-            currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
-            initializeFreeformGraph();
+            setUpUserSimulation();
             break;
     }
 }
@@ -94,7 +129,7 @@ function onBtnNextClick() {
 // PANEL 1
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
-    $("#btnNext").hide();
+    //$("#btnNext").hide();
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
@@ -269,11 +304,11 @@ function getCovidCount() {
 
 // PANEL 2
 function setupNormalSimulation() {
-    $("#btnNext").hide();
+    //$("#btnNext").hide();
     drawNormalSimulationChart();
 
     // initialize simulation canvas
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 0, null, null);
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
 }
 
 function drawNormalSimulationChart() {
@@ -424,24 +459,27 @@ function simulateSpreadNormal() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart);   
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, 36, updateChart, defaultSimulationOptions);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
 // PANEL 3
 function showThreshold() {   
     $(".threshold").fadeIn(2000);
-    simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
+    if (normalSimulationData && normalSimulationData.length > 0) {
+        simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
+    }    
 }
 
 // PANEL 4
 function setupSDSimulation() {
-    $("#btnNext").hide();
+    //$("#btnNext").hide();
     drawSDSimulationChart();
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 0, null, null);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 0, null, null, defaultSimulationOptions);
 }
+
 function drawSDSimulationChart() {
     $("#panel4Chart2").empty();
     var width = Math.min($("#panel4Chart2").width(), 700);
@@ -564,14 +602,59 @@ function simulateSDSpread() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart);
+    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, 36, updateChart, defaultSimulationOptions);
     document.getElementById("btnNormalSim").disabled = true;
 }
 
-// PANEL X
+// PANEL 5
+
+function setUpUserSimulation() {
+    // disable next button
+    $("#btnNext").hide();
+
+    //set up controls   
+    for (const sId in sliders) {
+        var s = sliders[sId];
+        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
+        if (s.type === "slider") {
+            applyFill(document.getElementById(sId));
+        }
+    }
+
+    // draw linegraph
+    drawUserSimulationChart();
+
+    // set up dot simulation world
+    if (simulationWorld) {
+        simulationWorld.resetWorld();
+        simulationWorld = null;
+    }
+    simulationWorld = new SimulationWorld('userCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
+}
+
+function renderUserSimulationWorld() {
+
+}
+
+function drawUserSimulationChart() {
+
+}
+
+function applyFill(slider) {
+    const settings = {
+        fill: '#b9003e',
+        background: '#d7dcdf'
+    };
+
+    const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+    const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+    slider.style.background = bg;
+}
+
 function initializeFreeformGraph() {
     $("#panel6Chart1").empty();
-    $("#btnNext").hide();
+    //$("#btnNext").hide();
     var width = Math.min($("#panel6Chart1").width(), 700);
     var height = Math.min($("#panel6Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
@@ -686,21 +769,10 @@ function redraw() {
     initializeFreeformGraph();
 }
 
-function applyFill(slider) {
-    const settings = {
-        fill: '#b9003e',
-        background: '#d7dcdf'
-    };
-
-    const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
-    const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
-    slider.style.background = bg;
-}
-
 function onSliderInput(slider){
     var i;
     var s = sliders[slider.id];
-    if (s.type == 'toggle'){
+    if (s.type === 'toggle'){
         i = slider.checked === true ? 1 : 0;
     } else{
         i = parseInt(slider.value);
@@ -714,49 +786,6 @@ function onSliderInput(slider){
 function onSliderChange(){
     redraw();
 }
-
-////////// Sliders //////////
-var sliders = {
-    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider"},
-    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
-    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
-};
-
-function initializeSliders(sliders) {
-    for (const sId in sliders) {
-        var s = sliders[sId];
-        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
-        if(s.type == "slider"){
-            applyFill(document.getElementById(sId));
-        }
-    }
-}
-
-function getPossibleSimulationOptions(sliders) {
-    return Object.values(sliders).reduce(function (possibleOptions, slider) {
-        var options = [];
-        if (!possibleOptions) {
-            options = slider.values.map(function (v) {
-                var o = {};
-                o[slider.optionName] = v;
-                return o;
-            });
-        } else {
-            possibleOptions.forEach(function (o) {
-                slider.values.forEach(function (v) {
-                    var patch = {};
-                    patch[slider.optionName] = v;
-                    options.push(Object.assign(patch, o));
-                });
-            });
-        }
-        return options;
-    }, null);
-}
-////////// End Sliders //////////
-
-
 
 
 // HELPER FUNCTIONS
@@ -779,7 +808,7 @@ function logToDB(data) {
 
 class SimulationWorld {
 
-    constructor(canvasId, percentHome, populationSize, infectedCount, days, callback) {
+    constructor(canvasId, percentHome, populationSize, infectedCount, days, callback, modelParam = null) {
         this.canvas = null;
         this.context = null;
         this.oldTimeStamp = 0;
@@ -795,10 +824,13 @@ class SimulationWorld {
         this.totalPeople = populationSize;
         this.defaultInfectedCount = infectedCount;
 
-        this.init(canvasId);
         this.update = callback;
         this.days = days;
         this.reset = false;
+        this.modelParam = modelParam;
+
+        this.init(canvasId);
+       
        
     }
 
@@ -820,8 +852,7 @@ class SimulationWorld {
             userMode: this.userMode
         });
 
-        window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });
-        console.log(this.canvasRight + " , " + this.canvasBottom);
+        window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });       
     }
 
     resetWorld() {
@@ -884,6 +915,13 @@ class SimulationWorld {
         
 
         this.gameObjects = [...infected, ...moving, ...home];
+
+        //assign people to objects
+        var population = covidModel.generatePopulation(this.modelParam);
+        _.forEach(this.gameObjects, function (o, i) {
+            o.data = population[i];
+        });
+
     }
 
     gameLoop(timeStamp) {
@@ -1065,3 +1103,50 @@ function addCommas(nStr) {
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+
+
+
+
+
+////////// Sliders //////////
+//var sliders = {
+//    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider" },
+//    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
+//    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
+//};
+
+//function initializeSliders(sliders) {
+//    for (const sId in sliders) {
+//        var s = sliders[sId];
+//        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
+//        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
+//        if (s.type === "slider") {
+//            applyFill(document.getElementById(sId));
+//        }
+//    }
+//}
+
+
+//function getPossibleSimulationOptions(sliders) {
+//    return Object.values(sliders).reduce(function (possibleOptions, slider) {
+//        var options = [];
+//        if (!possibleOptions) {
+//            options = slider.values.map(function (v) {
+//                var o = {};
+//                o[slider.optionName] = v;
+//                return o;
+//            });
+//        } else {
+//            possibleOptions.forEach(function (o) {
+//                slider.values.forEach(function (v) {
+//                    var patch = {};
+//                    patch[slider.optionName] = v;
+//                    options.push(Object.assign(patch, o));
+//                });
+//            });
+//        }
+//        return options;
+//    }, null);
+//}
+////////// End Sliders //////////

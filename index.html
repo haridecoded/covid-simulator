@@ -118,7 +118,6 @@
         </div>
 
 
-
         <div class="row panel" id="panel3" style="display:none;">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
@@ -192,56 +191,134 @@
         <div class="row panel" id="panel5" style="display:none;">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
-                  Now, you have a basic understanding of how <span class="emph">Social Distancing</span> can slow down the spread of Coronavirus. 
+                    <p class="pEmph">
+                        Up until now, we have looked at how <b>"shelter in place"</b> type of <span class="emph">Social Distancing</span>
+                        can greatly slow down the spread of Coronavirus. But, there are other questions you may have such as <i>What happens if only people over the age of 60 practice social distancing?</i>
+                        or <i>How washing hands or not touching your face can affect the spread of virus? </i>
+                    </p>
+                    <p>
+                        Choose from the list of questions below or directly change different attributes of our model to see how the spread of the virus changes.
+                    </p>
                 </div>
-                <div class="row">
-                    <div id="panel6Chart1">
+            </div>
+            <div class="row">
+                <div class="ten columns offset-by-one alpha">
+                    <select id="behavior" class="mdl-select-workaround">
+                        <option>Select a question:</option>
+                        <option value="over60">What if only people over the age of 60 practice social distancing?</option>
+                        <option value="under25">What if people under 25 move around in the neighborhood?</option>
+                        <option value="under25">What if only people who exhibit symptoms stay at home?</option>
+                        <option value="face">What if people wash hands regularly and avoid touching their face?</option>
+                    </select>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="four columns alpha">
+                    <div class="row lbl">
+                        <span>Social Distancing:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="isolationSliderText" class="range-slider__value"></span>
+                        </div>
+                    </div>
+                    <div class="row expl">
+                        <span  id="isolationExplanation">Explanation about value</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class=" four columns alpha ">
-                        <div class="row" style="text-align:left;">
-                            Average Population Age:
-                        </div>
-                        <div class="row">
-                            <div class="range-slider">
-                                <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                                <span id="ageSliderText" class="range-slider__value"></span>
-                            </div>
+                <div class="four columns alpha">
+                    <div class="row lbl">
+                        <span>Probability of Infection:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="infectionRateSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="infectionRateSliderText" class="range-slider__value"></span>
                         </div>
                     </div>
-                    <div class="four columns">
-                        <div class="row" style="text-align:left;">
-                            Social Distancing:
-                        </div>
-                        <div class="row">
-                            <div class="range-slider">
-                                <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                                <span id="isolationSliderText" class="range-slider__value"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="two columns">
+                    <div class="row expl">
+                        <span id="infectionRateExplanation">Explanation about value</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="four columns">
-                        <div class="row">
-                            <div class="row" style="text-align:left;">
-                                Who stays home?
-                            </div>
-                            <div class="toggle-container">
-                                <label class="switch">
-                                    <input id="symptomIsolationToggle" type="checkbox" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                                    <span class="toggle-slider round"></span>
-                                </label>
-                                <span id="symptomIsolationToggleText" class="range-slider__value toggle-text"></span>
-                            </div>
+                <div class="four columns alpha">
+                    <div class="row lbl">
+                        <span>Average Population Age:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="ageSliderText" class="range-slider__value"></span>
                         </div>
+                    </div>
+                    <div class="row expl">
+                        <span  id="ageExplanation">Explanation about value</span>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="six columns alpha">
+                    <div class="chart" id="panel5Chart1">
+                        <canvas id="userCanvas" width="100" height="100" style="margin-top:30px;border:1px solid #171717; background:#fff;">
+                            Your browser does not support the HTML5 canvas tag.
+                        </canvas>
+                    </div>
+                </div>
+                <div class="six columns">
+                    <div class="chart" id="panel5Chart2">
+
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="row">
+        <div id="panel6Chart1">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class=" four columns alpha ">
+            <div class="row" style="text-align:left;">
+                Average Population Age:
+            </div>
+            <div class="row">
+                <div class="range-slider">
+                    <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                    <span id="ageSliderText" class="range-slider__value"></span>
+                </div>
+            </div>
+        </div>
+        <div class="four columns">
+            <div class="row" style="text-align:left;">
+                Social Distancing:
+            </div>
+            <div class="row">
+                <div class="range-slider">
+                    <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                    <span id="isolationSliderText" class="range-slider__value"></span>
+                </div>
+            </div>
+        </div>
+        <div class="two columns">
+        </div>
+    </div>
+    <div class="row">
+        <div class="four columns">
+            <div class="row">
+                <div class="row" style="text-align:left;">
+                    Who stays home?
+                </div>
+                <div class="toggle-container">
+                    <label class="switch">
+                        <input id="symptomIsolationToggle" type="checkbox" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                        <span class="toggle-slider round"></span>
+                    </label>
+                    <span id="symptomIsolationToggleText" class="range-slider__value toggle-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>-->
         </div>
 
         <div class="row footer" style="text-align:center;">

@@ -226,11 +226,11 @@ function initializeDrawView() {
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
     var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
-
+    var userDrawStart = 7;
     var clipRect = c.svg
         .append('clipPath#clip')
         .append('rect')
-        .at({ width: c.x(5) - 2, height: c.height });
+        .at({ width: c.x(userDrawStart) + 2, height: c.height });
 
     var correctSel = c.svg.append('g').attr('clip-path', 'url(#clip)');
 
@@ -241,8 +241,8 @@ function initializeDrawView() {
 
     c.svg.append("svg:image")
         .attr("id","pencil")
-        .attr('x', c.x(trendData[4].day))
-        .attr('y', c.y(trendData[4].cases)-48)
+        .attr('x', c.x(trendData[userDrawStart - 1].day))
+        .attr('y', c.y(trendData[userDrawStart - 1].cases)-48)
         .attr('width', 48)
         .attr('height', 48)
         .attr("xlink:href", "images/pencil.png");
@@ -251,9 +251,9 @@ function initializeDrawView() {
     yourData = trendData
         .map(function (d) { return { day: d.day, cases: d.cases, defined: 0 };})
         .filter(function (d) {
-            if (d.day === 5)
+            if (d.day === userDrawStart)
                 d.defined = true;
-            return d.day >= 5;
+            return d.day >= userDrawStart;
         });
 
     // gridlines in x axis function

@@ -89,7 +89,7 @@ var sliders = {
         "explanations": [
             "Median age in Niger (youngest country)",
             "Median age in India (141st oldest country)",
-            "Median age in United States (61st oldest country)",
+            "Median age in U.S. (61st oldest country)",
             "Median age in Italy (5th oldest country)",
             "Median age in Monaco (oldest Country)"
         ],

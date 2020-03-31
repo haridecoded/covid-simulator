@@ -28,6 +28,7 @@ var defaultSimulationOptions = {
         eldersStayHome: false,
 
     },
+    infectionMultiplier: 1.0,
     propInfected: 0.001, // What proportion of people are infected at the beginning
     randomSeed: 7,
     user: {
@@ -71,15 +72,15 @@ var sliders = {
         "type": "slider"
     },
     "infectionRateSlider": {
-        "values": [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-        "labels": ["0", "0.2", "0.4", "0.6", "0.8", "1.0"],
+        "values": [0, 0.5, 1.0, 1.5, 2.0, 10.0],
+        "labels": ["0", "0.5", "1.0", "1.5", "2.0", "10.0"],
         "explanations": ["",
             "",
             "",
             "",
             ""],
-        "default": 0,
-        "optionName": "infectionRate",
+        "default": 2,
+        "optionName": "infectionMultiplier",
         "type": "slider"
     },
     // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
@@ -491,7 +492,9 @@ function simulateSpreadNormal() {
     }
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, defaultSimulationOptions);   
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
+    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, simOptions);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -1151,23 +1154,23 @@ class SimulationWorld {
                     if (isNaN(obj1.vx) || isNaN(obj1.vy) || isNaN(obj2.vx) || isNaN(obj2.vy)) {
                         console.log("Detected NaN");
                     }
-                    //// Uncomment this to use model to determine whether dots get infected on collision.
-                    // covidModel.simulateInteraction(obj1.data, obj2.data);
-                    // if (obj1.data.infected){
-                    //     obj1.infectedState = 'sick';
-                    //     if (!obj1.infectedTime) obj1.infectedTime = Date.now();
-                    // }
-                    // if (obj2.data.infected){
-                    //     obj2.infectedState = 'sick';
-                    //     if (!obj2.infectedTime) obj2.infectedTime = Date.now();
-                    // }
-                    if (obj1.infectedState === 'sick' || obj2.infectedState === 'sick') {
-                        obj1.data.infected
-                        obj2.infectedState = obj1.infectedState = 'sick';
-
+                    // Uncomment this to use model to determine whether dots get infected on collision.
+                    covidModel.simulateInteraction(obj1.data, obj2.data);
+                    if (obj1.data.infected){
+                        obj1.infectedState = 'sick';
                         if (!obj1.infectedTime) obj1.infectedTime = Date.now();
+                    }
+                    if (obj2.data.infected){
+                        obj2.infectedState = 'sick';
                         if (!obj2.infectedTime) obj2.infectedTime = Date.now();
                     }
+                    // if (obj1.infectedState === 'sick' || obj2.infectedState === 'sick') {
+                    //     obj1.data.infected
+                    //     obj2.infectedState = obj1.infectedState = 'sick';
+
+                    //     if (!obj1.infectedTime) obj1.infectedTime = Date.now();
+                    //     if (!obj2.infectedTime) obj2.infectedTime = Date.now();
+                    // }
                 }
             }
         }

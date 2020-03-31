@@ -35526,7 +35526,7 @@ function generatePerson(values, options){
         age: values.age | Math.round(Random.randLogNormal(Math.log(options.avgAge), 0.25)),
         houseId: null
     }, values);
-    Virus.assignProgressionProbs(person);
+    Virus.assignProgressionProbs(person, options);
     return person
 }
 
@@ -35737,8 +35737,8 @@ function getPDeath(person){
     return diseaseProgression.deaths[getAgeGroupKey(person.age)]
 }
 
-function assignProgressionProbs(person){
-    person.pInfection = getPInfection(person);
+function assignProgressionProbs(person, options){
+    person.pInfection = Math.min(getPInfection(person) * (options.infectionMultiplier ? options.infectionMultiplier: 1.0), 1.0);
     person.pHospitalization = getPHospitalization(person);
     person.pCriticalCare = getPCriticalCare(person);
     person.pDeath = getPDeath(person);

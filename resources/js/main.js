@@ -226,7 +226,7 @@ function initializeDrawView() {
 
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
-    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
+    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveBasis);
     var userDrawStart = 5;
     var clipRect = c.svg
         .append('clipPath#clip')
@@ -239,6 +239,12 @@ function initializeDrawView() {
     correctSel.append('path.line').at({ d: line(trendData) });
     yourDataSel = c.svg.append('path.your-line');
 
+
+    //c.svg.append('circle').attrs({
+    //    "r": 5,
+    //    "cx": c.x(trendData[userDrawStart - 1].day),
+    //    "cy": c.y(trendData[userDrawStart - 1].cases)
+    //}).style("fill", "#b9003e");
 
     c.svg.append("svg:image")
         .attr("id","pencil")

@@ -70,19 +70,19 @@ var sliders = {
     //    "default": 0,
     //    "optionName": "isolation",
     //    "type": "slider"
+    ////},
+    //"infectionRateSlider": {
+    //    "values": [0, 0.5, 1.0, 1.5, 2.0, 10.0],
+    //    "labels": ["0", "0.5", "1.0", "1.5", "2.0", "10.0"],
+    //    "explanations": ["",
+    //        "",
+    //        "",
+    //        "",
+    //        ""],
+    //    "default": 2,
+    //    "optionName": "infectionMultiplier",
+    //    "type": "slider"
     //},
-    "infectionRateSlider": {
-        "values": [0, 0.5, 1.0, 1.5, 2.0, 10.0],
-        "labels": ["0", "0.5", "1.0", "1.5", "2.0", "10.0"],
-        "explanations": ["",
-            "",
-            "",
-            "",
-            ""],
-        "default": 2,
-        "optionName": "infectionMultiplier",
-        "type": "slider"
-    },
     // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
     "ageSlider": {
         "values": [15.4	, 30.9, 38.1, 45.5, 53.1],

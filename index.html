@@ -213,37 +213,37 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="five columns alpha">
-                    <div class="row lbl">
-                        <span>Average Population Age:</span>
-                    </div>
+            <div class="row" >
+                <div class="six columns alpha">
                     <div class="row">
-                        <div class="range-slider">
-                            <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                            <span id="ageSliderText" class="range-slider__value"></span>
+                        COVID Protection Behavior
+                    </div> 
+                    <div class="row" style="padding-top:1em;text-align:left !important;">
+                        <div class="checkbox">
+                            <input id="6feet" type="checkbox" />
+                            <label for="6feet" class="checkbox-label" value="6feet">Six Feet Separation</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="handwash" type="checkbox" />
+                            <label for="handwash" class="checkbox-label" value="handwash">Wash Hands</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="mask" type="checkbox" />
+                            <label for="mask" class="checkbox-label" value="mask">Wear a Mask</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="facetouch" type="checkbox" />
+                            <label for="facetouch" class="checkbox-label" value="facetouch">Avoid Touching Face</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="shelter" type="checkbox" />
+                            <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
                         </div>
                     </div>
-                    <div class="row expl">
-                        <span id="ageSliderExplanation">Explanation about value</span>
                     </div>
-                    <div class="row lbl">
-                        <span>Probability of getting infected:</span>
-                    </div>
+
+                <div class="six columns">
                     <div class="row">
-                        <div class="range-slider">
-                            <input id="infectionRateSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                            <span id="infectionRateSliderText" class="range-slider__value"></span>
-                        </div>
-                    </div>
-                    <div class="row expl">
-                        <span id="infectionRateSliderExplanation">Explanation about value</span>
-                    </div>
-
-                </div>
-
-                <div class="seven columns">
-                    <div class="row lbl">
                         Who practices social distancing:
                     </div>
                     <div class="row" style="padding-top:1em;text-align:left !important;">
@@ -267,16 +267,25 @@
                             <input id="symptomatic" type="checkbox" />
                             <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
                         </div>
-                        <div class="checkbox">
-                            <input id="chronic" type="checkbox" />
-                            <label for="chronic" class="checkbox-label" value="chronic">People with Chronic Conditions</label>
-                        </div>
-
-
-
                     </div>                   
                 </div>
 
+            </div>
+            <div class="row">
+                <div class="eight columns offset-by-two alpha">
+                    <div class="row">
+                        <span>Average Population Age:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="ageSliderText" class="range-slider__value"></span>
+                        </div>
+                    </div>
+                    <div class="row expl">
+                        <span id="ageSliderExplanation">Explanation about value</span>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <input id="btnUserSim" type="button" class="button-primary" value="Simulate" onclick="simulateUserSpread()" />

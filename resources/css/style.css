@@ -158,7 +158,7 @@ h1{
 }
 
 .expl {
-    text-align: left !important;
+    /*text-align: left !important;*/
     padding-left: 2em;
     padding-top:0.5em;
     color:#5e5558;

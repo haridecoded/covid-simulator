@@ -33,7 +33,7 @@
                 <div class="eight columns offset-by-two alpha">
                     <p class="pEmph">
                         On December 26, 2019 four unusual cases of pneumonia was noticed by Dr. Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified as the cause.
-                        Since then, the virus has infected thousands of people all over the world at an exponential rate. <span class="emph" id="caseCount">400,000+</span> cases so far!
+                        Since then, the virus has infected thousands of people all over the world at an exponential rate. <span class="emph" id="caseCount">900,000+</span> cases so far!
                     </p>
                     <p>
 
@@ -214,35 +214,7 @@
             </div>
 
             <div class="row">
-                <div class="four columns alpha">
-                    <div class="row lbl">
-                        <span>Social Distancing:</span>
-                    </div>
-                    <div class="row">
-                        <div class="range-slider">
-                            <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                            <span id="isolationSliderText" class="range-slider__value"></span>
-                        </div>
-                    </div>
-                    <div class="row expl">
-                        <span  id="isolationSliderExplanation">Explanation about value</span>
-                    </div>
-                </div>
-                <div class="four columns alpha">
-                    <div class="row lbl">
-                        <span>Probability of Infection:</span>
-                    </div>
-                    <div class="row">
-                        <div class="range-slider">
-                            <input id="infectionRateSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                            <span id="infectionRateSliderText" class="range-slider__value"></span>
-                        </div>
-                    </div>
-                    <div class="row expl">
-                        <span id="infectionRateSliderExplanation">Explanation about value</span>
-                    </div>
-                </div>
-                <div class="four columns alpha">
+                <div class="five columns alpha">
                     <div class="row lbl">
                         <span>Average Population Age:</span>
                     </div>
@@ -253,10 +225,81 @@
                         </div>
                     </div>
                     <div class="row expl">
-                        <span  id="ageSliderExplanation">Explanation about value</span>
+                        <span id="ageSliderExplanation">Explanation about value</span>
                     </div>
+                    <div class="row lbl">
+                        <span>Probability of getting infected:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="infectionRateSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="infectionRateSliderText" class="range-slider__value"></span>
+                        </div>
+                    </div>
+                    <div class="row expl">
+                        <span id="infectionRateSliderExplanation">Explanation about value</span>
+                    </div>
+
                 </div>
+
+                <div class="seven columns">
+                    <div class="row lbl">
+                        Who practices social distancing:
+                    </div>
+                    <div class="row" style="padding-top:1em;text-align:left !important;">
+                        <div class="checkbox">
+                            <input id="60plus" type="checkbox" />
+                            <label for="60plus" class="checkbox-label" value="60plus">60 Years +</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="30plus" type="checkbox" />
+                            <label for="30plus" class="checkbox-label" value="30plus">30 Years +</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="under30" type="checkbox" />
+                            <label for="under30" class="checkbox-label" value="under30">Under 30</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="everyone" type="checkbox" />
+                            <label for="everyone" class="checkbox-label" value="everyone">All ages</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="symptomatic" type="checkbox" />
+                            <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
+                        </div>
+                        <div class="checkbox">
+                            <input id="chronic" type="checkbox" />
+                            <label for="chronic" class="checkbox-label" value="chronic">People with Chronic Conditions</label>
+                        </div>
+
+
+
+                    </div>                   
+                </div>
+
             </div>
+            <div class="row">
+                <input id="btnUserSim" type="button" class="button-primary" value="Simulate" onclick="simulateUserSpread()" />
+            </div>
+
+               
+                <!--<div class="four columns alpha">
+                    <div class="row lbl">
+                        <span>Social Distancing:</span>
+                    </div>
+                    <div class="row">
+                        <div class="range-slider">
+                            <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span id="isolationSliderText" class="range-slider__value"></span>
+                        </div>
+                    </div>
+                    <div class="row expl">
+                        <span id="isolationSliderExplanation">Explanation about value</span>
+                    </div>
+                </div>-->
+
+
+       
             <div class="row">
                 <div class="six columns alpha">
                     <div class="chart" id="panel5Chart1">

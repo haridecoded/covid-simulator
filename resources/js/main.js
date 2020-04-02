@@ -59,18 +59,18 @@ var defaultSimulationOptions = {
 
 // user simulation parameters
 var sliders = {    
-    "isolationSlider": {
-        "values": [0, 0.3, 0.5, 0.7, 0.95],
-        "labels": ["None", "Mild", "Moderate", "High", "Lockdown"],
-        "explanations": ["No one practices social distancing",
-            "",
-            "",
-            "",
-            ""],
-        "default": 0,
-        "optionName": "isolation",
-        "type": "slider"
-    },
+    //"isolationSlider": {
+    //    "values": [0, 0.3, 0.5, 0.7, 0.95],
+    //    "labels": ["None", "Mild", "Moderate", "High", "Lockdown"],
+    //    "explanations": ["No one practices social distancing",
+    //        "",
+    //        "",
+    //        "",
+    //        ""],
+    //    "default": 0,
+    //    "optionName": "isolation",
+    //    "type": "slider"
+    //},
     "infectionRateSlider": {
         "values": [0, 0.5, 1.0, 1.5, 2.0, 10.0],
         "labels": ["0", "0.5", "1.0", "1.5", "2.0", "10.0"],
@@ -227,7 +227,7 @@ function initializeDrawView() {
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
     var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
-    var userDrawStart = 7;
+    var userDrawStart = 5;
     var clipRect = c.svg
         .append('clipPath#clip')
         .append('rect')
@@ -273,7 +273,7 @@ function initializeDrawView() {
     var drag = d3.drag()
         .on('drag', function () {
             var pos = d3.mouse(this);
-            var day = clamp(6, defaultSimulationOptions.nDays, c.x.invert(pos[0]));
+            var day = clamp(userDrawStart-1, defaultSimulationOptions.nDays, c.x.invert(pos[0]));
             var cases = clamp(0, c.y.domain()[1], c.y.invert(pos[1]));
 
             yourData.forEach(function (d) {
@@ -1142,7 +1142,11 @@ class SimulationWorld {
                     var vRelativeVelocity = { x: obj1.vx - obj2.vx, y: obj1.vy - obj2.vy };
                     var speed = vRelativeVelocity.x * vCollisionNorm.x + vRelativeVelocity.y * vCollisionNorm.y;
 
-                    if (speed < 0 || isNaN(speed)) {
+                    if (isNaN(speed)) {
+                        speed = randomIntFromInterval(1, 20);
+                    }
+
+                    if (speed < 0) {
                         break;
                     }                  
 

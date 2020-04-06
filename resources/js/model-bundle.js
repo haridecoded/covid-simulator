@@ -2,6 +2,1565 @@
 module.exports = {diseaseProgression: {"relativeInfectionRate":{"0-19":0.197734572684335,"20-44":0.864482285470444,"45-54":1.32707227439771,"55-64":1.36854328297264,"65-74":1.87648248998674,"75-84":1.94884739596867,"85-120":3.09471105284649},"hospitalizations":{"0-19":0.0205,"20-44":0.1755,"45-54":0.2475,"55-64":0.253,"65-74":0.3605,"75-84":0.446,"85-120":0.508},"criticalCare":{"0-19":0,"20-44":0.031,"45-54":0.079,"55-64":0.0795,"65-74":0.1345,"75-84":0.2075,"85-120":0.1765},"deaths":{"0-19":0,"20-44":0.0015,"45-54":0.0065,"55-64":0.02,"65-74":0.038,"75-84":0.074,"85-120":0.1885},"keys":["0-19","20-44","45-54","55-64","65-74","75-84","85-120"]}};
 
 },{}],2:[function(require,module,exports){
+// Occupations based on BLS Standard Occupational Classififcation 2018
+// https://www.bls.gov/soc/2018/home.htm
+let occupations = [
+    "Admiral", "CEO", "COO", "County Commissioner", "Governor",
+    "Mayor", "School Superintendent", "University President", "General Manager",
+    "General Superintendent", "Operations Manager", "City Alderman",
+    "Congressional Representative", "Councilor", "Legislator", "Selectman",
+    "Senator", "Advertising Director", "Advertising Executive", "Advertising Manager",
+    "Promotions Director", "Promotions Manager", "VP Advertising", "VP Promotions",
+    "Marketing Administrator", "Marketing Director", "VP Marketing",
+    "E-Commerce Director", "Export Manager", "Sales Director", "Communication Manager",
+    "Publicity Director", "Foundation Director", "Funding Coordinator",
+    "Fundraising Director", "University Registrar", "Stadium Manager", "MIS Director",
+    "Banking Manager", "City Comptroller", "City Treasurer",
+    "Comptroller", "Credit Manager", "Financial Director", "Financial Officer",
+    "Fiscal Manager", "Manufacturing Director", "Plant Chief", "Plant Manager",
+    "Plant Superintendent", "Contract Administrator", "Contracting Manager",
+    "Procurement Manager", "Purchasing Director", "Sourcing Manager", "Airport Manager",
+    "Logistics Manager", "Transportation Manager", "Warehouse Manager",
+    "Compensation Director", "Personnel Administrator", "Personnel Director",
+    "Personnel Manager", "E-Learning Manager", "Greenhouse Manager", "Hatchery Manager",
+    "Orchard Manager", "Construction Coordinator", "Construction Superintendent",
+    "General Contractor", "Preschool Director", "Provost",
+    "University Dean", "Engineering Manager", "Banquet Director", "Banquet Manager",
+    "Cafeteria Director", "Tavern Operator", "Bingo Manager", "Casino Manager",
+    "Gambling Director", "Gambling Manager", "Slots Manager",
+    "Boardinghouse Keeper", "Hotel Director", "Hotel Manager", "Innkeeper",
+    "Clinic Director", "Healthcare Administrator", "Healthcare Manager", "Hospice Director",
+    "Hospital Administrator", "Hospital Director", "Medical Director",
+    "Wellness Director", "Wellness Manager", "Geochemical Manager", "Geophysical Manager",
+    "Postal Supervisor", "Postmaster", "Apartment Manager", "Property Manager",
+    "Emergency Planner", "EMS Director", "Safety Coordinator",
+    "Utilities Manager", "Artist Manager", "Artist Representative", "Band Manager",
+    "Booking Agent", "Booking Manager", "Fight Manager", "Literary Agent",
+    "Modeling Agent", "Talent Agent", "Talent Manager", "Theatrical Agent",
+    "Cattle Buyer", "Cotton Broker", "Cotton Buyer", "Fruit Buyer", "Grain Buyer",
+    "Hog Buyer", "Livestock Buyer", "Oyster Buyer", "Tobacco Buyer", "Gold Buyer",
+    "Merchandise Buyer", "Retail Buyer", "Tie Buyer", "Wholesale Buyer",
+    "Claims Analyst", "Compliance Investigator", "EEO Officer", "Immigration Investigator",
+    "License Inspector", "Mortician Investigator", "Construction Estimator",
+    "Electrical Estimator", "Job Estimator", "Corporate Recruiter",
+    "Credentialing Coordinator", "Job Recruiter", "Personnel Coordinator",
+    "Personnel Officer", "Personnel Recruiter", "Personnel Specialist", "Staffing Coordinator",
+    "Student Recruiter", "Volunteer Coordinator", "Harvesting Contractor",
+    "Union Representative", "Logistician", "Logistics Analyst",
+    "Logistics Coordinator", "Logistics Planner", "Logistics Specialist",
+    "Business Analyst", "Business Consultant", "Commercial Specialist",
+    "Industrial Analyst", "Management Consultant", "Conference Organizer",
+    "Conference Planner", "Convention Planner", "Event Planner", "Events Manager",
+    "Wedding Planner", "Campaign Fundraiser", "Fundraising Officer", "Benefits Analyst",
+    "Compensation Analyst", "Compensation Specialist", "Job Analyst",
+    "Occupational Analyst", "Pension Administrator", "Corporate Trainer",
+    "Training Coordinator", "Training Specialist", "Advertising Analyst",
+    "Marketing Analyst", "Marketing Consultant", "Marketing Forecaster",
+    "Marketing Specialist", "Mystery Shopper", "Ship Purser", "Account Auditor",
+    "Accountant", "Auditor", "Auditor-In-Charge", "Cost Accountant", "CPA", "Field Auditor",
+    "Financial Accountant", "Financial Auditor", "Fund Accountant",
+    "Internal Auditor", "Payroll Auditor", "Tax Accountant", "Estate Appraiser",
+    "Machinery Appraiser", "Budget Analyst", "Budget Coordinator", "Budget Examiner",
+    "Budget Officer", "Cost Analyst", "Credit Analyst", "Factorer",
+    "Estate Planner", "Financial Counselor", "Bond Underwriter", "Insurance Analyst",
+    "Insurance Underwriter", "Insurance Writer", "Bank Examiner",
+    "Payroll Examiner", "Pension Examiner", "Credit Counselor", "Commercial Lender",
+    "Loan Analyst", "Loan Officer", "Loan Reviewer", "City Collector",
+    "Customs Appraiser", "Revenue Collector", "Tax Examiner", "Tax Investigator",
+    "Tax Consultant", "Tax Specialist", "Bail Bondsman", "Bondsman", "Applications Analyst",
+    "Programmer Analyst", "Systems Architect", "Computer Scientist",
+    "Network Technician", "Network Designer", "Network Developer", "Network Engineer",
+    "Database Coordinator", "Database Programmer", "Data Architect",
+    "Database Developer", "LAN Administrator", "Network Analyst", "Network Coordinator",
+    "Applications Programmer", "Computer Programmer", "IT Programmer",
+    "Mainframe Programmer", "Systems Programmer", "Applications Developer",
+    "Software Engineer", "Applications Tester", "Intranet Developer",
+    "Web Architect", "Web Developer", "Digital Designer", "Actuarial Associate",
+    "Actuarial Mathematician", "Health Actuary", "Insurance Actuary", "Pricing Actuary",
+    "Algebraist", "Cipher Expert", "Cryptanalyst", "Cryptographer",
+    "Geometrician", "Operations Analyst", "Procedure Analyst", "Process Analyst",
+    "Analytical Statistician", "Applied Statistician", "Biometrician",
+    "Biostatistician", "Environmental Statistician", "Mathematical Statistician",
+    "Research Biostatistician", "Sampling Expert", "Statistical Analyst", "Survey Statistician",
+    "Harmonic Analyst", "Mathematics Technician", "Building Architect",
+    "Structural Architect", "Landscape Architect", "Landscape Designer",
+    "Cadastral Mapper", "Digital Cartographer", "Map Maker", "Mapper",
+    "Orthophotography Technician", "Photo Cartographer", "Photogrammetrist",
+    "Topographer", "City Surveyor", "County Surveyor", "Geodetic Surveyor", "Land Surveyor",
+    "Mine Surveyor", "Mineral Surveyor", "Topographical Surveyor",
+    "Aerodynamics Engineer", "Aeronautical Engineer", "Aircraft Designer",
+    "Aircraft Engineer", "Astronautical Engineer", "Agricultural Engineer",
+    "Biochemical Engineer", "Biomaterials Engineer", "Bio-Mechanical Engineer",
+    "Biomedical Engineer", "Dialysis Engineer", "Genetic Engineer", "Fuels Engineer",
+    "Oxidation Engineer", "Plastics Engineer", "Polymerization Engineer",
+    "Architectural Engineer", "Bridge Engineer", "Construction Engineer",
+    "Facilities Engineer", "Geotechnical Engineer", "Highway Engineer",
+    "Hydrographic Engineer", "Structural Engineer", "Illuminating Engineer",
+    "Antenna Engineer", "Electronic Engineer", "Telecommunication Engineer", "Soil Engineer",
+    "Efficiency Engineer", "Manufacturing Engineer", "Packaging Engineer",
+    "Production Engineer", "Marine Architect", "Naval Engineer",
+    "Ceramic Engineer", "Metallographer", "Metallurgical Engineer",
+    "Metallurgist", "Welding Engineer", "Combustion Engineer", "Engine Designer",
+    "Tool Engineer", "Geophysical Engineer", "Mineral Engineer", "Mining Engineer",
+    "Seismic Engineer", "Nuclear Engineer", "Radiation Engineer",
+    "Reactor Engineer", "Petroleum Engineer", "Calibration Engineer", "Coastal Engineer",
+    "Mathematical Engineer", "Mechatronics Engineer", "Metrologist",
+    "Ocean Engineer", "Optical Engineer", "Ordnance Engineer", "Photonics Engineer",
+    "Salvage Engineer", "Architectural Drafter", "Building Drafter",
+    "Civil Drafter", "Structural Drafter", "Electrical Drafter", "Electronic Drafter",
+    "Aeronautical Drafter", "Die Designer", "Gage Designer", "Tool Designer",
+    "Blueprint Tracer", "Draughtsman", "Geological Drafter", "Marine Drafter",
+    "Mechatronics Technician", "Environmental Technician", "Hydraulic Technician",
+    "Optomechanical Technician", "Calibration Technician",
+    "Calibration Technologist", "Hydrometer Calibrator", "Radar Technicians",
+    "Sonar Technicians", "Cartographic Aide", "Cartographic Technician", "Mapping Technician",
+    "Surveying Technician", "Topography Technician", "Animal Geneticist",
+    "Animal Nutritionist", "Dairy Scientist", "Poultry Scientist",
+    "Dairy Bacteriologist", "Enologist", "Food Scientist", "Food Technologist",
+    "Agriculturist", "Agronomist", "Arboreal Scientist", "Floriculturist",
+    "Horticulturist", "Plant Physiologist", "Plant Scientist", "Pomologist", "Soil Scientist",
+    "Viticulturist", "Biochemist", "Biological Chemist",
+    "Biophysicist", "Clinical Biochemist", "Physical Biochemist",
+    "Bacteriologist", "Clinical Microbiologist", "Medical Microbiologist",
+    "Microbiological Analyst", "Virologist", "Aquatic Biologist", "Entomologist",
+    "Fish Culturist", "Fishery Biologist", "Herpetologist", "Ichthyologist",
+    "Lepidopterist", "Marine Biologist", "Ornithologist", "Protozoologist",
+    "Wildlife Biologist", "Biologist", "Bryologist", "Embryologist",
+    "Osteologist", "Paleobotanist", "Phytopathologist", "Plant Etiologist",
+    "Grassland Conservationist", "Range Conservationist", "Range Ecologist",
+    "Range Scientist", "Resource Conservationist", "Soil Conservationist", "Water Conservationist",
+    "Forest Ecologist", "Forestry Scientist", "Operations Forester",
+    "Resource Forester", "Service Forester", "Urban Forester",
+    "Clinical Epidemiologist", "Environmental Epidemiologist", "Epidemiology Investigator",
+    "Malariologist", "Medical Epidemiologist",
+    "Pharmacoepidemiologist", "Cancer Researcher", "Clinical Pharmacologist",
+    "Gerontologist", "Histopathologist", "Immunochemist", "Industrial Pharmacist",
+    "Medical Scientist", "Neuroscientist", "Pharmacologist", "Serologist",
+    "Toxicologist", "Astrophysicist", "Cosmologist", "Extragalactic Astronomer",
+    "Galactic Astronomer", "High-energy Astrophysicist", "Optical Astronomer",
+    "Planetary Astronomer", "Radio Astronomer", "Solar Astronomer", "Stellar Astronomer",
+    "Theoretical Astronomer", "Computational Physicist", "Fluid Dynamicist",
+    "Health Physicist", "Mathematical Physicist", "Medical Physicist",
+    "Molecular Physicist", "Nuclear Physicist", "Optical Scientist",
+    "Plasma Physicist", "Research Physicist", "Rheologist", "Thermodynamic Physicist",
+    "Thermodynamicist", "Atmospheric Chemist", "Atmospheric Scientist",
+    "Climatologist", "Hurricane Tracker", "Meteorologist",
+    "Oceanographic Meteorologist", "Space Scientist", "Storm Chaser", "Tornado Chaser",
+    "Weather Analyst", "Weather Forecaster", "Weatherman", "Agricultural Chemist",
+    "Analytical Chemist", "Bench Chemist", "Food Chemist", "Formulary Chemist",
+    "Industrial Chemist", "Inorganic Chemist", "Laboratory Chemist",
+    "Nuclear Chemist", "Organic Chemist", "Plastics Scientist", "Ecological Modeler",
+    "Environmental Analyst", "Environmental Scientist", "Health Environmentalist",
+    "Crystallographer", "Development Geologist", "Environmental Geologist",
+    "Exploration Geologist", "Geochemist", "Geodesist", "Geologist",
+    "Geomagnetist", "Geophysicist", "Geoscientist", "Mine Geologist",
+    "Mineralogist", "Oceanographer", "Oceanologist", "Paleontologist", "Petroleum Geologist",
+    "Petrologist", "Research Geologist", "Sedimentationist",
+    "Seismologist", "Stratigrapher", "Volcanologist", "Hydrogeologist", "Isotope Hydrologist",
+    "Surface Hydrologist", "Agricultural Economist",
+    "Econometrician", "Environmental Economist", "Industrial Economist", "Labor Economist",
+    "Price Economist", "Social Economist", "Tax Economist", "Trade Economist",
+    "Pollster", "Survey Methodologist", "Engineering Psychologist",
+    "Industrial Psychologist", "Management Psychologist", "Organizational Psychologist",
+    "Geropsychologists", "Educational Psychologists",
+    "Developmental Psychologist", "Experimental Psychologist", "Forensic Psychologist",
+    "Neuropsychologist", "Psychotherapist", "Rehabilitation Psychologist",
+    "Social Psychologist", "Sports Psychologist", "Criminologist",
+    "Family Sociologist", "Penologist", "Rural Sociologist", "Urban Sociologist",
+    "City Planner", "Regional Planner", "Urban Planner", "Anthropologist",
+    "Applied Anthropologist", "Archaeologist", "Ethnoarchaeologist", "Medical Anthropologist",
+    "Physical Anthropologist", "Political Anthropologist",
+    "Research Anthropologist", "Research Archaeologist", "Biogeographer",
+    "Economic Geographer", "Geomorphologist", "GIS Geographer", "Glaciologist",
+    "Physical Geographer", "Political Geographer", "Genealogist",
+    "Historiographer", "Protohistorian", "Political Consultant", "Political Researcher",
+    "Behavioral Scientist", "Demographer", "Ethnologist",
+    "Etymologist", "Linguist", "Philologist", "Social Scientist", "Agronomy Technician",
+    "Seed Analyst", "Flavor Technician", "Bacteriology Technician",
+    "Biochemistry Technician", "Microbiology Technician", "Wildlife Technician",
+    "Assayer", "Radon Inspector", "Crude Tester", "Geophysical Prospector",
+    "Magnetometer Operator", "Mineral Technologist", "Mining Technician", "Mud Logger",
+    "Petroleum Technician", "Seismic Interpreter", "Seismic Observer",
+    "Seismograph Operator", "Radiochemical Technician", "Forest Technician",
+    "Forestry Aide", "Forestry Technician", "Ballistic Technician",
+    "Ballistician", "Ballistics Expert", "Criminalist Technician", "Fingerprint Expert",
+    "Forensic Analyst", "Handwriting Expert", "Meteorological Aide",
+    "Polygraph Examiner", "Industrial Hygienist", "CHST", "Ergonomics Technician",
+    "Addiction Counselor", "Addiction Therapist", "Drug Counselor", "Admissions Counselor",
+    "Career Counselor", "Education Counselor", "Guidance Counselor",
+    "Student Advisor", "Vocational Adviser", "Couples Therapist", "Family Counselor",
+    "Family Therapist", "Marriage Counselor", "Marriage Therapist",
+    "Relationship Counselor", "AIDS Counselor", "Grief Counselor", "HIV Counselor",
+    "C-CYFSW", "C-SWHC", "Diabetes Educator", "Health Educator",
+    "Parole Agent", "Parole Officer", "Probation Officer", "CHW", "Cantor",
+    "College Chaplain", "Hebrew Cantor", "Hospital Chaplain", "Imam", "Minister",
+    "Parish Priest", "Pastor", "Priest", "Rabbi", "Reverend", "Vicar", "Youth Pastor",
+    "Education Minister", "Buddhist Monk", "Missionary", "Mohel", "Nun",
+    "Pastoral Worker", "Prior", "Sacristan", "Traveling Missionary", "Verger",
+    "Assistant Counsel", "Associate Attorney", "Attorney", "Attorney General",
+    "Brief Writer", "City Attorney", "Civil Lawyer", "Commonwealth Attorney",
+    "Corporate Attorney", "Corporate Counsel", "Corporate Counselor", "County Attorney",
+    "Defense Attorney", "District Attorney", "Environmental Attorney",
+    "Estate Conservator", "General Counsel", "Insurance Attorney", "Legal Counsel",
+    "Probate Lawyer", "Prosecutor", "Public Defender", "Sports Attorney",
+    "Tax Attorney", "Trial Attorney", "Trial Lawyer", "Judicial Clerk",
+    "Appeals Examiner", "Appeals Referee", "Appellate Conferee", "Hearing Examiner",
+    "Hearing Officer", "Mediation Commissioner", "Ombudsman", "Jurist",
+    "Justice", "Probate Judge", "Tribal Judge", "Assistant Paralegal", "Legal Aide",
+    "Legal Assistant", "Paralegal", "Summer Associate", "Abstract Searcher",
+    "Abstract Writer", "Escrow Officer", "Lease Examiner", "Lien Searcher",
+    "Title Agent", "Title Checker", "Title Examiner", "Title Inspector",
+    "Title Investigator", "Title Officer", "Title Searcher", "Legal Technician",
+    "Accounting Professor", "Finance Professor", "Management Professor",
+    "Marketing Instructor", "Marketing Professor", "IT Professor",
+    "Biostatistics Professor", "Calculus Professor", "Geometry Professor",
+    "Mathematics Professor", "Statistics Professor", "Topology Professor",
+    "Architecture Professor", "Agronomy Professor", "Floriculture Professor",
+    "Horticulture Instructor", "Olericulture Professor", "Anatomy Professor",
+    "Bacteriology Professor", "Biochemistry Professor", "Botany Professor",
+    "Embryology Professor", "Microbiology Professor", "Zoology Professor",
+    "Ecology Professor", "Silviculture Professor", "Climatology Professor",
+    "Geology Professor", "Geoscience Professor", "Meteorology Professor",
+    "Mineralogy Professor", "Oceanography Professor", "Volcanology Professor",
+    "Chemistry Professor", "Phytochemistry Professor", "Aerodynamics Professor",
+    "Astrophysics Professor", "Ballistics Professor", "Hydrodynamics Professor",
+    "Thermodynamics Professor", "Ethnoarchaeology Professor", "Paleology Professor",
+    "Ethnology Professor", "Econometrics Professor", "Macroeconomics Professor",
+    "Microeconomics Professor", "Cartography Professor", "Geomatics Professor",
+    "GIS Professor", "Government Professor", "Psychology Professor",
+    "Dentistry Professor", "Gastroenterology Professor", "Neurology Professor",
+    "Nutrition Professor", "Optometry Professor", "Pharmacology Professor",
+    "Podiatry Professor", "Criminology Professor", "Penology Professor", "Ballet Professor",
+    "Music Professor", "Photography Professor", "Piano Professor",
+    "Stagecraft Professor", "Theatre Professor", "Voice Professor", "Journalism Professor",
+    "Speech Professor", "Composition Professor", "Etymology Professor",
+    "Arabic Professor", "French Professor", "German Professor", "Greek Professor",
+    "Hebrew Professor", "Japanese Professor", "Historiography Professor",
+    "Divinity Professor", "Ethics Professor", "Theology Professor",
+    "Kinesiology Professor", "Swimming Professor", "Barbering Instructor",
+    "Carpentry Instructor", "Cosmetology Instructor", "HVAC Instructor", "Masonry Instructor",
+    "Paralegal Instructor", "Upholstery Instructor", "Welding Instructor",
+    "Packaging Professor", "Nursery Teacher", "Pre-K Teacher",
+    "Pre-Kindergarten Teacher", "Preschool Teacher", "Kindergarten Teacher",
+    "Citizenship Teacher", "Knitting Instructor", "Algebra Tutor", "Reading Tutor",
+    "Spanish Tutor", "Digital Archivist", "Film Archivist", "Image Archivist",
+    "Museum Archivist", "Processing Archivist", "Reference Archivist",
+    "State Archivist", "Collections Curator", "Herbarium Curator", "Museum Curator",
+    "Art Conservator", "Art Handler", "Conservation Technician",
+    "Objects Conservator", "Paintings Conservator", "Paper Conservator", "Textile Conservator",
+    "Acquisitions Librarian", "Catalog Librarian", "College Librarian",
+    "Film Librarian", "Law Librarian", "Medical Librarian", "Music Librarian",
+    "Periodicals Librarian", "Record Librarian", "Reference Librarian",
+    "Research Librarian", "School Librarian", "Serials Librarian",
+    "University Librarian", "Agricultural Agent", "Curriculum Coordinator",
+    "Curriculum Designer", "Curriculum Specialist", "Assistant Instructor",
+    "Magazine Designer", "Hand Potter", "Quilter", "Book Illustrator", "Caricature Artist",
+    "Comic Artist", "Comic Illustrator", "Commercial Artist", "Concrete Sculptor",
+    "Editorial Cartoonist", "Fashion Illustrator", "Fresco Artist",
+    "Glass Artist", "Ice Sculptor", "Medical Illustrator", "Mural Painter",
+    "Muralist", "Oil Painter", "Pattern Illustrator", "Political Cartoonist",
+    "Portrait Artist", "Portrait Painter", "Scientific Illustrator", "Sketch Artist",
+    "Sports Cartoonist", "Water Colorist", "Watercolor Artist",
+    "Animator", "Multimedia Artist", "Calligrapher", "Tattoo Artist", "Automobile Designer",
+    "Bicycle Designer", "Ceramic Designer", "Furniture Designer",
+    "Package Designer", "Rug Designer", "Snowboard Designer", "Textile Designer",
+    "Tile Designer", "Toy Designer", "Apparel Designer", "Clothes Designer",
+    "Clothing Designer", "Costume Designer", "Custom Furrier", "Dress Designer",
+    "Hat Designer", "Sweater Designer", "Uniform Designer", "Corsage Maker",
+    "Floral Arranger", "Floral Artist", "Floral Decorator", "Florist", "Florist Designer",
+    "Flower Arranger", "Graphic Artist", "Visual Designer", "Furniture Arranger",
+    "Interior Decorator", "Interior Designer", "Kitchen Designer",
+    "Display Artist", "Display Decorator", "Display Designer", "Display Specialist",
+    "Mannequin Decorator", "Merchandise Displayer", "Visual Merchandiser",
+    "Window Decorator", "Window Draper", "Window Dresser", "Window Trimmer",
+    "Scenic Designer", "Set Decorator", "Set Designer", "Actor Understudy",
+    "Actress", "Dramatic Reader", "Elocutionist", "Monologist",
+    "Vaudeville Actor", "Voice-Over Artist", "Broadcast Producer", "Casting Director",
+    "Film Maker", "Movie Producer", "Newscast Director", "Newscast Producer",
+    "On-Air Director", "Pageant Director", "Radio Producer", "Stage Manager",
+    "Television Producer", "Video Producer", "Profession Cyclist",
+    "Professional Athlete", "Professional Bicyclist", "Professional Bowler",
+    "Professional Golfer", "Professional Jockey", "Professional Pugilist",
+    "Professional Skater", "Professional Skier", "Professional Snowboarder",
+    "Professional Surfer", "Professional Swimmer", "Professional Wrestler",
+    "Athletic Coach", "Baseball Coach", "Baseball Scout", "Basketball Coach",
+    "Boxing Coach", "Coach", "Football Coach", "Hockey Scout", "Riding Coach",
+    "Ski Coach", "Tennis Coach", "Baseball Umpire", "Diving Judge", "Dressage Judge",
+    "Handicapper", "Paddock Judge", "Pit Steward", "Placing Judge", "Race Starter",
+    "Ballerina", "Ballet Dancer", "Ballet Soloist", "Burlesque Dancer",
+    "Dance Artist", "Discotheque Dancer", "Exotic Dancer", "Go-Go Dancer", "Line Dancer",
+    "Tap Dancer", "Dance Director", "Dance Master", "Choir Director",
+    "Choirmaster", "Chorus Master", "Composer", "Maestro", "Music Adapter", "Music Arranger",
+    "Music Copyist", "Music Director", "Music Minister", "Music Pastor",
+    "Orchestra Conductor", "Orchestra Director", "Orchestrator",
+    "Songwriter", "Accompanist", "Baritone", "Bassoonist", "Bugler", "Cellist",
+    "Choir Member", "Church Organist", "Clarinetist", "Concert Pianist", "Concert Singer",
+    "Flutist", "Guitar Player", "Guitarist", "Harpist", "Horn Player",
+    "Instrumentalist", "Musician", "Oboist", "Opera Singer", "Organist",
+    "Percussionist", "Pianist", "Piano Player", "Piccoloist", "Rapper", "Soloist",
+    "Tenor", "Timpanist", "Trombonist", "Trumpet Player", "Trumpeter",
+    "Violinist", "Violist", "Vocalist", "Club DJ", "Deejay", "DJ", "Acrobat",
+    "Aerialist", "Bareback Rider", "Baton Twirler", "Clown", "Comedian", "Fortune Teller",
+    "Impersonator", "Juggler", "Magician", "Marionette Performer",
+    "Palmist", "Prompter", "Puppeteer", "Ringmaster", "Rodeo Performer", "Story Teller",
+    "Stunt Performer", "Tumbler", "Ventriloquist", "Wire Walker",
+    "Commercial Announcer", "Radio Artist", "Radio Host", "Television Host", "Book Critic",
+    "Book Reviewer", "Columnist", "Correspondent", "Desk Reporter", "Film Critic",
+    "Foreign Correspondent", "Investigative Reporter", "Journalist",
+    "Movie Critic", "News Anchor", "News Commentator", "News Reporter",
+    "Newscaster", "Newspaper Columnist", "Newspaper Correspondent", "Political Reporter",
+    "Press Writer", "Society Reporter", "Lobbyist", "Press Agent",
+    "Press Secretary", "Publicist", "Publicity Agent", "Publicity Writer",
+    "Advertising Editor", "Art Editor", "Book Editor", "Copy Editor", "Index Editor",
+    "Manuscript Editor", "Publications Editor", "Rewrite Editor", "Sports Editor",
+    "Technical Editor", "Documentation Writer", "Engineering Writer",
+    "Handbook Writer", "Specifications Writer", "Technical Communicator",
+    "Advertising Copywriter", "Author", "Biographer", "Copy Writer", "Copywriter",
+    "Lyricist", "Novelist", "Playwright", "Poet", "Program Writer", "Screen Writer",
+    "Song Lyricist", "Television Writer", "Verse Writer", "Court Interpreter",
+    "Deaf Interpreter", "Diplomatic Interpreter", "Language Translator",
+    "Translator", "Court Stenographer", "Court Transcriber",
+    "Deposition Reporter", "Realtime Captioner", "Stenocaptioner", "Stage Technician",
+    "Train Announcer", "Train Caller", "Broadcast Engineer",
+    "Telecasting Engineer", "Disc Recordist", "Recording Engineer", "Sound Assistant",
+    "Sound Cutter", "Sound Designer", "Sound Editor", "Gaffer", "Lamp Operator",
+    "Spotlight Operator", "Advertising Photographer", "Aerial Photographer",
+    "Industrial Photographer", "Marine Photographer", "Medical Photographer",
+    "News Photographer", "Newspaper Photojournalist",
+    "Photojournalist", "Portrait Photographer", "School Photographer", "Wedding Photographer",
+    "News Videographer", "Cue Selector", "Film Editor", "Movie Editor",
+    "Tape Editor", "Chiropractic Doctor", "Chiropractic Physician",
+    "Family Dentist", "Dental Surgeon", "Maxillofacial Surgeon", "Oral Surgeon",
+    "Pediatric Orthodontist", "Maxillofacial Prosthodontist", "Reconstructive Dentist",
+    "Endodontist", "Maxillofacial Pathology", "Oral Pathologist",
+    "Pediatric Dentist", "Pedodontist", "Periodontist", "Clinical Dietitian",
+    "Dietitian", "Nutritionist", "Pediatric Dietician", "Research Dietitian",
+    "Sports Nutritionist", "Therapeutic Dietitian", "Apothecary", "Clinical Pharmacist",
+    "Druggist", "Hospital Pharmacist", "Registered Pharmacist",
+    "Anesthesiologist Assistant", "Chiropodist", "Foot Doctor", "Foot Orthopedist",
+    "Orthopedic Podiatrist", "Podiatric Physician", "Occupational Therapist",
+    "OT", "Physiotherapist", "PT", "CTRS", "Drama Therapist", "CRT",
+    "Inhalation Therapist", "Oxygen Therapist", "Respiratory Therapist", "RRT",
+    "Language Pathologist", "Speech Clinician", "Speech Pathologist", "Speech Therapist",
+    "Kinesiotherapist", "Art Therapist", "Auriculotherapist",
+    "Educational Therapist", "Hydrotherapist", "Music Therapist",
+    "Peripatologist", "Animal Pathologist", "Animal Surgeon", "Equine Veterinarian",
+    "Poultry Pathologist", "Veterinary Cardiologist", "Veterinary Radiologist",
+    "Wildlife Veterinarian", "CCU Nurse", "CNS", "Obstetrical Nurse",
+    "PACU Nurse", "Psychiatric Nurse", "RN", "DNAP", "NP", "Clinical Audiologist",
+    "Dispensing Audiologist", "Educational Audiologist", "Hearing Therapist",
+    "Licensed Audiologist", "Pediatric Audiologist", "Ambulatory Anesthesiologist",
+    "Anaesthesiologist", "Anesthetist", "Attending Anesthesiologist",
+    "Obstetrical Anesthesiologist", "Staff Anesthetist",
+    "Electrophysiology Cardiologist", "Interventional Cardiologist",
+    "Dermatopathologist", "Procedural Dermatologist", "Family Physician", "Family Practitioner",
+    "General Practitioner", "GP Doctor", "General Internist",
+    "Internist", "Epileptologist", "Headache Specialist", "Gynecological Oncologist",
+    "Gynecologist", "OB Specialist", "Obstetrician", "General Pediatrician",
+    "Neonatal Doctor", "Neonatologist", "Paediatrician", "Pediatric Cardiologist",
+    "Pediatrist", "Clinical Pathologist", "Immunopathologist",
+    "Neuropathologist", "Addiction Psychiatrist", "Child Psychiatrist", "Clinical Psychiatrist",
+    "Forensic Psychiatrist", "Forensic Psychiatrist", "Geriatric Psychiatrist",
+    "Geriatric Psychiatrist", "Neuropsychiatrist", "Pediatric Psychiatrist",
+    "Staff Psychiatrist", "Diagnostic Radiologist", "Interventional Radiologist",
+    "Gastroenterologist", "Immunologist", "Nephrologist",
+    "Oncologist", "Physiatrist", "Pulmonary Physician", "Pulmonologist",
+    "Rheumatologist", "Joint Preservationist", "Orthopaedic Surgeon", "Orthopedic Surgeon",
+    "Pediatric Neurosurgeon", "Brain Surgeon", "Cardiac Surgeon",
+    "Cardiovascular Surgeon", "Colorectal Surgeon", "Neurological Surgeon",
+    "Neurosurgeon", "Otolaryngologist", "Plastic Surgeon", "Reconstructive Surgeon",
+    "Surgical Oncologist", "Thoracic Surgeon", "Urologist", "Vascular Surgeon",
+    "Acupuncture Physician", "Licensed Acupuncturist", "Oral Hygienist",
+    "RDH", "Homeopathic Doctor", "Hypnotherapist", "Naturopath", "Naturopathic Doctor",
+    "Naturopathic Physician", "Biochemistry Technologist", "Cytogenetic Technologist",
+    "Cytologist", "Cytotechnologist", "Histologist Technologist",
+    "Histotechnologist", "Immunohematologist", "Tissue Technologist", "Hematology Technician",
+    "Hemodialysis Technician", "Histologic Aide", "Histologic Technician",
+    "Histology Technician", "Histotechnician", "Neurology Technician",
+    "Pathology Technician", "Serology Technician", "Cardiac Technician",
+    "Cardiopulmonary Technologist", "Cardiovascular Technologist",
+    "EKG Technician", "Electrocardiogram Technician", "Electrocardiograph Operator",
+    "Echocardiogram Technician", "Echocardiographer",
+    "Echocardiographic Technologist", "Echocardiography Technician",
+    "Echocardiology Technologist", "Sonographer", "Ultrasonographer", "Ultrasound Technician",
+    "Ultrasound Technologist", "Isotope Technologist", "Radioisotope Technologist",
+    "Radiologic Technician", "Skiagrapher", "X-Ray Technician",
+    "MRI Technologist", "EMT", "EMT-B", "Ambulance Driver-Paramedic", "Flight Paramedic",
+    "Dietary Aide", "Dietary Technician", "DTR", "Nutrition Technician",
+    "CPHT", "Pharmacist Technician", "OR Tech", "LVT", "Veterinary Technologist",
+    "Ophthalmic Technologist", "LP Nurse", "LPN", "LVN", "Certified Optician",
+    "Eyeglass Fitter", "Licensed Optician", "Optical Dispenser",
+    "Optician", "Licensed Prosthetist", "Orthotist", "Pedorthist", "Prosthetist",
+    "Dialysis Technician", "Electroneurodiagnostic Technologist",
+    "Encephalographer", "Perfusionist", "Polysomnograph Tech", "Cancer Registrar",
+    "Podiatric Technician", "Blind Aide", "Blind Escort", "Elderly Companion",
+    "Hospital Aide", "Hospital Attendant", "Nursing Aide", "Nursing Attendant",
+    "Hospital Orderly", "Medical Orderly", "Surgical Orderly", "Psychiatric Orderly",
+    "COTA", "OT Aide", "LPTA", "Physiotherapy Assistant", "Physiotherapy Aide",
+    "Masseur", "Masseuse", "Massotherapist", "Rolfer", "Swedish Masseuse",
+    "Dental Aide", "Orthodontic Assistant", "Orthodontist Assistant", "Autopsy Assistant",
+    "Chiropractic Assistant", "Morgue Attendant", "Optometric Aide",
+    "Optometrist Assistant", "Optometry Assistant", "Podiatric Aide",
+    "Sterilization Specialist", "Sterilization Technician", "Medical Stenographer",
+    "Medical Transcriber", "Pathology Transcriptionist", "Radiology Transcriptionist",
+    "Pharmacist Aide", "Pharmacist Assistant", "Pharmacy Assistant",
+    "Pharmacy Clerk", "Prescription Clerk", "Veterinarian Assistant",
+    "Veterinarian Helper", "Veterinary Attendant", "Phlebotomy Technician",
+    "Venipuncturist", "Chief Jailer", "Correctional Supervisor", "Corrections Sergeant",
+    "Detective Lieutenant", "Detective Supervisor", "Police Lieutenant",
+    "Traffic Lieutenant", "Traffic Sergeant", "Fire Lieutenant",
+    "Fire Fighter", "Forest Firefighter", "Marine Firefighter", "Municipal Firefighter",
+    "Smoke Jumper", "Wildland Firefighter", "Arson Investigator",
+    "CFEI", "Fire Investigator", "Fire Ranger", "City Bailiff", "County Bailiff",
+    "Court Bailiff", "Court Officer", "Deputy Bailiff", "Convict Guard",
+    "Correction Officer", "Correctional Guard", "Correctional Sergeant",
+    "Detention Deputy", "Detention Officer", "Jail Guard", "Penal Officer",
+    "Prison Guard", "Prison Officer", "Criminal Investigator", "FBI Investigator",
+    "Homicide Detective", "Narcotics Detective", "Narcotics Investigator", "Police Detective",
+    "Fish Warden", "Game Warden", "Wildlife Officer", "Meter Maid",
+    "Border Guard", "Constable", "Cop", "Deputy Sheriff", "Motorcycle Police",
+    "Mounted Police", "Park Police", "Patrol Officer", "Policeman", "Policewoman",
+    "State Trooper", "Railroad Detective", "Track Patrol", "Animal Warden", "Dog Catcher",
+    "Dog Warden", "Humane Officer", "Private Detective", "Private Eye",
+    "Private Investigator", "Skip Tracer", "Store Detective", "Casino Investigator",
+    "Gambling Monitor", "Armed Guard", "Bank Guard", "Bodyguard",
+    "Bouncer", "Private Watchman", "Security Officer", "Crossing Guard", "Beach Lifeguard",
+    "Life Guard", "OEC Technician", "Pool Lifeguard", "Ski Patrol",
+    "Bus Monitor", "Warrant Server", "Banquet Chef", "Executive Chef", "Head Chef",
+    "Kitchen Chef", "Master Chef", "Pastry Chef", "Sous Chef", "Sushi Chef",
+    "Banquet Supervisor", "Bar Manager", "Cafeteria Manager", "Head Waiter",
+    "Head Waitress", "Kitchen Supervisor", "Fryline Attendant",
+    "Cafeteria Cook", "Camp Cook", "Galley Cook", "Institutional Cook", "Mess Cook",
+    "School Cook", "Personal Chef", "Private Chef", "Banquet Cook",
+    "Breakfast Cook", "Line Cook", "Saucier", "Specialty Cook", "Griddle Attendant",
+    "Griddle Cook", "Grill Cook", "Deli Clerk", "Deli Slicer", "Food Preparer",
+    "Salad Maker", "Sandwich Maker", "Barkeep", "Drink Mixer",
+    "Mixologist", "Taproom Attendant", "Barista", "Cafe Server", "Cafeteria Server",
+    "Mess Attendant", "Cocktail Server", "Cocktail Waitress", "Restaurant Server",
+    "Wine Steward", "Boat Hop", "Bar Back", "Barback", "Buffet Attendant",
+    "Bus Person", "Busser", "Lunchroom Attendant", "Dishwasher",
+    "Silverware Cleaner", "Bar Hostess", "Tearoom Hostess", "Kitchen Steward",
+    "Custodial Supervisor", "Head Custodian", "Janitor Supervisor", "Maid Supervisor",
+    "Gardening Supervisor", "Greenskeeper Supervisor", "Grounds Foreman",
+    "Head Greenskeeper", "Building Custodian", "Custodial Worker",
+    "Custodian", "Floor Cleaner", "Janitor", "Office Cleaner", "School Custodian",
+    "Window Cleaner", "Window Washer", "Chambermaid", "Cleaning Maid", "Cottage Attendant",
+    "Domestic Maid", "House Cleaner", "Housekeeping Aide",
+    "Housekeeping Staff", "Motel Maid", "Ward Maid", "Chimney Sweep", "Chimney Sweeper",
+    "Exterminator", "Fumigator", "Insecticide Expert", "Mosquito Sprayer",
+    "Pest Controller", "Rat Exterminator", "Rodent Exterminator",
+    "Termite Technician", "Termite Treater", "Greenskeeper", "Greenskeeper Laborer",
+    "Grounds Caretaker", "Hedge Trimmer", "Lawn Caretaker", "Lawn Mower",
+    "Shrub Planter", "Sod Layer", "Fruit Sprayer", "Herbicide Sprayer",
+    "Orchard Sprayer", "Plant Sprayer", "Weed Sprayer", "Pruner", "Tree Pruner",
+    "Tree Specialist", "Tree Surgeon", "Tree Trimmer", "Utility Arborist",
+    "Blackjack Supervisor", "Cardroom Manager", "Cardroom Supervisor", "Casino Supervisor",
+    "Gambling Supervisor", "Pit Boss", "Slot Host", "Arcade Supervisor",
+    "Caddy Master", "Head Butler", "Dog Handler", "Dog Trainer",
+    "Dolphin Trainer", "Horse Breaker", "Lion Trainer", "Animal Caregiver",
+    "Animal Groomer", "Animal Sitter", "Aquarist", "Dog Bather", "Dog Beautician",
+    "Dog Groomer", "Dog Sitter", "Horse Exerciser", "Kennel Aide", "Kennel Attendant",
+    "Kennel Helper", "Kennel Worker", "Pet Feeder", "Pet Groomer",
+    "Pet Sitter", "Pet Stylist", "Zookeeper", "Blackjack Dealer", "Casino Dealer",
+    "Craps Dealer", "Keno Dealer", "Poker Dealer", "Roulette Dealer", "Betting Clerk",
+    "Bookie", "Keno Runner", "Keno Writer", "Bingo Worker", "Pit Clerk",
+    "Proposition Player", "Shill", "Chief Projectionist", "Movie Projectionist",
+    "Stereoptician", "Lobby Attendant", "Theater Usher", "Ticket Attendant",
+    "Ticket Collector", "Usher", "Arcade Attendant", "Carnival Worker", "Golf Caddy",
+    "Ride Operator", "Rides Attendant", "Wardrobe Assistant", "Wardrobe Attendant",
+    "Wardrobe Custodian", "Wardrobe Dresser", "Wardrobe Supervisor",
+    "Bathhouse Attendant", "Checkroom Attendant", "Coat Checker", "Washroom Attendant",
+    "Jockey Valet", "Anatomical Embalmer", "Arterial Embalmer",
+    "Embalmer Apprentice", "Licensed Embalmer", "Cremation Arranger", "Cremator",
+    "Crematory Operator", "Funeral Assistant", "Funeral Greeter", "Mortician Helper",
+    "Pallbearer", "Undertaker Helper", "Certified Mortician", "Funeral Arranger",
+    "Barber Apprentice", "Master Barber", "Beautician",
+    "Cosmetologist", "Hair Colorist", "Hair Stylist", "Hairdresser", "Hairpiece Stylist",
+    "Wig Stylist", "Fingernail Sculptor", "Nail Technician",
+    "Pedicurist", "Shampoo Assistant", "Shampoo Technician", "Electrolysis Operator",
+    "Electrolysist", "Esthetician", "Facialist", "Licensed Esthetician",
+    "Medical Esthetician", "Baggage Porter", "Bell Staff",
+    "Bellperson", "Bellstaff", "Luggage Attendant", "Redcap", "Skycap",
+    "Activities Concierge", "Club Concierge", "Conference Concierge", "Hotel Concierge",
+    "Historical Interpreter", "Museum Docent", "Museum Guide",
+    "Sightseeing Guide", "Tourist Escort", "Tourist Guide", "Cruise Director",
+    "Tour Coordinator", "Tour Director", "Au Pair", "Baby Sitter", "Childcare Aide",
+    "Childcare Attendant", "Daycare Aide", "Daycare Provider", "Governess",
+    "Nanny", "Playground Aide", "Aerobics Instructor", "Fitness Trainer",
+    "Personal Trainer", "Weight Trainer", "Yoga Instructor", "Yoga Teacher", "Camp Counselor",
+    "Recreation Assistant", "Recreational Aide", "Dormitory Counselor",
+    "House Parent", "Residence Director", "Residential Director",
+    "Sorority Mother", "Butler", "Doula", "House Sitter", "Magnetic Healer", "Shoe Shiner",
+    "Valet", "Cashier Manager", "Cashier Supervisor", "Telemarketer Supervisor",
+    "Telemarketing Manager", "Telesales Supervisor", "Fare Collector",
+    "Grocery Checker", "Toll Collector", "Mutuel Teller", "Slot Attendant",
+    "Layaway Clerk", "Rental Clerk", "Parts Clerk", "Automotive Salesperson",
+    "Menswear Salesperson", "Pets Salesperson", "Shoe Salesperson",
+    "Advertising Agent", "Advertising Solicitor", "Insurance Agent", "Insurance Broker",
+    "Pension Agent", "Commodities Broker", "Commodity Trader", "Equity Trader",
+    "Investment Banker", "Securities Trader", "Stock Broker", "Stock Trader",
+    "Travel Consultant", "Travel Counselor", "Membership Solicitor",
+    "Pharmaceutical Detailer", "Pharmaceutical Salesperson", "Freight Broker",
+    "Pulpwood Dealer", "Home Demonstrator", "In-Store Demonstrator", "Clothes Model",
+    "Fashion Model", "Figure Model", "Hand Model", "Hat Model", "Studio Model",
+    "Inbound Telemarketer", "Outbound Telemarketer", "Telephone Solicitor",
+    "Telesales Representative", "Telesales Specialist", "Newspaper Carrier",
+    "Newstand Vendor", "Peddler", "Auctioneer", "Leaflet Distributor",
+    "Livestock Auctioneer", "Personal Shopper", "Billing Supervisor", "Clerical Supervisor",
+    "Payroll Supervisor", "Records Supervisor", "Teller Supervisor",
+    "Timekeeping Supervisor", "PBX Operator", "Information Operator", "Radio Operator",
+    "Telex Operator", "Accounts Collector", "Bill Collector", "Billing Representative",
+    "Collection Agent", "Collections Clerk", "Collections Representative",
+    "Debt Collector", "Installment Agent", "Insurance Collector",
+    "Payment Collector", "Repossessor", "Billing Clerk", "Invoice Clerk", "Posting Clerk",
+    "Statement Clerk", "Statement Processor", "Auditing Clerk",
+    "Bookkeeper", "Cage Cashier", "Casino Cashier", "Gambling Cashier", "Payroll Bookkeeper",
+    "Personnel Scheduler", "Time Clerk", "Timekeeper", "Procurement Assistant",
+    "Purchasing Assistant", "Purchasing Clerk", "Bank Teller",
+    "Commercial Teller", "Exchange Teller", "Loan Teller", "Receiving Teller",
+    "Savings Teller", "Securities Teller", "Vault Teller", "Commodities Clerk",
+    "Dividend Clerk", "Securities Clerk", "Correspondence Representative",
+    "Correspondence Transcriber", "City Clerk", "Court Clerk", "Courtroom Clerk",
+    "Docket Clerk", "Dog Licenser", "License Clerk", "Municipal Clerk", "Tax Clerk",
+    "Township Clerk", "Warrant Clerk", "Charge Authorizer", "Credit Authorizer",
+    "Credit Checker", "Credit Investigator", "Credit Processor",
+    "Complaint Clerk", "Warranty Clerk", "Medicare Interviewer", "Welfare Interviewer",
+    "Document Clerk", "File Keeper", "Index Clerk", "Records Clerk",
+    "Assistant Innkeeper", "Motel Clerk", "Admitting Interviewer", "Census Clerk",
+    "Census Taker", "Field Enumerator", "Survey Interviewer", "Telephone Interviewer",
+    "Book Sorter", "Circulation Clerk", "Library Aide", "Library Assistant",
+    "Library Clerk", "Microfilm Clerk", "Loan Interviewer", "Loan Processor",
+    "Mortgage Processor", "Catalogue Clerk", "Subscription Clerk",
+    "Employment Clerk", "HR Clerk", "Personnel Clerk", "Appointment Clerk",
+    "Dental Receptionist", "Airline Reservationist", "Gate Agent", "Hotel Reservationist",
+    "Passenger Agent", "Reservation Agent", "Train Clerk",
+    "Transportation Clerk", "Travel Clerk", "Election Clerk", "Probate Clerk",
+    "Cargo Agent", "Cargo Router", "Freight Agent", "Bank Courier", "Bicycle Messenger",
+    "Courier", "Court Messenger", "Laboratory Courier", "Office Messenger",
+    "Office Runner", "Ambulance Dispatcher", "Emergency Operator",
+    "Fire Dispatcher", "Police Dispatcher", "Bus Dispatcher", "Crew Dispatcher",
+    "Maintenance Dispatcher", "Taxicab Dispatcher", "Train Dispatcher", "Truck Dispatcher",
+    "Postal Clerk", "Letter Carrier", "Mail Deliverer", "Expeditor",
+    "Material Expediter", "Mill Recorder", "Production Scheduler", "Freight Clerk",
+    "Inventory Taker", "Receiving Clerk", "Reconsignment Clerk",
+    "Stockroom Attendant", "Stockroom Clerk", "Supply Clerk", "Warehouse Clerk",
+    "Bean Weigher", "Cheese Weigher", "Freight Checker", "Sample Checker", "Scale Attendant",
+    "Scale Clerk", "Scale Operator", "Warehouse Checker", "Wool Sampler",
+    "Executive Assistant", "Law Secretary", "Dental Secretary",
+    "Hospital Secretary", "Psychiatric Secretary", "Alumni Secretary", "Office Secretary",
+    "Personal Secretary", "Data Keyer", "Data Typist", "Keypunch Operator",
+    "Keypuncher", "Clerk Typist", "Dictaphone Typist", "Statistical Typist",
+    "Transcription Typist", "Typist", "Word Processor", "DTP Operator",
+    "Electronic Imager", "Electronic Publisher", "Insurance Clerk", "Underwriting Assistant",
+    "Underwriting Clerk", "Mailroom Clerk", "Packaging Clerk",
+    "Administrative Clerk", "Office Assistant", "Office Clerk", "Collator Operator",
+    "Braille Proofreader", "Clerical Proofreader", "Copy Reader",
+    "Editorial Assistant", "Format Proofreader", "Proofreader", "Actuarial Assistant",
+    "Actuary Clerk", "Statistical Clerk", "Braille Transcriber",
+    "Envelope Stuffer", "Fingerprint Clerk", "Investigation Clerk", "Newspaper Inserter",
+    "Notary Public", "Corral Boss", "Farm Supervisor", "Farrowing Manager",
+    "Feed Manager", "Harvest Manager", "Planting Supervisor", "Cattle Examiner",
+    "Cattle Inspector", "Grain Sampler", "Milk Tester", "Wheat Inspector",
+    "Cat Breeder", "Dog Breeder", "Equine Breeder", "Horse Breeder",
+    "Livestock Breeder", "Poultry Inseminator", "Stallion Manager", "Apple Sorter",
+    "Cherry Sorter", "Cotton Grader", "Egg Grader", "Fruit Sorter", "Meat Grader",
+    "Oyster Sorter", "Peanut Grader", "Potato Sorter", "Seed Sorter",
+    "Strawberry Sorter", "Vegetable Sorter", "Wool Grader", "Combine Driver",
+    "Combine Operator", "Cotton Ginner", "Custom Harvester", "Hay Baler", "Rake Operator",
+    "Tractor Operator", "Cane Cutter", "Carrot Harvester", "Citrus Picker",
+    "Corn Picker", "Cotton Picker", "Crop Picker", "Flower Picker",
+    "Greenhouse Transplanter", "Harvest Worker", "Harvester", "Orchard Hand",
+    "Orchard Worker", "Pecan Gatherer", "Pepper Picker", "Vineyard Tender",
+    "Aquaculture Worker", "Barn Hand", "Barn Worker", "Cattle Brander", "Cattle Driver",
+    "Chicken Handler", "Chicken Vaccinator", "Cow Tender", "Egg Gatherer",
+    "Farrowing Worker", "Goat Herder", "Groom", "Hatchery Worker",
+    "Livestock Handler", "Poultry Debeaker", "Ranch Hand", "Sheep Shearer", "Crop Scout",
+    "Irrigation Worker", "Livestock Showman", "Alligator Hunter", "Bird Trapper",
+    "Commercial Crabber", "Commercial Fisher", "Crab Fisher", "Crabber",
+    "Deer Hunter", "Fur Trapper", "Lobster Catcher", "Seaweed Harvester",
+    "Forester Aide", "Forestry Laborer", "Reforestation Worker", "Seedling Puller",
+    "Lumberjack", "Pulpwood Cutter", "Timber Cutter", "Timber Faller",
+    "Timber Feller", "Delimber Operator", "Feller Operator", "Grapple Operator",
+    "Loader Operator", "Log Hauler", "Tree-Shear Operator", "Log Grader", "Log Scaler",
+    "Log Sorter", "Timber Estimator", "Veneer Grader", "Log Cutter", "Log Peeler",
+    "Log Roper", "Logging Laborer", "Logging Swamper", "Rigging Slinger",
+    "Timber Hand", "Carpenter Supervisor", "Drilling Foreman", "Electrician Supervisor",
+    "Excavating Supervisor", "Foreman", "Foreperson", "Forewoman",
+    "Quarry Boss", "Rig Supervisor", "Tool Pushers", "Boiler Fitter", "Boiler Installer",
+    "Boiler Mechanic", "Boiler Setter", "Boiler Tester", "Boilermaker Mechanic",
+    "Adobe Layer", "Block Layer", "Blockmason", "Brick Setter",
+    "Bricklayer", "Brickmason", "Brickmason Apprentice", "Firebrick Layer",
+    "Furnace Mason", "Refractory Bricklayer", "Banker Mason", "Curbstone Setter",
+    "Granite Setter", "Memorial Mason", "Monument Mason", "Rock Mason", "Stone Layer",
+    "Beam Builder", "Building Carpenter", "Construction Carpenter",
+    "Counter Installer", "Finish Carpenter", "House Carpenter", "Carpet Layer",
+    "Linoleum Installer", "Vinyl Installer", "Floor Finisher", "Floor Refinisher",
+    "Floor Sander", "Floor Scraper", "Hardwood Finisher", "Tile Installer", "Tile Mason",
+    "Cement Mason", "Cement Patcher", "Concrete Finisher", "Concrete Mason",
+    "Concrete Smoother", "Terrazzo Finisher", "Terrazzo Grinder",
+    "Terrazzo Installer", "Terrazzo Layer", "Terrazzo Setter", "Terrazzo Worker",
+    "Asphalt Paver", "Blacktop-Paver Operator", "Paver Operator", "Road Grader",
+    "Screed Operator", "Construction Excavator", "Grader Operator", "Road Grader",
+    "Scraper Operator", "Drywall Applicator", "Drywall Finisher", "Drywall Hanger",
+    "Drywall Installer", "Drywall Sander", "Drywall Stripper", "Drywall Worker",
+    "Drywall Taper", "Wall Taper", "Chief Electrician", "Control Electrician",
+    "House Wirer", "Licensed Electrician", "Marine Electrician",
+    "Master Electrician", "Stage Electrician", "Window Glazier", "Cork Insulator",
+    "Boiler Coverer", "Pipe Coverer", "Pipe Insulator", "Refrigeration Insulator",
+    "Bridge Painter", "Facilities Painter", "Highway Painter", "House Painter",
+    "Industrial Painter", "Roof Painter", "Billboard Poster", "Wallpaper Hanger",
+    "Wallpaperer", "Pipe Layer", "Gas Plumber", "Hydraulic Plumber", "Marine Pipefitter",
+    "Marine Steamfitter", "Master Plumber", "Pipe Fitter", "Plumber",
+    "Sprinkler Fitter", "Steamfitter", "Dry Plasterer", "Molding Plasterer",
+    "Ornamental Plasterer", "Plasterer Apprentice", "Stucco Plasterer", "Stucco Worker",
+    "Rebar Worker", "Rod Buster", "Steel Tier", "Composition Roofer",
+    "Industrial Roofer", "Residential Roofer", "Shingles Roofer", "Slate Roofer",
+    "Tinsmith", "Bridge Ironworker", "Construction Ironworker", "Ornamental Ironworker",
+    "Steel Fabricator", "Steel Fitter", "PV Installer", "Brick Carrier",
+    "Brick Washer", "Bricklayer Helper", "Mortar Mixer", "Carpenter Assistant",
+    "Carpenter Helper", "Plaster Tender", "Wallpaperer Helper",
+    "Plumber Assistant", "Plumber Helper", "Roofer Assistant", "Roofer Helper",
+    "Roofing Laborer", "Architectural Inspector", "Bridge Inspector", "Building Inspector",
+    "Construction Inspector", "Electrical Inspector", "Elevator Inspector",
+    "Highway Inspector", "Home Inspector", "Home Inspector", "Plumbing Inspector",
+    "Elevator Adjuster", "Elevator Constructor", "Elevator Installer",
+    "Elevator Mechanic", "Escalator Installer", "Escalator Mechanic", "Fence Builder",
+    "Asbestos Remover", "Decontamination Worker", "Hazmat Technician",
+    "Highway Maintainer", "Highway Worker", "Road Patcher", "Track Layer", "Track Maintainer",
+    "Track Repairer", "Trackwalker", "Sewer Cleaner", "Paver Installer",
+    "Waterproofer", "Derrick Operator", "Oil Driller", "Prospecting Driller",
+    "Dragline Oiler", "Mining Excavator", "Churn Driller", "Blast Setter",
+    "Blaster", "Dynamite Shooter", "Dynamiter", "Explosive Technician",
+    "Coke Loader", "Joy Loader", "Rock Duster", "Shearer Operator", "Sandstone Splitter",
+    "Gas Floorhand", "Roustabout", "Roustabout Pusher", "Blaster Helper",
+    "Blasting Helper", "Driller Helper", "Mining Helper", "ATM Servicer",
+    "Computer Repairer", "Copier Technician", "Radio Mechanic", "Radio Repairer",
+    "Headend Technician", "Switchboard Wirer", "Aircraft Electrician", "Airplane Electrician",
+    "Armature Rewinder", "Battery Repairer", "Dynamo Repairer",
+    "Locomotive Electrician", "Powerhouse Electrician", "Relay Technician",
+    "Substation Electrician", "Substation Mechanic", "Auto Electrician",
+    "Automotive Electrician", "Television Installer", "Television Repairer",
+    "Alarm Adjuster", "Alarm Technician", "Airframe Mechanic", "Airplane Rigger",
+    "Helicopter Mechanic", "Car Refinisher", "Automotive Glazier", "Windshield Installer",
+    "Combine Mechanic", "Harvester Mechanic", "Tractor Mechanic",
+    "Bulldozer Mechanic", "Dragline Mechanic", "Forklift Mechanic", "Forklift Technician",
+    "Streetcar Repairer", "Marine Technician", "Motorboat Mechanic",
+    "Outboard Technician", "ATV Technician", "Motorcycle Repairer", "Motorcycle Technician",
+    "Scooter Mechanic", "Go-Cart Mechanic", "Snowblower Mechanic",
+    "Snowmobile Mechanic", "Bicycle Mechanic", "Bike Mechanic", "RV Mechanic", "RV Servicer",
+    "Tire Balancer", "Tire Fixer", "Tire Mechanic", "Tire Mounter",
+    "Tire Servicer", "Tire Technician", "Thermostat Repairer", "Valve Mechanic",
+    "Furnace Converter", "Furnace Fitter", "Stoker Installer", "Stove Installer",
+    "Boilerhouse Mechanic", "Loom Fixer", "Loom Technician", "Crane Oiler",
+    "Construction Millwright", "Machine Erector", "Machinery Dismantler",
+    "Maintenance Millwright", "Manufacturing Millwright", "Cupola Repairer",
+    "Ladle Repairer", "Refractory Repairer", "Electrical Lineworker", "Power Lineworker",
+    "Telephone Lineworker", "Camera Machinist", "Camera Repairer",
+    "BMET", "Accordion Repairer", "Banjo Repairer", "Bow Rehairer", "Chip Tuner",
+    "Guitar Builder", "Guitar Repairer", "Luthier", "Mandolin Repairer", "Organ Installer",
+    "Organ Tuner", "Piano Regulator", "Piano Technician", "Piano Tuner",
+    "Tone Regulator", "Violin Repairer", "Chronometer Repairer",
+    "Clockmaker", "Clocksmith", "Horologist", "Watchmaker", "Gyroscope Repairer",
+    "Scale Adjuster", "Telescope Repairer", "Building Mechanic", "Maintenance Mechanic",
+    "Mechanics Handyman", "Slot Technician", "Marine Diver", "Salvage Diver",
+    "Scuba Diver", "Submarine Diver", "Underwater Welder", "Key Maker",
+    "Keysmith", "Lock Expert", "Lock Fitter", "Lock Setter", "Lock Technician",
+    "Locksmith", "Housetrailer Servicer", "Acrobatic Rigger", "Boat Rigger",
+    "Crane Rigger", "Gantry Rigger", "High Rigger", "Marine Rigger", "Parachute Rigger",
+    "Ship Rigger", "Theatrical Rigger", "Wire Rigger", "Yacht Rigger",
+    "Yard Rigger", "Locksmith Helper", "Curtain Mender", "Gunsmith", "Parachute Repairer",
+    "Sail Repairer", "Tarp Repairer", "Wheelwright", "Assembly Supervisor",
+    "Machinist Supervisor", "Molding Supervisor", "Printing Supervisor",
+    "Aircraft Riveter", "Wing Coverer", "Coil Builder", "Coil Former",
+    "Coil Winder", "Motor Rewinder", "Motor Winder", "Wire Coiler", "Wire Winder",
+    "Anode Builder", "Armature Assembler", "Battery Assembler", "Battery Builder",
+    "Computer Assembler", "Electrical Assembler", "Electronic Assembler",
+    "Electronic Wirer", "Switchbox Assembler", "Transformer Assembler",
+    "Transformer Maker", "Electromechanical Assembler", "Engine Builder",
+    "Generator Assembler", "Machine Builder", "Fiberglass Fabricator",
+    "Fiberglass Grinder", "Fiberglass Laminator", "Fiberglass Roller",
+    "Fiberglasser", "Barrel Straightener", "Crate Builder", "Doll Maker", "Lure Maker",
+    "Quilt Stuffer", "Bagel Maker", "Bread Baker", "Dough Maker", "Pastry Baker",
+    "Pastry Finisher", "Pie Baker", "Pie Maker", "Butcher", "Butcher Apprentice",
+    "Halal Butcher", "Kosher Butcher", "Meat Carver", "Meat Clerk",
+    "Crab Picker", "Deboner", "Fish Cutter", "Fish Filleter", "Meat Trimmer",
+    "Oyster Shucker", "Poultry Cutter", "Poultry Eviscerator", "Shrimp Peeler",
+    "Shrimp Picker", "Wing Scorer", "Beef Splitter", "Cattle Killer", "Hog Slaughterer",
+    "Meat Packer", "Meat Processor", "Poultry Slaughterer",
+    "Shochet", "Slaughterer", "Bean Roaster", "Coffee Roaster", "Fish Smoker",
+    "Grain Roaster", "Meat Curer", "Meat Smoker", "Sausage Smoker", "Smokehouse Worker",
+    "Candy Maker", "Candy Puller", "Cheese Processor", "Honey Blender",
+    "Pickle Maker", "Relish Maker", "Taffy Puller", "Fish Fryer", "Pierogi Maker",
+    "Tripe Cooker", "Olive Pitter", "Poultry Hanger", "Yeast Maker", "Swager Operator",
+    "Brass Roller", "Pipe Straightener", "Steel Roller", "Metal Slitter",
+    "Metal Stamper", "Aluminum Polisher", "Metal Grinder", "Gear Cutter",
+    "Automotive Machinist", "CNC Machinist", "Gear Machinist", "Precision Machinist",
+    "Production Machinist", "Smelter Operator", "Aluminum Pourer",
+    "Ingot Caster", "Iron Pourer", "Steel Pourer", "Tin Pourer", "Metal Patternmaker",
+    "Airset Caster", "Airset Molder", "Core Stripper", "Foundry Molder",
+    "Sand Molder", "Tool Maker", "Toolmaker", "Aluminum Welder", "Arc Welder",
+    "Brazer", "Pipe Welder", "Silver Solderer", "Welder Fitter", "Wire Welder",
+    "Machine Welder", "Wire Annealer", "Wire Temperer", "Shipfitter",
+    "Shipfitter Apprentice", "Anodizer", "Chrome Plater", "Chromium Plater",
+    "Copper Plater", "Electro Plater", "Electroplater", "Galvanizer", "Metal Plater",
+    "Nickel Plater", "Tin Plater", "Tool Grinder", "Tool Sharpener",
+    "Tool Straightener", "Photoengraver", "Plate Mounter", "Pre-Press Proofer",
+    "Prepress Stripper", "Type Setter", "Bindery Worker", "Book Repairer",
+    "Bookbinder", "Drycleaner", "Launderer", "Laundress", "Laundry Attendant",
+    "Laundry Operator", "Laundry Sorter", "Laundry Worker", "Precision Dyer",
+    "Clothes Ironer", "Clothes Presser", "Clothing Presser", "Garment Presser",
+    "Pants Presser", "Shirt Presser", "Silk Presser", "Wool Presser", "Cobbler",
+    "Leather Lacer", "Leather Worker", "Luggage Repairer", "Saddle Maker", "Shoe Maker",
+    "Shoe Repairer", "Shoemaker", "Insole Beveler", "Lacing Operator",
+    "Pump Stitcher", "Shoe Cementer", "Sole Trimmer", "Hand Quilter", "Hand Sewer",
+    "Hand Stitcher", "Hand Weaver", "Alterations Sewer", "Alterations Tailor",
+    "Coat Cutter", "Coat Maker", "Couture Dressmaker", "Dress Fitter",
+    "Fur Tailor", "Garment Fitter", "Suit Maker", "Vest Maker", "Cloth Dyer", "Rug Dyer",
+    "Yarn Dyer", "Bedspread Cutter", "Canvas Cutter", "Cloth Cutter",
+    "Twill Cutter", "Upholstery Cutter", "Knitter Operator", "Loom Operator",
+    "Roving Winder", "Twister Operator", "Winder Operator", "Drawbench Operator",
+    "Clothing Patternmaker", "Embroidery Patternmaker", "Auto Upholsterer", "Chair Upholsterer",
+    "Furniture Upholsterer", "Seating Upholsterer", "Feltmaker",
+    "Swatch Maker", "Cabinet Builder", "Cabinetmaker", "Marquetry Worker",
+    "Cabinet Finisher", "Furniture Refinisher", "Furniture Sander", "Piano Refinisher",
+    "Backup Sawyer", "Bandmill Operator", "Buzzsaw Operator",
+    "Hardwood Sawyer", "Headrig Sawyer", "Tenon Operator", "Wood Planer", "Pole Framer",
+    "Timber Framer", "Wood Carver", "Reactor Operator", "Substation Operator",
+    "Powerhouse Operator", "Boiler Engineer", "Wastewater Operator",
+    "Nitrogen Operator", "Gas Controller", "Hydrotreater Operator", "Oil Gauger",
+    "Oil Refiner", "Chemical Processor", "Brewmaster", "Fermentation Operator",
+    "Fermenter", "Milk Pasteurizer", "Milk Processor", "Molasses Preparer",
+    "Pasteurizer", "Winemaker", "Beveller Operator", "Pulverizer Operator", "Hand Buffer",
+    "Hand Sander", "Jewelry Grinder", "Jewelry Polisher", "Knife Grinder",
+    "Ring Polisher", "Asphalt Blender", "Clay Mixer", "Concrete Batcher",
+    "Dye Mixer", "Glue Mixer", "Ink Blender", "Ink Mixer", "Plaster Mixer",
+    "Resin Mixer", "Fur Trimmer", "Insulation Cutter", "Paper Cutter",
+    "Paper Slitter", "Rubber Trimmer", "Trimming Operator", "Brick Maker",
+    "Cigarette Stamper", "Sugar Presser", "Tuber Operator", "Calciner Operator",
+    "Rubber Curer", "Ampoule Examiner", "Bag Grader", "Cigarette Examiner",
+    "Petroleum Sampler", "Quality Inspector", "Diamond Grader", "Diamond Polisher",
+    "Diamond Setter", "Facetor", "Gem Cutter", "Gemologist",
+    "Goldsmith", "Jewelry Repairer", "Jewelsmith", "Lapidarist", "Pewterer",
+    "Silversmith", "Crown Ceramist", "Dental Ceramist", "Dental Technician",
+    "Orthodontic Technician", "Arch-Support Maker", "Brace Maker", "Orthotics Fitter",
+    "Orthotics Technician", "Prosthetics Technician", "Eyeglass Assembler",
+    "Eyeglass Maker", "Lens Grinder", "Lens Mounter", "Bottle Capper",
+    "Bottle Packer", "Can Filler", "Can Sealer", "Keg Filler", "Ceramic Painter",
+    "China Decorator", "Glass Decorator", "Lacquerer", "Sign Painter", "Aircraft Painter",
+    "Auto Painter", "Automobile Refinisher", "Boat Painter",
+    "Semiconductor Assembler", "Wafer Fabricator", "Digital Retoucher", "Film Printer",
+    "Film Processor", "Photo Retoucher", "Print Retoucher", "CNC Operator",
+    "Acid Dipper", "Degreaser Operator", "Chiller Operator", "Chiller Tender",
+    "Freezer Operator", "Refrigeration Operator", "Engraver", "Glass Etcher",
+    "Laser Engraver", "Machine Engraver", "Metal Engraver", "Pantograph Engraver",
+    "Rotary Engraver", "Rubber Engraver", "Cigar Roller", "Clay Modeler",
+    "Glass Bender", "Glass Blower", "Glass Presser", "Neon Molder",
+    "Rubber Molder", "Stone Carver", "Box Fabricator", "Corrugator Operator",
+    "Retreader", "Tire Finisher", "Tire Molder", "Tire Retreader", "Machinist Helper",
+    "Slitter Helper", "Tailor Helper", "Welder Helper", "Woodworker Helper",
+    "Aircraft Loadmaster", "Warehouse Supervisor", "Airline Captain",
+    "Airline Pilot", "Aerial Sprayer", "Agricultural Pilot", "Balloon Pilot",
+    "Corporate Pilot", "Executive Pilot", "Helicopter Pilot", "Enroute Controller",
+    "Flight Steward", "Ambulance Attendant", "Bobtailer", "Newspaper Deliverer",
+    "Route Salesperson", "Over-the-Road Driver", "Semi-Truck Driver",
+    "Tanker Driver", "Hearse Driver", "Cab Driver", "Motorcycle Deliverer",
+    "Freight Engineer", "Railroad Engineer", "Railway Engineer", "Train Engineer",
+    "Dinkey Driver", "Dinkey Operator", "Engine Hostler", "Railcar Switcher",
+    "Yard Hostler", "Railroad Firer", "Switch Coupler", "Freight Conductor",
+    "Train Conductor", "Yard Conductor", "Subway Conductor", "Tram Operator",
+    "Retarder Operator", "Able Seaman", "Deck Cadet", "Deck Hand", "Deckhand",
+    "Merchant Mariner", "Merchant Seaman", "Ordinary Seaman", "Sailor", "Barge Captain",
+    "Barge Master", "Boat Pilot", "Deck Officer", "Docking Pilot",
+    "Ferry Captain", "Ferryboat Captain", "First Mate", "Harbor Pilot", "Port Captain",
+    "River Pilot", "Sailboat Captain", "Towboat Pilot", "Tugboat Captain",
+    "Tugboat Mate", "Tugboat Operator", "Tugboat Pilot", "Launch Operator",
+    "Speedboat Driver", "Speedboat Operator", "Barge Engineer", "Ferry Engineer",
+    "Towboat Engineer", "Tugboat Engineer", "Bridge Operator", "Bridge Tender",
+    "Dam Tender", "Lighthouse Keeper", "Auto Parker", "Car Jockey",
+    "Valet Parker", "Valet Runner", "Oil Changer", "Pump Jockey", "Aircraft De-Icer",
+    "Aircraft Refueler", "Airplane Refueler", "Transportation Technician",
+    "Aircraft Inspector", "Freight Inspector", "Locomotive Inspector",
+    "Railroad Inspector", "Ship Steward", "Train Attendant", "Pedicab Driver",
+    "Rickshaw Driver", "Conveyor Tender", "Dredge Deckhand", "Dredge Engineer",
+    "Dredge Mate", "Dredger", "Hoist Operator", "Winch Operator",
+    "Forklift Driver", "Forklift Operator", "Stacker Operator", "Aircraft Cleaner",
+    "Auto Cleaner", "Auto Detailer", "Automobile Detailer", "Boat Detailer",
+    "Bus Cleaner", "Bus Washer", "Car Washer", "Equipment Cleaner",
+    "Machine Cleaner", "Truck Washer", "Cargo Handler", "Cart Pusher", "Freight Handler",
+    "Grave Digger", "Manufacturing Laborer", "Material Handler",
+    "Package Handler", "Van Loader", "Wharf Laborer", "Brick Offbearer", "Chain Offbearer",
+    "Chopper Feeder", "Doffer", "Dryer Feeder", "Hopper Feeder",
+    "Hopper Filler", "Line Feeder", "Offbearer", "Spinning Doffer", "Spooler Operator",
+    "Bagger", "Carton Wrapper", "Egg Packer", "Gift Wrapper", "Meat Packager",
+    "Meat Wrapper", "Utility Bagger", "Grocery Stocker", "Night Stocker",
+    "Retail Stocker", "Store Stocker", "Warehouse Stocker", "Brewery Pumper",
+    "Garbage Collector", "Refuse Collector", "Trash Collector", "Barge Loader",
+    "Dock Loader", "Rail Loader", "Ship Unloader", "Backhoe Operator",
+    "Bulldozer Operator", "Payloader Operator", "Shovel Operator", "Helicopter Officer",
+    "Armor Officer", "Cavalry Officer", "Tank Officer", "Ammunition Officer",
+    "Ordnance Officer", "Weapons Officer", "Combat Control",
+    "Sea-Air-Land Officer", "Air Boatswain", "Counter Intelligence",
+    "Counter-Intelligence Technician", "Human Intelligence", "Imagery Intelligence",
+    "Intelligence", "Intelligence Officer", "Minesweeping Officer",
+    "Mission Commander", "Parachute Officer", "Psychological Operations", "Space Operations",
+    "Weapons", "Cryptologic Supervisor", "Intelligence Chief",
+    "Intelligence Manager", "Aerial Gunner", "Airborne Operations", "Airman",
+    "Communications Operator", "Crew Chief", "Flight Engineer", "Helicopter Specialist",
+    "In-Flight Technician", "Multi-Sensor Operator", "Naval Aircrewman",
+    "Non-Acoustic Operator", "Transport Aircrewman", "Utility Aircrewman",
+    "Cavalry Scout", "Lav Crewman", "Lcac Operator", "Anti-Tank Missileman",
+    "Cannon Crewmember", "Fire Controlman", "Lance Crewmember",
+    "Missile Technician", "Combat Control", "Operations Specialist", "Operations Specialists",
+    "Sensor Operator", "Infantry Assaultman", "Infantryman",
+    "Machine Gunner", "Mortarman", "Rifleman", "Scout Sniper", "Scout-Sniper",
+    "Parachutist", "Pararescue Craftsman", "Pararescue Manager", "Reconnaissance Man",
+    "Counterintelligence Agent", "Cryptologic Technician", "Intelligence Analyst",
+    "Intelligence Specialist", "Multi-Sensor Operator", "Operations Intelligence",
+    "Parachute Rigger", "Signalman", "Tactical Debriefer"
+];
+
+// Names from Faker.js
+let names = [
+    "Margarita Wunsch", "Antwan Mertz", "Lavon Casper", "Shad Hessel",
+    "Yessenia Mayert", "Skyla Krajcik", "Harrison Hane", "Tomas Turner",
+    "Kiera Schmidt", "Sylvester Kulas", "Danny Tillman", "Mathew Runte",
+    "Danial Borer", "Patsy Powlowski", "Florine Reilly", "Myah McClure",
+    "Adonis Nolan", "Abdullah Doyle", "Joanie Schultz", "Katherine Zieme",
+    "Delta Mills", "Lilla Raynor", "Abagail Corwin", "August Cole", "Giovanna Block",
+    "Palma Gusikowski", "Eleonore Yost", "Magdalena Bradtke", "Alaina Jacobs",
+    "Krystel Rohan", "Paris Gaylord", "Kathlyn Botsford", "Vaughn Upton",
+    "Cloyd Fahey", "Joseph Reichert", "Leonardo Kris", "Ward Sanford", "Lamar Pollich",
+    "Conner Mitchell", "Herta Anderson", "Winifred Thiel", "Mylene Harvey",
+    "Margarita Kreiger", "Danny Schinner", "Norwood D'Amore", "Tod Frami",
+    "Therese Welch", "Dana Anderson", "Candice Jacobson", "Reed Muller",
+    "Franco Deckow", "Hayley Lynch", "Hans Beahan", "Willis Wolf", "Leda Boehm",
+    "Kelly Koelpin", "Muriel Brown", "Travis Cartwright", "Eve Skiles", "Liana Osinski",
+    "Filiberto Wilkinson", "Itzel Walter", "Lyda Johns", "Coty Windler",
+    "Celestino Fay", "Austin O'Conner", "Carlos Kulas", "Thomas Towne",
+    "Christian Grady", "Lora Turcotte", "Keegan Bergnaum", "Reginald Champlin",
+    "Kallie Medhurst", "Margaret Halvorson", "Taurean Stark", "Samir Jenkins",
+    "Leola Doyle", "Greyson Schulist", "Adolf Kutch", "Sabina Zemlak",
+    "Merlin Schmeler", "Mollie Jenkins", "Aubree Kunde", "Aidan Thompson",
+    "Gudrun Cormier", "Bernice Kutch", "Enrico Runolfsdottir", "Leann Kunze",
+    "Keagan Kreiger", "Vesta Bayer", "Nickolas Morissette", "Margaret Gusikowski",
+    "Jaida Mitchell", "Dax Raynor", "Katarina Kiehn", "Andres Herman",
+    "Mikel Walter", "Erich Mertz", "Vida Bruen", "Dylan Wisoky", "Hilma Hackett",
+    "Angelo Medhurst", "Jaylon Thompson", "Joesph Toy", "Nia Bogan", "Loraine Bechtelar",
+    "Retha Baumbach", "Wendy Swift", "Brigitte Macejkovic", "Freda O'Kon",
+    "Sandy Kreiger", "Hassan Hayes", "Cleta Hessel", "Darrin Franecki", "Lelia Goldner",
+    "Maybelle Luettgen", "Cory Walsh", "Etha Effertz", "Bertha Renner",
+    "Monica Rolfson", "Carlo Mante", "Ramiro Welch", "Hugh Champlin",
+    "Everette Schoen", "Savion Veum", "Andreane Bergnaum", "Rozella Dicki",
+    "Verda Parisian", "Donato Cassin", "Reinhold Nienow", "Kirk Lockman",
+    "Celestino Baumbach", "Zion Kshlerin", "Kristin Nader", "Marquis Hilll",
+    "Annabell Davis", "Adrian Macejkovic", "Guido Bauch", "Sharon Lubowitz",
+    "Osvaldo Powlowski", "Salma Carroll", "Maymie Windler", "Brice Nicolas",
+    "Ottis Grant", "Bradford Tremblay", "Shad Leuschke", "Roslyn Runolfsson",
+    "Allan Pagac", "Megane Lubowitz", "Aaron Maggio", "Elian Schinner",
+    "Clyde Thompson", "Mariana Kris", "Raegan Sanford", "Waylon Haag",
+    "Valentin Brakus", "Murphy Wunsch", "Arlene Ankunding", "Adolph Ondricka",
+    "Pascale Buckridge", "Doris Turcotte", "Macie Becker", "Reba Weissnat",
+    "Jessyca Leffler", "Cathrine Rogahn", "Sydney Greenholt", "Ethyl Leannon",
+    "Paolo Hilpert", "Ted Upton", "D'angelo Stark", "Coleman Emmerich",
+    "Wiley Willms", "Lia Monahan", "Mervin Dach", "Florian Muller", "Ashtyn Cartwright",
+    "Nicole McDermott", "Everett Yundt", "Hildegard Pagac", "Lamar Homenick",
+    "Adrienne Friesen", "Trystan Ruecker", "Hank Konopelski", "Darlene Bruen",
+    "Lexie Quigley", "Nash Fisher", "Fredrick Morar", "Emmett Zemlak", "Ila Ankunding",
+    "Adele Smitham", "Boyd Bruen", "Gay Grimes", "Aniyah Volkman", "Ottis Smith",
+    "Elinor Hilll", "Simeon Schulist", "Maude Ondricka", "Dulce Kertzmann",
+    "Cornelius Denesik", "Salma Gusikowski", "Sherwood Collins", "Kayden Buckridge",
+    "Assunta Lang", "Shemar Predovic", "Melba Jaskolski", "Jeffry Bartell",
+    "Maritza Bode", "Karianne Kerluke", "Francisco Purdy", "Taya Von",
+    "Kamille Hamill", "Gianni McGlynn", "Lue Huels", "Tianna Legros", "Sven Dooley",
+    "Iva O'Kon", "Lisette Collins", "Noemy Cole", "Claire Bernhard", "Tessie Senger",
+    "Kaley Hackett", "Reta Harvey", "Jerad Hilpert", "Arianna Predovic",
+    "Laurel Howe", "Lauren Mosciski", "Marge Gaylord", "Jordan McKenzie",
+    "Julianne Bogan", "Laila Effertz", "Rhett McClure", "Margret Mayer",
+    "Abbie Terry", "Taylor Hackett", "Narciso Dickens", "Dee Bradtke", "Iva Hegmann",
+    "Camron Crona", "Darion Auer", "Granville Goldner", "Macey Bergnaum",
+    "Shyann Dach", "Forest Feil", "Prudence Oberbrunner", "Favian Koelpin",
+    "Jess McLaughlin", "Elliott Moore", "Madalyn Steuber", "Justice Senger",
+    "Zoie Krajcik", "Loyal Flatley", "Nat Lakin", "Rene Bogisich", "Kenny O'Reilly",
+    "Selina Nolan", "Eliezer Paucek", "Mandy Kassulke", "Yvette Block",
+    "Meaghan Block", "Cristobal Olson", "Roger Marquardt", "Tamara Bernhard",
+    "Percival Boehm", "Caitlyn Fritsch", "Lester Erdman", "Ciara Erdman",
+    "Zena Haley", "Valerie Legros", "Angelina Murphy", "Javier O'Connell",
+    "Ruby Gusikowski", "Patricia Kertzmann", "Kaden Rempel", "Marlon Windler",
+    "Ally Harber", "Tessie Koss", "Orpha Mitchell", "Edmund Schiller",
+    "Brionna Lang", "Jessie Haag", "Cristina Bergstrom", "Amira Reilly",
+    "Irwin Stroman", "Erik Weber", "Scot Muller", "Monica Reichert", "Santino Fisher",
+    "Terrence Gleichner", "Natalie Feest", "Jerome Witting", "Zoe Hoeger",
+    "Carmine Conroy", "Bobbie Hahn", "Lilyan Brakus", "Bernita Kshlerin",
+    "Liana McGlynn", "Giovanni Tremblay", "Zula Klein", "Collin Mayer",
+    "Zane Abshire", "Anastacio Hayes", "Renee Olson", "Dewitt Glover", "Eli Bradtke",
+    "Hoyt Ryan", "Leon Carter", "Fern Macejkovic", "Christiana Ferry",
+    "Maximo Borer", "Eddie Herman", "Mac Zemlak", "Trystan Parisian", "Phyllis Kerluke",
+    "Trent Schultz", "Anjali Watsica", "Delmer Kuvalis", "Edwardo Yost",
+    "Rhiannon Cassin", "Felton Gusikowski", "Toby Tillman", "Rupert Heaney",
+    "Albertha Huel", "Libbie Cruickshank", "Juanita Gleichner", "Adele O'Connell",
+    "Ernesto Bartell", "Pasquale Bradtke", "Keenan Witting", "Amelia Davis",
+    "Larry Cassin", "Anthony Pfannerstill", "Brayan Bauch", "Nolan Koelpin",
+    "Ricky Dicki", "Veda Dach", "Clementina Willms", "Iliana Ernser",
+    "Johanna Gorczany", "Newton Zboncak", "Korey Heaney", "Vesta Bauch",
+    "Kayleigh Hauck", "Heber Satterfield", "Adaline Jerde", "Jennie Nitzsche",
+    "Otis Rau", "Jayson Fahey", "Estefania Emmerich", "Bailey Lang", "Flavio Rosenbaum",
+    "Israel Kozey", "Winston Mann", "Lura Barton", "Garry Reilly", "Hallie Quitzon",
+    "Jerod Bosco", "Mariah Thompson", "Dena Bergstrom", "Reta Lueilwitz",
+    "Ryley Kuhlman", "Elyssa Reynolds", "Sophie Kilback", "Tobin Ondricka",
+    "Dorothy Beahan", "Rebeca Crona", "Arthur Cassin", "Leonora Cummings",
+    "Ophelia Boyer", "Koby Douglas", "Rhianna Kshlerin", "Kendrick Kuphal",
+    "Jordi Lockman", "Jess Pollich", "Whitney Gibson", "Karli Cummerata",
+    "Torey Hills", "Raven Hane", "Jarrett O'Reilly", "Lilla Adams",
+    "Sigmund Funk", "Madge Pouros", "Olin Rau", "Devin Treutel", "Deion Feil",
+    "Vivianne Hirthe", "David Koelpin", "Lelia Adams", "Brayan Bernier",
+    "Kamille Simonis", "Minerva Carter", "Francisco Dicki", "Raymundo Prohaska",
+    "Jaida Rau", "Mylene Nader", "Trent Bogisich", "Isaiah Bergstrom", "Elmo Barton",
+    "Roma Rutherford", "Esperanza Little", "Janet Ankunding", "Haskell McCullough",
+    "Hermina Hamill", "Demond Dickens", "Everardo Schiller", "Norbert O'Reilly",
+    "Estrella Swift", "Carlotta Homenick", "Winnifred Daniel", "Lilliana Shields",
+    "Sabryna Nolan", "Kellen Kiehn", "Trycia Towne", "Noemi Robel", "Deja Kris",
+    "Millie Hettinger", "Isobel Will", "Peter Satterfield", "Anais Kuhic",
+    "Birdie Hettinger", "Morris Ortiz", "Kendall Daniel", "Isabella Hermiston",
+    "Harvey Crist", "Frederique McClure", "Zachery Blick", "Arvid Huels",
+    "Chester Bosco", "Bartholome Hyatt", "Carmel Tillman", "Sherwood Barton",
+    "Margarette Rolfson", "Clark Johnston", "Margarita Romaguera", "Zachariah Kuhic",
+    "Favian Strosin", "Casper Fadel", "Philip Ratke", "Enrico Johns", "Markus Dietrich",
+    "Camden Hilll", "Angelita Willms", "Katlynn Fritsch", "Gaston Wiegand",
+    "Lisandro Sawayn", "Selmer Reinger", "Nikko Boyle", "Doug Dietrich",
+    "Houston Gutkowski", "Raheem Harris", "Dorothy Little", "Maeve Bogan",
+    "Karson Krajcik", "Tamia Satterfield", "Alice Ryan", "Edmond Wisozk",
+    "Sarah Hoppe", "Nayeli Sawayn", "Brennon Spencer", "Gerard Schoen",
+    "Irving Huels", "Emanuel Quitzon", "Verdie Weissnat", "Orrin Pollich",
+    "Manuel Nolan", "Flo Ziemann", "Riley Ward", "Garnett Jacobi", "Chaim Ankunding",
+    "Renee Rodriguez", "Tina Yost", "Kallie Labadie", "Rhianna Kemmer",
+    "Lisa Moen", "Nadia Kuhn", "Madeline Shields", "Birdie Konopelski",
+    "Tremaine Littel", "Kenna Kreiger", "Fleta Koelpin", "Kurt Miller",
+    "Pablo Goldner", "Eldora Towne", "Casey Yundt", "Jana Murphy", "Destin Stokes",
+    "Josie Rau", "Rubye Willms", "Darrion Ferry", "Bill Monahan", "Etha Upton",
+    "Roy Bauch", "Zion Kunde", "Tiara MacGyver", "Brook Lueilwitz", "Kieran Funk",
+    "Federico Swaniawski", "Charlotte Hackett", "Elwyn Rohan", "Krystal Rutherford",
+    "Rory Fisher", "Russ Torphy", "Braden Ryan", "Myah Ryan", "Adah O'Kon",
+    "Danielle McLaughlin", "Kyla Huel", "Chelsea Thompson", "Ila Armstrong",
+    "Sam Osinski", "Deja Daniel", "Rudolph Bednar", "Drew Jacobs", "Gaston Heathcote",
+    "Carolina Hilpert", "Emily Doyle", "Kade Gerlach", "Wilson Koelpin",
+    "Carey Rowe", "Kristy Vandervort", "Woodrow Bogan", "Alberto Heidenreich",
+    "Agustin O'Connell", "Guido Herzog", "Carley Crona", "Sanford Ebert",
+    "Bartholome Hilpert", "Paxton Botsford", "Phoebe Kuphal", "Mervin Zboncak",
+    "Vern Connelly", "Annabell Crona", "Fausto King", "Bennie Jacobs",
+    "Hailey Considine", "Kristoffer Lakin", "Bette Hartmann", "Russel Lindgren",
+    "Gideon Lockman", "Jesse McCullough", "Aliza Huels", "Joanny Torp",
+    "Alanis Little", "Vladimir Ritchie", "Weston Dibbert", "Javier Hilll",
+    "Ethyl Predovic", "Jace Gulgowski", "Adonis Schaden", "Jeramy Mayert",
+    "Nikki Nader", "Isabell Kessler", "Mona Roob", "Elyssa Grant", "Osborne Keeling",
+    "Nettie Schmeler", "Lennie Dibbert", "Zola McCullough", "Lambert Bartell",
+    "Stone Barrows", "Destiny Hettinger", "Darian Doyle", "Jaime Beatty",
+    "Marquise Towne", "Llewellyn Hintz", "Evan Okuneva", "Jeremie Pouros",
+    "Twila Reichel", "Freddy Streich", "King Padberg", "Alda Kiehn", "Shanna Morar",
+    "Juston Casper", "Brook Swaniawski", "Tre Wyman", "Clemens Emmerich", "Kale Buckridge",
+    "Gabriella Schinner", "Braulio Rice", "Kaelyn Reynolds", "Amy Wuckert",
+    "Antonetta Hirthe", "Sigrid Gerhold", "Lorna Rau", "Ephraim Hodkiewicz",
+    "Armani Pacocha", "Arvid Kuphal", "Joelle Brown", "Eunice Mitchell",
+    "Americo Rice", "Marguerite Collins", "Joannie Fisher", "Benton Conroy",
+    "Freeman Zieme", "Mazie Kuhic", "Leta O'Conner", "Penelope McDermott",
+    "Keenan O'Reilly", "Allen West", "Blaze Lang", "Jaylon Hills",
+    "Cordelia Reichel", "Drew Goldner", "Ahmed Hansen", "Erling Johnson",
+    "Brock Walsh", "Amara Runte", "Emelie Nitzsche", "Lawrence Rempel",
+    "Granville Reichel", "Madonna Kovacek", "Lela Eichmann", "River Jones",
+    "Chaya Douglas", "Dandre Spencer", "Joanny Waelchi", "Caden Upton",
+    "Malachi Lubowitz", "Micaela Kuhn", "Warren Abshire", "Isaac Ferry", "Lela Walker",
+    "Amos Ruecker", "Bryce Hills", "Devin Rogahn", "Reagan Simonis", "Zackery Hackett",
+    "Eliane Crooks", "Neva Howe", "Reanna Grady", "Icie Jaskolski", "Ivory Upton",
+    "Oscar Hoeger", "Richard Senger", "Arnold Mosciski", "Gavin Wiza", "Chris Lueilwitz",
+    "Asha King", "Zelda Durgan", "Sheldon Bailey", "Lambert Lockman", "Sim Bogisich",
+    "Zackary Ebert", "Eliezer Sauer", "Cali Sanford", "Phoebe Feil", "Adonis Abshire",
+    "Zion Abbott", "Evan Cruickshank", "Buford Rogahn", "Ima Tremblay",
+    "Candida Schmidt", "Johanna Cummings", "Leone O'Conner", "Noemie Littel",
+    "Roberta Glover", "Perry Legros", "Uriah Schulist", "King Dickens", "Kay Denesik",
+    "Danika Muller", "Colt Roberts", "Odie Reilly", "Ashley Kerluke",
+    "Vivienne Feil", "Bartholome Ortiz", "Rasheed Kshlerin", "Andreanne Boyer",
+    "Anya Gaylord", "Adelia Kunde", "Jamel Sauer", "Joshuah Simonis", "Rosemary Treutel",
+    "Elva Lebsack", "Nathanial Marvin", "Mckayla Larson", "Juwan Reinger",
+    "Leda Lemke", "Kevon Legros", "Kiana Goodwin", "Judy Hermann", "Emilia Keebler",
+    "Roxane Huels", "Urban Green", "Louie Conroy", "Dora Gleason", "Pedro Tremblay",
+    "Kavon Jones", "Dylan Littel", "Rigoberto Shanahan", "Sabina Cormier",
+    "Delphia Kihn", "Grover Spencer", "Kenyon Renner", "Joseph Muller", "Nya Keeling",
+    "Rafael Ritchie", "Edgardo Okuneva", "Turner Nader", "Andre Little",
+    "Mitchel Breitenberg", "Jacey Block", "Jaida Treutel", "Jovan Rutherford",
+    "Elisha Ortiz", "Oda Mitchell", "Angelo Lynch", "Makenzie Leannon",
+    "Doug Blanda", "Talia Price", "Earlene Stokes", "Bernhard Crona",
+    "Dedrick Zboncak", "Lucienne Cummings", "Aiden Wunsch", "Kelsi Wyman",
+    "Kenyatta Ziemann", "Sienna Langosh", "Lyric Bergnaum", "Bulah Schmeler",
+    "Adelbert White", "Sylvester Yost", "Stevie Blanda", "Enos Schaefer",
+    "Delta Kozey", "Meghan Schroeder", "Frank Olson", "Hipolito Gerlach",
+    "Burnice Larkin", "Magnus Ondricka", "Kristy Koch", "Delpha Wolf",
+    "Elvera Emard", "Rick Mills", "Madaline Nolan", "Alexanne Weissnat",
+    "Ophelia Beier", "Margarette Fritsch", "Damaris Witting", "Mavis Hartmann",
+    "Cortez Rohan", "Earl Nader", "Unique Walsh", "Kristopher Cole", "Ericka Kemmer",
+    "Jake Dickinson", "Jessy Wisozk", "Selina Stehr", "Renee Rodriguez",
+    "Colton Donnelly", "Vada Mante", "Krystina Berge", "Haylie Paucek",
+    "Kenny Wehner", "Adriel Klein", "Eduardo Lebsack", "Neil Aufderhar", "Kira Beahan",
+    "Amparo Schamberger", "Jaylin Terry", "Jonathon Weissnat", "Braden Flatley",
+    "Lilla McCullough", "Katheryn Borer", "Pauline Ebert", "Aurelie Ziemann",
+    "Jayce Grady", "Georgette Sanford", "Tanner Sanford", "Germaine Johnson",
+    "Katarina Reichert", "Angelina McCullough", "Cortney Frami", "Sasha Satterfield",
+    "Bart Feeney", "Kory Quigley", "Osborne Hayes", "Ardith Ward",
+    "Mallory O'Connell", "Tabitha Padberg", "Cleo Stiedemann", "Micaela Eichmann",
+    "Marlene Stehr", "Abby Erdman", "Jazlyn Crist", "Kenya Larson", "Alec Anderson",
+    "Jamey Nikolaus", "Sean Gleichner", "Ola Bechtelar", "Howell Gutmann",
+    "Jay Schinner", "Joana Powlowski", "Icie Feest", "Gerson Kub", "Caleigh O'Reilly",
+    "Kelly Padberg", "Kailyn Rau", "Tomasa Johns", "Helmer Jerde", "Earl Pfannerstill",
+    "Bridgette Volkman", "Sydnee Herman", "Tracey Lindgren", "Enrique Fritsch",
+    "Eriberto Harber", "Margarette Langworth", "Levi Roberts", "Shyanne Ebert",
+    "Shaina Hessel", "Derrick Crona", "Elenora Ortiz", "Gerald McLaughlin",
+    "Alford Parisian", "Taurean Hilll", "Manuela Reinger", "Arjun McCullough",
+    "Kendall Ledner", "Stephany Boyle", "Bessie Hansen", "Earline Harris",
+    "Cassidy Rowe", "Shyann Carroll", "Hobart Hahn", "Enrico Nicolas", "Danika Pacocha",
+    "Anibal O'Hara", "Teagan Funk", "Erwin Morar", "Helene Wuckert",
+    "Elfrieda Purdy", "Alessandro Haley", "Zoila Ledner", "Griffin Haag",
+    "Casandra Schaden", "Minerva Ratke", "Kristian Cartwright", "Maximo Kshlerin",
+    "Theodora Jerde", "Madonna Nitzsche", "Zoe Ernser", "Anissa Stanton",
+    "Alverta Schneider", "Braden Nader", "Ashlynn Sauer", "Enola Weimann",
+    "Wava Schmitt", "Hermann Cormier", "Jasen Muller", "Lysanne Treutel",
+    "Dustin Bauch", "Gwen Torp", "Pierre Herman", "Lilliana Franecki",
+    "Stewart Powlowski", "Fanny Kunde", "Madonna Wuckert", "Peggie Volkman",
+    "Neal Blanda", "Minnie Yost", "Ferne Farrell", "Reece Hauck", "Richie Kuvalis",
+    "Vincenzo Mitchell", "Ali Wilkinson", "Raleigh Hintz", "Emelia Witting",
+    "Keenan Haag", "Dawn Jaskolski", "Petra Terry", "Shany Hartmann",
+    "Janelle Lockman", "Jaren Rosenbaum", "Jasper Ratke", "Malachi Swaniawski",
+    "Aisha Rogahn", "Thaddeus Hauck", "Sidney Mills", "Ethan Huels",
+    "Lelia Jacobi", "Sydni Boyer", "River Auer", "Myrtice Funk", "Lance Daugherty",
+    "Onie Bashirian", "Edythe Ledner", "Dillon Nikolaus", "Lavern Homenick",
+    "Lesly Hirthe", "Kenna Wehner", "Buster Beatty", "Talia Skiles", "Sibyl Lind",
+    "Anne Bahringer", "Emelie Price", "Macey Schaden", "Dock Crooks", "Nico Graham",
+    "Keely Schumm", "Lupe Kassulke", "Roma Murphy", "Jany Langosh", "Randy Schroeder",
+    "Mossie Hirthe", "Loyal Borer", "Tiana Auer", "Cortney Ratke", "Thad Tillman",
+    "Adam Medhurst", "Donald Reynolds", "Jaclyn Braun", "Doyle Rice",
+    "Marielle Cremin", "Connie McGlynn", "Tre Abbott", "Berta Shields",
+    "Wilhelmine Christiansen", "Destiny Moore", "Shea Bahringer", "Isai Batz",
+    "Madison Witting", "Madonna Klein", "Casimer Bergnaum", "Carlie Larson",
+    "Palma Wisozk", "Adelia Fritsch", "Stewart Bradtke", "Nelson Rau",
+    "Ophelia Ortiz", "Pearline Kilback", "Braden Anderson", "Deondre Boyle",
+    "Isom Armstrong", "Letha Cruickshank", "Mustafa Hand", "Darby Bode", "Abdul Cummerata",
+    "Virgie Ernser", "Lesley Doyle", "Jermain Armstrong", "Heather Olson",
+    "May Hegmann", "Evangeline Jaskolski", "Francesca Welch", "Jodie Davis",
+    "Freeman Rosenbaum", "Jessy Goldner", "Lowell Collier", "Wiley Pollich",
+    "Tevin Turner", "Colten O'Conner", "Yessenia Pfeffer", "Natasha Casper",
+    "Archibald Altenwerth", "Eden Jakubowski", "Abigale Krajcik", "Weldon Denesik",
+    "Filiberto Heaney", "Joshua Bruen", "Joshua Von", "Lia Rolfson", "Alexa Welch",
+    "Nya Kautzer", "Loren Bernier", "Erik Will", "Rollin Steuber", "Elenora Rutherford",
+    "Melisa Carroll", "Fredrick Heidenreich", "Ramona Dicki", "Adolf Swaniawski",
+    "Kacie Kihn", "Caroline Lemke", "Brielle Predovic", "Jackeline Willms",
+    "Gust Lindgren", "Jermain Kuhic", "Bella Nienow", "Tommie Rau", "Flavie Skiles",
+    "Tito Mosciski", "Jedidiah Hahn", "Florencio Rohan", "Veda Veum", "Katelin Wolff",
+    "Austen Hills", "Kristofer Braun", "Meredith Marks", "Armani Rutherford",
+    "Natasha Collier", "Franz Halvorson", "Sabryna Wuckert", "Terry Koelpin",
+    "Jaeden Kessler", "Abby Pacocha", "Peter Rippin", "Dino Predovic",
+    "Warren Connelly", "Ashlynn Shanahan", "Janie Hilll", "Heather Weissnat",
+    "Bart Schuster", "Jakayla Ritchie", "Geoffrey Ernser", "Vinnie Bode",
+    "Lilly Mraz", "Myrl Koss", "Wilhelm MacGyver", "Antonia Bode", "Elza Steuber",
+    "Tito Rutherford", "Kaia Dooley", "Norene Mann", "Arely Collins",
+    "Rosetta Davis", "Rosemary Padberg", "Adella Ortiz", "Alek Goyette",
+    "Afton Lynch", "Ariel DuBuque", "Raymond Ortiz", "Kendrick Wilderman",
+    "Johnnie Vandervort", "Koby Gorczany", "Elyssa Hermann", "Marge Schneider",
+    "Nicole Harber", "Orland Collier", "Wilbert Nitzsche", "Anne Murphy",
+    "Pamela Zboncak", "Jaylin Greenfelder", "Donato Wisozk", "Ambrose Monahan",
+    "Cicero Gusikowski", "Birdie Considine", "Geovany Hirthe", "Roxanne Muller",
+    "Jerel Ledner", "Margarete Kirlin", "Baby Keebler", "Laury Pfannerstill",
+    "Kay Gutmann", "Floy Prosacco", "Cleta Lesch", "Lonnie Bailey",
+    "Jared Kihn", "Savanah Kshlerin", "Mabel Lockman", "Trent Mann", "Katelynn Hirthe",
+    "Annamae Kilback", "Wendell Hackett", "Justina Miller", "Leilani Kling",
+    "Leopold Sporer", "Art Robel", "Krystel Yost", "Alexandre Crooks", "Ray McKenzie",
+    "Judson Larson", "Elisha Hackett", "Erich Flatley", "Devin Greenholt",
+    "Hollis Breitenberg", "Jakob Greenholt", "Jamil Lockman", "Weston Ernser",
+    "Vernon Mayert", "Harry Padberg", "Xzavier Jast", "Herminio Schuppe",
+    "Roscoe Breitenberg", "Shayne Bergstrom", "Noel Stokes", "Cora Weber",
+    "Rene Leannon", "Eladio Kihn", "Kayden Adams", "Porter Moen", "Jamir Denesik",
+    "Muhammad Barton", "Janie Corwin", "Burnice Medhurst", "Lucio Rippin",
+    "Josiah Schumm", "Ebba Windler", "Mohammed Mante", "Jaquan Lebsack",
+    "Kadin Murray", "Joanny Schulist", "Jessika D'Amore", "Mikel Willms",
+    "Paul Moen", "Aiden Turcotte", "Alvah Bashirian", "Jerald Mayer", "Nova Hartmann",
+    "Bernardo Ondricka", "Emiliano Hickle", "Osbaldo Jaskolski", "Pink O'Kon",
+    "Lexi Toy", "Aniya Heidenreich", "Lambert Wisozk", "Rosamond Upton",
+    "Reinhold Batz", "Cicero Leuschke", "Miracle Carter", "Dameon Dickens",
+    "Alexandre Koepp", "Scotty Ferry", "Shaun Gerhold", "Savannah Roob",
+    "Tyson Harber", "Carmelo Wintheiser", "Aaron Rodriguez", "Emiliano Rodriguez",
+    "Sabryna Stamm", "Loma Gleichner", "Javonte Kihn", "Ervin Bergnaum",
+    "Christine Schmeler", "Rosetta Gislason", "Jody Moore", "Brad Vandervort",
+    "Clifford Fisher", "Nelson Terry", "Melyssa Cole", "Joannie Weimann",
+    "Carmella Murphy", "Darian Russel", "Kaylie Bergstrom", "Diana Goyette",
+    "Buddy Huel", "Leonardo Ortiz", "Valentina Ondricka", "Norene Hermann",
+    "Veda Marquardt", "Ansel Pfannerstill", "Demond Rempel", "Jessie Rogahn",
+    "Yolanda Smith", "Desmond Lowe", "Davion Breitenberg", "Baby Runolfsson",
+    "Shakira Tromp", "Berenice Hane", "Jean Russel", "Edd Torphy",
+    "Madisyn Wintheiser", "Cullen Paucek", "Mohammad Auer", "Damion Paucek",
+    "Austen Ferry", "Ophelia Schultz", "Stefan Shanahan", "Marlene Quitzon",
+    "Candice Barrows", "Cooper Reichert", "Shanny Bernhard", "Gail Bernier",
+    "Lizeth Bosco", "Gillian Murray", "Lura Schulist", "Willie Carter",
+    "Charlotte Roob", "Brannon Hermann", "Karianne Hilll", "Michael Kautzer",
+    "Lane Gulgowski", "Dannie Lindgren", "Madyson Sipes", "Alexane Robel",
+    "Kolby Altenwerth", "Mervin Kessler", "Jaylen Gottlieb", "Kennedy Reichert",
+    "Devyn VonRueden", "Brandon Yost", "Mathias Macejkovic", "Malinda Witting",
+    "Cielo Kulas", "Loy Pagac", "Juana Simonis", "Elinor Wiegand", "Willy Bogisich",
+    "Wilson Heidenreich", "Lyric Brown", "Pattie Upton", "Greyson Friesen",
+    "Kyleigh Heller", "Pearline Luettgen", "Evan Ankunding", "Micheal Gibson",
+    "Mireya Mills", "Matt Thiel", "Kendra Shanahan", "Adriel Reynolds",
+    "Rosalinda O'Keefe", "Zander Kshlerin", "Devon Shanahan", "Terrence Blanda",
+    "Andre Denesik", "Marisa Bradtke", "Destiny Hane", "Arvid Heathcote",
+    "Nelda Eichmann", "Jammie Moore", "Judy Fay", "Maybelle Romaguera",
+    "Jeromy Reichert", "Bud Christiansen", "Antonette Hammes", "Duane Lubowitz",
+    "Sanford Veum", "Queenie Flatley", "Thalia Senger", "Abbey Gerlach",
+    "Brian Corkery", "Lenore Koss", "Arnold McDermott", "Rowan Jacobson",
+    "Catharine Satterfield", "Lamont Ullrich", "Sheridan Beahan",
+    "Gwendolyn Conn", "Karley Bartoletti", "Helen Flatley", "Rosalinda Schumm",
+    "Kirk Schimmel", "Opal Swift", "Betty Weimann", "Ulises Baumbach",
+    "Candace Wunsch", "Dee Rice", "Boris Hartmann", "Bernardo Hahn",
+    "Genevieve Beer", "Bernita Von", "Audra Friesen", "Helmer Watsica",
+    "Serenity Ebert", "Isaias Cummerata", "Jace Stoltenberg", "Vicente D'Amore",
+    "Loyce Rodriguez", "Leonie Funk", "Abagail Mayer", "Hosea Franecki",
+    "Leonardo Haley", "Hertha Brown", "Devon Kautzer", "Laura Lowe",
+    "Chanelle Sipes", "Meggie Koepp", "Sherman Leuschke", "Edd McCullough",
+    "Percy Heaney", "Alta Purdy", "Amari Cummings", "Geraldine Walsh",
+    "Neoma Robel", "Fernando Prosacco", "Cassandre Hansen", "Brock Bailey",
+    "Eriberto McDermott", "Katherine Parisian", "Rickey Buckridge",
+    "Concepcion O'Reilly", "Minnie Crooks", "Teresa Hills", "Mabelle Paucek",
+    "Desmond Stehr", "Laurence Kshlerin", "Andrew Murray", "Gaylord Graham",
+    "Lora Crist", "Theresia Cummerata", "Lamar Barrows", "Arnoldo Shanahan",
+    "Jeramy Lindgren", "Shirley Jacobson", "Cristina Adams", "Gaylord Kerluke",
+    "Shannon Schumm", "Shyanne Grady", "Raymond Stark", "Theo Flatley",
+    "Meredith Brown", "Jazmin Cassin", "Verda Hudson", "Rebecca Senger", "Asa Bosco",
+    "Thalia Lakin", "Rae Turcotte", "Adalberto Kozey", "Lew Pollich", "Allen Yost",
+    "Clifford Farrell", "Gonzalo Rutherford", "Silas VonRueden", "Riley Hand",
+    "Claudia Johnston", "Julien Gulgowski", "Meggie Schuster", "Dovie Doyle",
+    "Ana O'Kon", "Dorothea Kuhlman", "Erin Gaylord", "Alvera Walker", "Gavin Gutkowski",
+    "Ricky Ondricka", "Marianna McKenzie", "Lawson Pfeffer", "Alisa Harber",
+    "Brionna Bauch", "Cleve Donnelly", "Dale Gusikowski", "Zack Lubowitz",
+    "Mellie Reichert", "Terry Dietrich", "Hope Barton", "Lacey Rempel",
+    "Odessa Ryan", "Darian Schuppe", "Isabell O'Keefe", "Nathen Swaniawski",
+    "Elva Cremin", "Ward Littel", "Gennaro Ondricka", "Jessyca Gleason",
+    "Alfonzo King", "Dortha Dooley", "Zion Upton", "Ana Cormier", "Willard Wehner",
+    "Amos Cummings", "Cindy Carroll", "Harmony Schultz", "Rhiannon Parker",
+    "Mathilde Rolfson", "Elisha Keebler", "Santino Runolfsdottir", "Karine Keeling",
+    "Susana Osinski", "Harley Ruecker", "Jaylan Homenick", "Esperanza Jast",
+    "Neha Erdman", "Arnulfo Runolfsdottir", "Kassandra Hettinger", "Leda Batz",
+    "Rosalee Schneider", "Keagan Littel", "Verona Conroy", "Jayson Parker",
+    "Veda Block", "Louisa Rau", "Mireille Ferry", "Wendy Donnelly", "Dorian Schuppe",
+    "Angelo Balistreri", "Carroll Witting", "Eudora Nader", "Bettie Stamm",
+    "Sabrina Kuhlman", "Lynn Denesik", "Jerrod Jacobs", "Ivah Fadel", "Adrienne Conroy",
+    "Ubaldo Franecki", "Cristian Reichel", "Thalia Rodriguez", "Rudy Hodkiewicz",
+    "Duncan Prohaska", "Ariane Schoen", "Abel Lesch", "Ivory Altenwerth",
+    "Mayra Mann", "Rachael Thiel", "Judah Nikolaus", "Billy Wisoky",
+    "Beulah DuBuque", "Allan Deckow", "Rhett Schoen", "Berniece Lynch",
+    "Delilah Hilll", "Dena Upton", "Ignacio Casper", "Augusta Abbott", "Dasia Morissette",
+    "Lacey Marquardt", "Giovani Upton", "Eugene Nitzsche", "Jessyca Swift",
+    "Marcia Blick", "Daryl Russel", "Patsy Stroman", "Pete Fahey", "Lesley Borer",
+    "Mitchel Rippin", "Fernando Osinski", "Gregoria Ullrich", "Arnoldo Ullrich",
+    "Carolina Doyle", "Ransom Huel", "Eliezer Koss", "Janice Torphy", "Orrin Gulgowski",
+    "Chester Kris", "Helena Hartmann", "Louisa Hoeger", "Margaretta Cassin",
+    "Christopher Hettinger", "Stephany Simonis", "Keara Effertz", "Keagan Rau",
+    "Junior Wisozk", "Florian Rodriguez", "Eulalia Becker", "Alysha Barrows",
+    "Ashleigh Schmidt", "Sonia Swaniawski", "Angelina Mills", "Katlyn Dare",
+    "Prudence Effertz", "Adelia Rutherford", "Casper Farrell", "Hector Farrell",
+    "Marcos Welch", "Daisha Kautzer", "Carlo Bechtelar", "Mazie Davis",
+    "Reymundo Grant", "Antonetta Morar", "Jettie Krajcik", "Shea Bins", "Yazmin Yost",
+    "Leopold Schaefer", "Pietro Frami", "Danial Bartell", "Conner Vandervort",
+    "Donny Reichert", "Ignatius Lang", "Alberta Oberbrunner", "Pat Hilpert",
+    "Millie Wolff", "Maude Kautzer", "Davin McGlynn", "Bulah Beatty", "Janick Lindgren",
+    "Emmie Cruickshank", "Cheyanne Gleichner", "Deron Heaney", "Kailyn Schumm",
+    "Araceli McCullough", "Eino Tromp", "Aleen Robel", "Earl Runolfsson",
+    "Adolf Haley", "Madyson Price", "Dewitt Dibbert", "Ara O'Reilly",
+    "Therese Jaskolski", "Vance Predovic", "Janelle Turner", "Isaiah Crona",
+    "Teresa Jacobi", "Annetta Kling", "Jannie Morissette", "Alexys Dooley",
+    "Mozelle Reynolds", "Delilah Weissnat", "Kiana Breitenberg", "Isaac Olson",
+    "Peyton Metz", "Johnnie Murphy", "Bonita Jerde", "Arvel Keebler", "Skylar Erdman",
+    "Eloisa Goyette", "Rose Lesch", "Otha Roberts", "Carrie Carter", "Colin Bechtelar",
+    "Heath Bednar", "Corbin Donnelly", "Lyla Nikolaus", "Delpha Hyatt",
+    "Abbey Johnston", "Lexus Wiza", "Celestino Rath", "Freeman Pacocha",
+    "Flavie Mayert", "Richmond Boehm", "Trace Schneider", "Jacklyn Kemmer",
+    "Laisha Wunsch", "Sophia O'Reilly", "Bethel Kutch", "Amaya Marvin", "Mikel Prohaska",
+    "Shaylee Gusikowski", "Charity Prosacco", "Jadyn Schowalter", "Kennedi Koelpin",
+    "Jose Johnson", "Chet Waters", "Ariane Goodwin", "Martina Towne", "Aidan Walker",
+    "Brent Stiedemann", "Horacio Leffler", "Nels Littel", "Kara Cormier",
+    "Karl Casper", "Gino Schmitt", "Gonzalo Gerhold", "Granville Rutherford",
+    "Lawrence Koelpin", "Conner Bahringer", "Cristobal Cartwright",
+    "Melody Bode", "Derek Anderson", "Beth Kunze", "Merl Mayert", "Tierra Stamm",
+    "Marty Wilkinson", "Janice Schmitt", "Claud Heller", "Federico Friesen",
+    "Toy MacGyver", "Gussie Nikolaus", "Sabryna Gaylord", "Alta Heaney",
+    "Ruthe Hodkiewicz", "Abigayle Pacocha", "Linda MacGyver", "Nia Halvorson",
+    "Blaise Little", "Kavon O'Kon", "Erich Gerlach", "Izabella Cummings",
+    "Ward Bogan", "Sigmund Roberts", "Jed Mitchell", "Alia Romaguera",
+    "Dwight Marks", "Aracely Treutel", "Marielle Toy", "David Fay", "Ray Tremblay",
+    "Kiarra Kub", "Wayne Denesik", "Jovan Medhurst", "Laurie Lind",
+    "Antoinette Robel", "Yadira Hackett", "Maxie Waelchi", "Walton McClure",
+    "Nash Hayes", "Francisco Fadel", "Newton Green", "Riley Willms", "Myrl Ward",
+    "Antonietta Lynch", "Carson Gerlach", "Letitia Towne", "Wanda Luettgen",
+    "Luciano McClure", "Serenity Dicki", "Libbie Koch", "Rico Ebert", "Aimee Weber",
+    "Gerry Parisian", "Greyson Fadel", "Hoyt Lowe", "Hugh Miller", "Mariano Gibson",
+    "Lia Marvin", "Larue Bartoletti", "Fred Haley", "Osborne Barrows", "Luna Goyette",
+    "Amani Littel", "Kyleigh Sanford", "Micheal Herman", "Bart Romaguera",
+    "Dale Gislason", "Adaline Grant", "Mollie Wuckert", "Angelita Wintheiser",
+    "Iva Senger", "Rey Pollich", "Nannie Green", "Izaiah Cremin", "Layne Kiehn",
+    "Cydney Lubowitz", "Cyrus Abernathy", "Stephania Cole", "Vern Armstrong",
+    "Celestino Bruen", "Ian Lemke", "Reba Rogahn", "Mathilde Metz", "Devyn Stoltenberg",
+    "Antwon Schroeder", "Aron Lang", "Durward Lakin", "Bernice Barton",
+    "Robb Lowe", "Randall Herzog", "Casimer Cruickshank", "Neoma Kerluke",
+    "Bell Cremin", "Eleanore Klocko", "Pattie Goyette", "Paige Kovacek",
+    "Mortimer Marvin", "Anita Osinski", "Dillon O'Hara", "Ilene Donnelly",
+    "Jerald Hagenes", "Maurice Dibbert", "Lawrence Deckow", "Sydni Berge",
+    "Quincy Deckow", "Kaycee Nikolaus", "Dylan Ruecker", "Jade McLaughlin",
+    "Mitchell McCullough", "Francisca Spinka", "Yessenia Gulgowski",
+    "Tomasa Torp", "Gregory Gislason", "Nathanial Parker", "Dusty Ortiz",
+    "Fred Mertz", "Elnora Wilderman", "Elvis Jaskolski", "Macy Rau", "Carli Hintz",
+    "Otha Pouros", "Gloria Bins", "Mustafa Hauck", "Heath Ebert", "Pansy Abshire",
+    "Yadira Von", "Josue Huel", "Esta Olson", "Reagan Kerluke", "Wiley Schiller",
+    "Edwin Glover", "Kaci Christiansen", "Zita Cartwright", "Jaron Collins",
+    "Ole Shields", "Ashley Denesik", "Dejon Nolan", "Reina Schulist", "Elza Carter",
+    "Wilson Gerlach", "General Kuhlman", "Edison Schamberger", "Dax Kozey",
+    "Xander Jenkins", "Grady Robel", "Giovanny Simonis", "Flavio Runte",
+    "Derrick Murray", "Valentina Lueilwitz", "Shaun Cummerata", "Myrtis Robel",
+    "Amy Rolfson", "Kyra Goyette", "Rosalind Quigley", "Roxane Hessel", "Shanie Osinski",
+    "Jackeline Lockman", "Noel Graham", "Melba Leffler", "Laverna Runolfsdottir",
+    "Leilani Lang", "Devante Tremblay", "Madelynn Brekke", "Reagan Daniel",
+    "Heather Schoen", "Marlene Hudson", "Lucy Dickens", "Kaleigh Durgan",
+    "Emilia Fisher", "Breanna Pouros", "Stephen Kilback", "Orland Cartwright",
+    "Kitty Labadie", "Jaleel Roob", "Edmund Schumm", "Chyna Sawayn",
+    "Libbie Block", "Sabina Kuhlman", "Destin Raynor", "Salma Grant", "Lewis Strosin",
+    "Murl Treutel", "Monte Volkman", "Fermin Maggio", "Jody Kerluke", "Kay Bayer",
+    "Armani Dooley", "Raphaelle Smith", "William Doyle", "Giovani Kihn",
+    "Alexandrea Armstrong", "Buck Gibson", "Dorthy Ebert", "Dale Leffler",
+    "Margarita Abshire", "Enos Spinka", "Kristin Howell", "Aurelia Eichmann",
+    "Lera Towne", "Jabari Ruecker", "Rosa Jones", "Elise Sauer", "Romaine Christiansen",
+    "Lydia Witting", "Kenyatta Schimmel", "Megane Bradtke", "Norene Legros",
+    "Brody Smith", "Cloyd Koch", "Hattie Jenkins", "Heber Bechtelar", "Clair Kilback",
+    "Tony Barrows", "Thomas Heaney", "Laurel Schinner", "Aaliyah Rogahn",
+    "Aisha Gusikowski", "Murl Mertz", "Bobbie Reynolds", "Lynn Jerde",
+    "Enrique Kulas", "Ford Hackett", "Shanelle Shanahan", "Sadie Brown", "Addie Satterfield",
+    "Curtis Schiller", "Willie Schneider", "Agnes Lowe", "Nicolette Larson",
+    "Jaylan Gerhold", "Gregory Block", "Blaze Senger", "Dangelo Gutmann",
+    "Guillermo Towne", "Gus Trantow", "Stefan Tillman", "Laurie Cartwright",
+    "Edwardo Schaefer", "Mariano Lang", "Rodrick Roberts", "Francesco Braun",
+    "Alayna Windler", "Gage Denesik", "Mikayla Schamberger", "Vladimir Donnelly",
+    "Jacynthe Smith", "Abdullah Dach", "Mark Considine", "Jeremy Harris",
+    "Easton Barton", "Madisen Bergstrom", "Joanne Cruickshank", "Delfina Lindgren",
+    "Maxine Haley", "Sylvan Waters", "Marcus Kulas", "Euna Nader", "Corrine Kreiger",
+    "Gianni Kuvalis", "Velda Kirlin", "Kurtis Windler", "Lera Wiza", "Marques Mante",
+    "Hailie Murray", "Monroe Mueller", "Constantin Mayer", "Thad Mueller",
+    "Dolores Schaefer", "Arnaldo Halvorson", "Lexi Gleichner", "Novella Thiel",
+    "Cathy Windler", "Kara Gerhold", "Jamison Gleichner", "Lorenz Graham",
+    "Imani Braun", "Felton Ebert", "Granville Goyette", "Triston Luettgen",
+    "Duncan Walter", "Domingo Koelpin", "Hildegard Adams", "Rodrick Kris",
+    "Odie Gutkowski", "Carson Feil", "Austen Abernathy", "Marlene Schroeder",
+    "Rosemarie Anderson", "Melvin Wilkinson", "Rebekah Koch", "Louisa Ortiz",
+    "Ryan Deckow", "Gwendolyn Schuppe", "Otto Schmidt", "Mozelle Bergnaum",
+    "Marcos Steuber", "Andrew Sipes", "Guiseppe Spencer", "Moriah Hermiston",
+    "Harry Glover", "Jennifer Jast", "Earlene Mante", "Kailyn Dickinson",
+    "Loren Muller", "Rashad Grady", "Elijah Quitzon", "Webster Kirlin",
+    "Ari Stokes", "Damaris Cartwright", "Deonte Glover", "Adolfo Bode", "Janet McKenzie",
+    "Osbaldo Jacobs", "Sylvester Hermiston", "Rashawn Kassulke", "Kale Runolfsson",
+    "Bertha Buckridge", "Raegan Legros", "Kayla Rodriguez", "Jaylen Mohr",
+    "Matilda Mante", "Kayli Bergnaum", "Hugh Anderson", "Deonte Marvin", "Arno Kutch",
+    "Carolina Ebert", "Devon Fadel", "Maxine McGlynn", "Jamaal Rowe", "Jan Kulas",
+    "Chanelle Homenick", "Antonio Schultz", "Oda Rempel", "Jarrett Gutkowski",
+    "Destinee Watsica", "Rosalee Dietrich", "Nina Reinger", "Myles Runte",
+    "Hank Hauck", "Sven Ondricka", "Angeline Nienow", "Ward Von", "Leo Luettgen",
+    "Adam Shields", "Josephine Hodkiewicz", "Zack Rohan", "Sydni Wunsch",
+    "Blaise Moore", "Vincent Runolfsson", "Ryan Eichmann", "Sarina Kris",
+    "Harold Predovic", "Pink Konopelski", "Maybelle Paucek", "Fiona Pouros",
+    "Catharine Kirlin", "Kavon Block", "Randall Corkery", "Macy Hauck",
+    "Althea Turner", "Monte Okuneva", "Ervin Ondricka", "Libby Moen",
+    "Gabriella Bartell", "Ted Waters", "Reilly Konopelski", "Eulalia Fisher",
+    "Shana Pfeffer", "Lazaro Thiel", "Esta Little", "Abraham Schamberger",
+    "Jodie Durgan", "Horacio Aufderhar", "Katelyn Toy", "Elisabeth Volkman",
+    "Mossie Daniel", "Samanta Wisozk", "Marcus Pollich", "Eddie Renner",
+    "Oceane O'Keefe", "Trey Rohan", "Carolyne Ruecker", "Lillie Purdy",
+    "Santos Stoltenberg", "Sylvester Grant", "Harrison Lakin", "Kattie Herman",
+    "Abel Corkery", "Justice Mertz", "Jalon Johns", "Anabelle Roberts", "Zoey Blanda",
+    "Alexanne Hilll", "Daniella Casper", "Dorthy Wintheiser", "Agustin Rogahn",
+    "Anderson Stracke", "Lonny Steuber", "Milo Breitenberg", "Ruthie Wunsch",
+    "Dillon Rohan", "Beverly Homenick", "Evelyn Daugherty", "Tara Reynolds",
+    "Bradly Quitzon", "Desmond Shields", "Lupe Fritsch", "Andreane Lind",
+    "Charlotte Aufderhar", "Misael Bednar", "Hailey Fisher", "Lauretta Ritchie",
+    "Aiyana Borer", "Johnny Von", "Rodger Hirthe", "Katelynn Batz", "Maryjane Effertz",
+    "Trent Jakubowski", "Alison McLaughlin", "Alaina Lubowitz", "Vivien Mohr",
+    "Dereck Ritchie", "Carmelo Cummings", "Vivienne Berge", "Monty Adams", "Dax Klein",
+    "Devante Bahringer", "Jazlyn Wisoky", "Aurelio Crona", "Willy Jerde",
+    "Dudley Torphy", "Myrtle Hane", "Ignatius Wisoky", "Valentina Waelchi",
+    "Anissa Berge", "Leola Windler", "Lourdes Okuneva", "Georgette Kozey",
+    "Jasen Cummerata", "Pattie Jakubowski", "Kevin Goyette", "Precious Conroy",
+    "Freddy Hand", "Mariah McClure", "Una Wunsch", "Davion Feil", "Carley Grady",
+    "Rosalee Romaguera", "Stevie Kuvalis", "Abner Grant", "Forest Doyle",
+    "Edyth Larson", "Adam Ortiz", "Roxane Orn", "Declan Rice", "Kelsie Kuhlman",
+    "Laurence Muller", "Adan Hauck", "Leo Ankunding", "Katheryn Kutch", "Vida Gorczany",
+    "Durward Leuschke", "Janae Hilll", "Lacey Schuster", "Josiane Frami",
+    "Donavon Dibbert", "Pedro Effertz", "Carter Runolfsson", "Trudie Rau",
+    "Nedra Fay", "Willie Volkman", "Annetta Larkin", "Florencio Gerhold", "Albert Mohr",
+    "Reina Beahan", "Jamey Dickinson", "Loma Labadie", "Rebekah Bosco",
+    "Bertrand Schoen", "Filomena O'Keefe", "Lina Orn", "Hal McCullough",
+    "Bertram Jerde", "Camilla Emmerich", "William Medhurst", "Amber Reinger",
+    "Kennedy Hilpert", "Micah Fahey", "Pete Becker", "Jayce Fisher", "Kacie Schumm",
+    "Sid Dickinson", "Immanuel Funk", "Adell Schuster", "Scottie Zboncak",
+    "Asha Maggio", "Sam Parisian", "Florida Reynolds", "Arvilla Sipes", "Mary Witting",
+    "Dejuan Pouros", "Asa Jenkins", "Katherine Littel", "Alayna Nader",
+    "Raymond Daniel", "Lysanne Johnston", "Americo Weimann", "Nikko Kovacek",
+    "Terrell Kris", "Archibald Christiansen", "Angelita Tillman", "Jaycee Luettgen",
+    "Marquise Feil", "Lillie Ledner", "Ora Crooks", "Christina Boehm",
+    "Emely Jast", "Nichole Hoppe", "Bertram Schmitt", "Tressie Ferry", "Micheal Kuvalis",
+    "Maximo Bradtke", "Laisha Daugherty", "Felicita Rogahn", "Trenton Aufderhar",
+    "Nyasia Lind", "Vincent Pouros", "Roman Larson", "Celestine Wisozk",
+    "Jessica Jenkins", "Georgianna Mohr", "Marcelle Moore", "Eva Spencer",
+    "Donato Kuhlman", "Berneice Kertzmann", "Gianni Miller", "Leif Rippin",
+    "Marilou Shanahan", "Yazmin O'Reilly", "Adrienne Wiza", "Ruben Nienow",
+    "Skyla Effertz", "Rigoberto Pacocha", "Fabiola Wunsch", "Logan Heidenreich",
+    "Burley Prohaska", "Logan Weimann", "Frida Koepp", "Nigel Daugherty",
+    "Alayna Collier", "Vella Dickens", "Marlee Gerhold", "Cheyanne Haley",
+    "Cecilia MacGyver", "Carlie Gerhold", "Lonnie Kiehn", "Javier Miller",
+    "Garry Kulas", "Caitlyn Rolfson", "Mattie Oberbrunner", "Dedrick McDermott",
+    "Joel Lowe", "Reynold Windler", "Aditya Hyatt", "Brigitte D'Amore",
+    "Martin Heathcote", "Devon D'Amore", "Domingo Muller", "Keely Cormier",
+    "Zena Leannon", "Mack Daniel", "Kurtis Hand", "Suzanne Klocko", "Flossie Cummerata",
+    "Quentin Fritsch", "Issac Franecki", "Timothy Blick", "Phyllis Kutch",
+    "Burnice Hartmann", "Eugenia Moen", "Angeline Wilderman", "Kaleigh Raynor",
+    "Dell Adams", "Myah Bernhard", "Delpha Mitchell", "Josefa Champlin", "Ocie Marks",
+    "Darrion Ondricka", "Nolan Jacobi", "Gloria Romaguera", "Dawn Wiegand",
+    "Daron Schoen", "Luigi Jacobson", "Corine Konopelski", "Jaquelin O'Kon",
+    "Baron Thiel", "Alayna VonRueden", "Abbie Dach", "Orpha Hammes", "Reid Ankunding",
+    "Vernie Greenholt", "Wilma Huels", "Reece Dietrich", "Anne Rau",
+    "Laverna Koelpin", "Jamie Hilll", "Kale Farrell", "Kira Runte", "Aiyana Krajcik",
+    "Horacio Walsh", "Wellington Krajcik", "Unique Lubowitz", "Charlie Greenholt",
+    "Johnson Rowe", "Luis Dickens", "Vernie Bode", "Karli Schmitt",
+    "Kariane Lang", "Kenny Hyatt", "Laurel Cremin", "Valerie Leffler", "Reva Yost",
+    "Eldon Von", "Adaline Abshire", "Ceasar Morar", "Maurice Towne", "Talon Becker",
+    "Dovie Gleason", "Gretchen Green", "Axel Towne", "Leone Powlowski", "Nina Gutmann",
+    "Myrtis Beatty", "Mia O'Hara", "Eden Schultz", "Carroll Krajcik", "Jannie Grant",
+    "Darlene Wehner", "Rogers Douglas", "Emmie Schultz", "Alexis Kuhn", "Abby Lebsack",
+    "Christopher Jacobson", "Ines Heaney", "Verda Collier", "Jaylin McGlynn",
+    "Coleman Torphy", "Kitty Swaniawski", "Retta Homenick", "Lilla Murazik",
+    "Jaiden Hagenes", "Brad Haley", "Odessa Dooley", "Ana Halvorson", "Raoul Kreiger",
+    "Lisette Hills", "Madelyn Swaniawski", "Earline Runolfsdottir", "Myrna Beatty",
+    "Alivia Schamberger", "Llewellyn Batz", "Russel Ledner", "Missouri Smith",
+    "Candice Reichel", "Maxwell Heathcote", "Damion Denesik", "Candace Pfannerstill",
+    "Bessie Goldner", "Helena Klein", "Neil Goldner", "Anissa Rath",
+    "Pasquale Macejkovic", "Addie Leannon", "Darrion Blick", "Nathan Dach",
+    "Frances Turner", "Queenie Franecki", "Pedro Ondricka", "Lurline Johnston",
+    "Quincy Wilkinson", "Chelsea McKenzie", "Daphney Johnson", "Casey Grady",
+    "Henri Kerluke", "Kayden Ratke", "Vito Wilkinson", "Waino Olson", "Alayna Feeney",
+    "Cletus Kessler", "Anthony Homenick", "Jazmin Christiansen", "Prudence Goodwin",
+    "Elwyn Stoltenberg", "Domenic Wintheiser", "Granville Rowe", "Brigitte Carter",
+    "Robin Dach", "Liliane Rogahn", "Paige Deckow", "Randi Daugherty", "Estel Jakubowski",
+    "Lauriane Schmidt", "Lenore Mayer", "Adan Cruickshank", "Cristina O'Connell",
+    "Jordi Rutherford", "Lillie Thompson", "Dillon Klocko", "Emmie Cremin",
+    "Marjolaine Halvorson", "Wade Hackett", "Nelda Johnston", "Rhoda Pfannerstill",
+    "Lexus Waelchi", "Abagail Stark", "Pablo Tillman", "Millie Koepp",
+    "Amalia Mosciski", "Korbin Lockman", "Wilford Swaniawski", "Roslyn Schuster",
+    "Modesta Heidenreich", "Solon Heaney", "Emory Schaefer", "Alison Schuster",
+    "Trystan Shanahan", "Gaylord Runolfsson", "Luciano Williamson", "Jade Davis",
+    "Ila Balistreri", "Angelina Leffler", "Emmy Franecki", "Ludie Howe", "Lera Huels",
+    "Deon Lueilwitz", "Wilhelm Cremin", "Cristina Gibson", "Isai Pfeffer",
+    "Delaney Rosenbaum", "Tatyana Beer", "Valentine Heidenreich", "Rosina Effertz",
+    "Misael Fadel", "Alexandrea Nader", "Frances O'Connell", "Angelita Bogan",
+    "Jabari Rempel", "Christelle Grimes", "Rosario Heaney", "Kristian Moore",
+    "Eldon Rosenbaum", "Rhiannon Schiller", "Haven Treutel", "Cordelia Lebsack",
+    "Cory Nicolas", "Aubrey Gislason", "Cody Turcotte", "Lucius Heidenreich",
+    "Chris Howe", "Jeffrey Feil", "Meda Labadie", "Dale Krajcik",
+    "Octavia Carter", "Merritt Tromp", "Era Kuvalis", "Taurean Abshire",
+    "Elnora Rodriguez", "Issac Halvorson", "Taylor Robel", "Maudie Moen",
+    "Daija Spinka", "Ella Kessler", "Kailyn Kunze", "Hazle Bednar", "Glenda Davis",
+    "Mustafa Daniel", "Asha Lakin", "Einar Kuhic", "Augustus Bechtelar",
+    "Corbin Franecki", "Kristofer Wuckert", "Myrna Schultz", "Emmalee Kohler",
+    "Michelle Nolan", "Francisco DuBuque", "Malinda Casper", "Ludie Thiel",
+    "Seth Ferry", "Jalyn Zulauf", "Imani Bayer", "Darrin Rogahn", "Ari Wilkinson",
+    "Wyman O'Hara", "Raheem Frami", "Bernice Maggio", "Yasmeen Johnson",
+    "Ofelia Schoen", "Chandler Reichel", "Adolph Feil", "Reggie Oberbrunner",
+    "Jace Lueilwitz", "Arthur Lynch", "Bernhard Steuber", "Isadore Farrell",
+    "Mertie Moen", "Annie Rosenbaum", "Kirsten Johnston", "Ruth Rau", "Gerald Lockman",
+    "Avery Streich", "Kiley Johns", "Toney Schaefer", "Davin Hegmann", "Abbey Klein",
+    "Earline Nicolas", "Willy Johnston", "Ursula Collier", "Abel Cremin",
+    "Ryder Heathcote", "Susan Ferry", "Nathaniel McClure", "Foster Harvey",
+    "Helmer Harvey", "Derick Kessler", "Herman Nienow", "Jadyn Moore", "Ross Ebert",
+    "Richard Konopelski", "Shanel Strosin", "Faye Kiehn", "Isabelle Brakus",
+    "Vidal Larson", "Carmel Lesch", "Roderick Grimes", "Rosina Russel",
+    "Vernon Leannon", "Luciano Blanda", "Gus Medhurst", "Lorine Bednar",
+    "Suzanne Cormier", "Ward Collier", "Stephan Schaefer", "Elody Turner",
+    "Ressie Hoppe", "Hans Murazik", "Kurtis Collins", "Enola Goyette", "Greg Johnston",
+    "Eldridge Luettgen", "Julie Konopelski", "Linda Romaguera", "Emmanuel Howe",
+    "Mayra Yundt", "Jailyn Wiegand", "Anita Berge", "Verna Dibbert", "Taya Roob",
+    "Adolph Von", "Vance Sanford", "Rocio Emmerich", "Ralph Renner", "Haylie Botsford",
+    "Tyrell Hickle", "Rasheed Schaefer", "Yessenia Stroman", "Jeromy Hansen",
+    "Sister Lowe", "Javier Funk", "Hope Waters", "Jermaine Schaefer",
+    "Krystina Lemke", "Raven Skiles", "Myron Kirlin", "Ralph Wisoky", "Heath Kozey",
+    "Ken Kozey", "Marion Bogisich", "Llewellyn Hermiston", "Erich Brakus",
+    "Cassandra Ferry", "Karley Batz", "Myrtle Mayer", "Nikko Bogan", "Caitlyn Cassin",
+    "Clifton Anderson", "Joesph Breitenberg", "Amparo Heidenreich", "Mary Bashirian",
+    "Kay Willms", "Tyler Veum", "Myrtie Waters", "Meaghan Prosacco", "Loma Ritchie",
+    "Rogers Emmerich", "Monroe Schamberger", "Christian Schuppe", "Modesta Von",
+    "Finn Stamm", "Arvilla Herman", "London Glover", "Odessa Toy", "Cooper Koss",
+    "Yvonne Grant", "Furman Homenick", "Brielle Leffler", "Adela Thompson",
+    "Erica Nader", "Micaela Morar", "Wallace Leffler", "Aisha Sipes",
+    "Mohammad Gislason", "Herminio Cartwright", "Dell Davis", "Larue Toy",
+    "Kennedy Treutel", "Reba Kulas", "Leon Mayer", "Bryce Von", "Vidal Rogahn",
+    "Benjamin Littel", "Pink Rowe", "Anastasia Schoen", "Jayme Cummings",
+    "Tavares Dooley", "Bartholome Bayer", "Louisa Marvin", "Ellie Bergstrom",
+    "Brant Williamson", "Antonietta Yundt", "Lucious Hartmann", "Alda Schuppe",
+    "Kaleb Ondricka", "Jamarcus Witting", "Ruth Schamberger", "Eliezer Bayer",
+    "Amya Dicki", "Akeem Lehner", "Wilton Harris", "Helene Tremblay", "Hillard Gulgowski",
+    "Rhianna Dibbert", "Seth Hettinger", "Monserrate Funk", "Ignacio Mitchell",
+    "Winona Olson", "Alphonso Reichel", "Darwin Zieme", "Immanuel Altenwerth",
+    "Iva Christiansen", "Ewell Swift", "Vallie O'Hara", "Darrion Mertz",
+    "Noemie Hills", "Darian Cole", "Kathryne Collier", "Millie Lemke", "Tyshawn Rutherford",
+    "Anya Jenkins", "Owen Ferry", "Hans Lind", "Catharine Davis", "Josiane Legros",
+    "Clifford Marquardt", "Sarina Spencer", "Litzy Little", "Golden Miller",
+    "Rubye O'Keefe", "Vladimir Pollich", "Geo Ernser", "Grayson Konopelski",
+    "Shanna Price", "Bernhard Mante", "Conrad Bednar", "Peyton Boehm",
+    "Garrison Sipes", "Miles Mitchell", "Myrtie Bernhard", "Julien O'Keefe",
+    "Stephen Stroman", "Sasha Schaefer", "Ines Corkery", "Enrique Zboncak",
+    "Maegan Gottlieb", "Reta Okuneva", "Clarabelle Stiedemann", "May Hoeger",
+    "Dariana Rempel", "Aubrey Hamill", "Gabrielle Funk", "Vickie Koss",
+    "Johnnie Ernser", "Quentin Gorczany", "Candelario Weimann", "Chanel Collins",
+    "Monique Huel", "Kiana Emard", "Elnora King", "Halie Armstrong", "Eloisa Rodriguez",
+    "Daphney Schneider", "Dejuan Pfeffer", "Eve Bartoletti", "Juston Miller",
+    "Marcus Metz", "Jennyfer Gleason", "Constantin Paucek", "Amelia Johnson",
+    "Brady Auer", "Ali Funk", "Louisa Donnelly", "Alejandra Kunze", "Davin Boyer",
+    "Jordyn Cartwright", "Santina Little", "Leopold Ankunding", "Elenor Mills",
+    "Helen Olson", "Micah Hahn", "Emilie Schowalter", "Isabelle Will", "Milan Heller",
+    "Zakary Kozey", "Izabella McDermott", "Rasheed Hermann", "Morgan Yundt",
+    "Quincy Treutel", "Virginie Goyette", "Makenna Hudson", "Orval Feeney",
+    "Maximillia Roberts", "Carolina Schuster", "Brendan Rodriguez", "Olaf Wisoky",
+    "Tamara Lehner", "Jefferey Rowe", "Emory Stoltenberg", "Hipolito Blanda",
+    "Palma Halvorson", "Branson Turcotte", "Fritz Watsica", "Estell Mayer",
+    "Giovanni Kuhn", "Zula Watsica", "Miguel Okuneva", "Blaise Cummerata",
+    "Sister Gusikowski", "Alisa Fahey", "Pauline Homenick", "Tommie Mraz",
+    "Elisabeth O'Kon", "Margot Borer", "Sierra Kilback", "Jessy Cronin", "Verona Marks",
+    "Geovany Renner", "Evan Gorczany", "Maud Rempel", "Jaquan West", "Jamir Ward",
+    "Jany Jast", "Winnifred Bergnaum", "Joana Smith", "Columbus Wisozk", "Emie Brakus",
+    "Bernardo Weber", "Keira Jacobs", "Kiley Harris", "Addison VonRueden",
+    "Hester Lubowitz", "Madelyn Wilderman", "Audra Hane", "Rusty Abernathy",
+    "Ruthe Dietrich", "Fidel Lindgren", "Coty Nicolas", "Janessa Williamson",
+    "Daryl Smith", "Nakia Ryan", "Payton Ryan", "Demond Keeling", "Logan Block",
+    "Jimmie Ledner", "Eugenia McClure", "Carson D'Amore", "Freida Jakubowski",
+    "Deven Roob", "Amaya Daniel", "Jesus Ortiz", "Jamison Witting",
+    "Fernando Lesch", "Catharine Hudson", "Allie Dare", "Marlene Gusikowski",
+    "Yasmeen Osinski", "Misael Doyle", "Melody Schmitt", "Destini Conn",
+    "Elisha Weissnat", "Adela Schaden", "Shyann Pacocha", "Leopold Abbott",
+    "Josue Green", "Rosalee Gibson", "Thaddeus Ledner", "Kevin Cummings",
+    "Antoinette Moore", "Enos Kling", "Sydney Bashirian", "Jany Kertzmann",
+    "Jeffrey Moen", "Rafael Tromp", "Maryam Hand", "Rafaela Boehm", "Pearl Considine",
+    "Adrien Mayert", "Emmanuel Stoltenberg", "Elnora Haley", "Rene Ledner",
+    "Hilma Armstrong", "Keyon Lind", "Chet Bailey", "Ramiro Buckridge",
+    "Carmelo Keeling", "Spencer Pfannerstill", "Tracey Romaguera", "Eloy Dach",
+    "Aliya Bednar", "Meggie Altenwerth", "Lacy Kuhn", "Alyson Kirlin", "Casimer Welch",
+    "Candida Kessler", "Hayley Fisher", "Anastacio Stamm", "Cora Schroeder",
+    "Elwin Haag", "Raheem Herman", "Erwin Douglas", "Damion Hayes", "Keagan Reilly",
+    "Martina Mertz", "Jerrold Nienow", "Carey Vandervort", "Fabiola Schroeder",
+    "Eryn Price", "Lenna Rogahn", "Gina Feil", "Kayla Roob", "Kattie Crona",
+    "Rodrick McGlynn", "Ali Little", "Hyman Konopelski", "Charley Turcotte",
+    "Pierre Auer", "Jules Cruickshank", "Jody Aufderhar", "Clementine Macejkovic",
+    "Clare Schaden", "Cleo Haag", "Kyleigh Torphy", "Sabrina Schmidt",
+    "Jesus Heaney", "Angela Johnson", "Kody Streich", "Makayla Murazik",
+    "Deontae Klein", "Sabrina Wiza", "Jody Bogisich", "Clint Bosco", "Glennie Kulas",
+    "Orpha Green", "Asa Howe", "Fermin Jacobson", "Giovani Pagac", "Tracy Franecki",
+    "Tristin Windler", "Luz Yost", "Cecelia Howell", "Owen Price", "Marianne Kessler",
+    "Enola Olson", "Forrest Conroy", "Doug Sanford", "Lexus O'Hara", "Delaney Rogahn",
+    "Myrna Weimann", "Abe Schaden", "Filomena Yost", "Ashton Watsica",
+    "Penelope Lebsack", "Elmore Legros", "Allen O'Conner", "Freda Anderson",
+    "Louvenia Schuppe", "Ari Adams", "Cordie Koss", "Delphia Cruickshank",
+    "Annette Simonis", "Agustina Goldner", "Bobby Hauck", "Jerod Rippin",
+    "Patricia Beatty", "Roberta Blick", "Favian Denesik", "Gilberto Gislason",
+    "Eulah Borer", "Helene Doyle", "Tillman Greenfelder", "Norval Kiehn",
+    "Annabelle Schumm", "Carlos Muller", "Krista DuBuque", "Fritz Medhurst",
+    "Josephine Turner", "Dewayne Kilback", "Jamal Paucek", "Katheryn Rohan",
+    "Shanny Grady", "Lina Orn", "Zena Sipes", "Jordan Gibson", "Evelyn Marks",
+    "Maryjane Raynor", "Haskell Veum", "Wilma Bernhard", "Zane Hauck", "Zack McClure",
+    "Lue Kessler", "Idell Goldner", "Esmeralda Bayer", "Cletus Little",
+    "Stephen Cruickshank", "Vidal Lynch", "Kyla Price", "Tanner Rath", "Shanon Ritchie",
+    "Opal Hilpert", "Bernadine Weber", "Darrick Olson", "Maritza Paucek",
+    "Brittany Cummings", "Candida Stiedemann", "Destiney Zboncak", "Hollie Okuneva",
+    "Andy Little", "Angel McClure", "Turner Abbott", "Torey Cruickshank",
+    "Cooper Grimes", "Irving Wolff", "Kiara Herzog", "Shyann Hilpert",
+    "Jasper Weissnat", "Ernest Friesen", "Lydia Veum", "Katlyn Jacobi", "Viva Dare",
+    "Malinda Robel", "Kris Gerlach", "Mabel Stoltenberg", "Vada Rau", "Bettye Bosco",
+    "Lincoln Graham", "Kailee Johnston", "Nayeli Hermiston", "Emelia Morar",
+    "Victoria Zieme", "Finn Turcotte", "Jaiden Kling", "Kylee Heidenreich",
+    "Alize Rippin", "Salvador Nitzsche", "Chet Bauch", "Braulio Skiles",
+    "Broderick Koss", "Wilfredo Kuphal", "Maryam Lind", "Madelynn Walter",
+    "Jeramie Balistreri", "Faye Dooley", "Lonny McLaughlin", "Easton Schmeler",
+    "Eli Trantow", "Amara Mueller", "Elvera Windler", "Lurline Reynolds",
+    "Camille Tromp", "Jerel Altenwerth", "Archibald Grady", "Margarete Abernathy",
+    "Rafaela Green", "Glen Lockman", "Destini Stroman", "Assunta Kub",
+    "Junior Sawayn", "Gabe Pollich", "Pedro Stanton", "Issac Gislason", "Hilario Streich",
+    "Isac Lang", "Jett Jaskolski", "Colin Luettgen", "Rodrick Weber", "Elbert Hammes",
+    "Kallie Roberts", "Norwood Schuster", "June Wyman", "Gardner Goldner",
+    "Eliza Moen", "Fiona Parisian", "Bradford Murphy", "Flo Marvin",
+    "Shanelle Bergstrom", "Heber Zieme", "Janick Schowalter", "Raven Kihn",
+    "Nils Hegmann", "Reba Feest", "Donny Boyle", "Jeffery Klein", "Khalil Abbott",
+    "Kariane Hartmann", "Diana Haag", "Minerva Lindgren", "Liliane Towne",
+    "Samir Greenholt", "Corene Haley", "Antonio Stehr", "Betsy Mueller", "Nova Morar",
+    "Camilla Armstrong", "Marion Bednar", "Deron Harvey", "Lisandro Feest",
+    "Reid Mayer", "Kaitlin Yundt", "Clara Deckow", "Leonie Beer", "Oda Rodriguez",
+    "Zelma Veum", "Melisa Trantow", "Jane Mraz", "Santino Barton", "Rosario Douglas",
+    "Samson Hauck", "Destany Schimmel", "Jamil Schulist", "Abigail Hane",
+    "Valentine Weissnat", "Shirley Kerluke", "Enid Feeney", "Daphney Turcotte",
+    "Beverly Dickens", "Bernadine DuBuque", "Belle Keebler", "D'angelo Nikolaus",
+    "Jeanette Feil", "Vena Wyman", "Damion Schneider", "Luna Bashirian",
+    "Margarete Braun", "Cheyenne Hauck", "Zion Corwin", "Devon Bashirian",
+    "Gwendolyn Harvey", "Idella Christiansen", "Nedra McLaughlin", "Melyna Bergstrom",
+    "Lazaro Mante", "Noemie Bergnaum", "Ellsworth Flatley", "Nyah Cartwright",
+    "Darrin Stracke", "Mervin Conn", "Bonnie Hintz", "Saul Mohr", "Enos Price",
+    "Ona Hirthe", "Kayli Pouros", "Marco Schaden", "Jacky Brakus", "Eliza Casper",
+    "Jeff Lakin", "Paul Kuphal", "Shanny Sporer", "Jesse Blick", "Rashad Collier",
+    "Anjali Volkman", "Nels Hettinger", "Verda Lesch", "Hilario Grimes", "Ray MacGyver",
+    "Zella Feest", "Annabell Greenholt", "Rebekah Morar", "Coby Champlin",
+    "Rita Wolff", "Abner Stracke", "Nicola Lindgren", "Jimmie Romaguera",
+    "Lyla Cruickshank", "Fabian Yost", "Lorena Stehr", "Yessenia Tillman",
+    "Rocio Tromp", "Althea Fay", "Roberto Grimes", "Vada Emard", "Kenna Schaden",
+    "Chelsey Altenwerth", "Estefania O'Kon", "Felipe Mante", "Adam Friesen",
+    "Pearlie Langworth", "Reilly Blick", "Odie McDermott", "Lorine Osinski",
+    "Danny Macejkovic", "Ephraim Heathcote", "Jimmy Fay", "Kristina Gutmann",
+    "Jonathon Kutch", "Glenna Schinner", "Ethel Wintheiser", "Alice Schamberger",
+    "Antonette Keebler", "Carlie Brekke", "Brannon Homenick", "Mike Lehner",
+    "Miller Mohr", "Bailee Ward", "Ally Hackett", "Deontae Hoeger", "Dallin Crooks",
+    "Carey Cruickshank", "Cade Miller", "Leonel Crona", "Lia Wuckert",
+    "Carolanne Kreiger", "Corene Goodwin", "Savanna Ledner", "Laurence White",
+    "Jeramie Gibson", "Chaz King", "Rowland Rowe", "Philip D'Amore", "Virginie Koch",
+    "Maryjane Bergnaum", "Kianna Harvey", "Freida Tromp", "Therese Bernier",
+    "Bernice Leffler", "Rylee Hyatt", "Deondre Crooks", "Emilio Wiegand",
+    "Ima Schumm", "Rosalee Bogisich", "Eugene Cruickshank", "Mario Greenholt",
+    "Hobart Erdman", "Burdette Mann", "Ara Keeling", "Montana Vandervort",
+    "Hilario Rath", "Terrance Harris", "Dessie Quitzon", "Marjory O'Kon",
+    "Nels Homenick", "Lenora Feil", "Natalie Barton", "Addie Kiehn", "Nakia Bergnaum",
+    "Marlin Gusikowski", "Ottilie Dicki", "Rhianna Volkman", "Woodrow Harber",
+    "Sheridan Purdy", "Kristina Bashirian", "Marta Cummings", "Gideon Mitchell",
+    "Jennings Abernathy", "Cheyenne Murazik", "Kathleen Dooley", "Leonora Conroy",
+    "Frederick Reichert", "Freeda Braun", "Guiseppe Miller", "Jacques Strosin",
+    "Hermann Mohr", "Kendrick Jacobson", "Orville Bradtke", "Shaniya Cormier",
+    "Esteban Erdman", "Carlie Marquardt", "Antoinette Lehner", "Granville Baumbach",
+    "Dominique Christiansen", "Tevin Brakus", "Everette Tillman", "Travon Nolan",
+    "Triston Feeney", "Rhoda Kemmer", "Okey Gulgowski", "Jovani Schmitt",
+    "Rickie Willms", "Merlin Gaylord", "Lloyd Bernhard", "Roderick Schuppe",
+    "Yoshiko Block", "Chet Lemke", "Arch Considine", "Arthur Langworth",
+    "Mylene Franecki", "Henry Kris", "Nora Renner", "Kristina Skiles",
+    "Myrna Altenwerth", "Ladarius Tremblay", "Sheila Volkman", "Samanta Fisher",
+    "Dane O'Keefe", "Alexandrine Dietrich", "Aubree Abbott", "Amie Schimmel",
+    "Darryl Wehner", "Prudence Haag", "Marjory Halvorson", "Kadin Hahn",
+    "Sydney Blick", "Linnie Kovacek", "Fred Beahan", "Jessica Olson", "Earl Block",
+    "Ramon Schaefer", "Neil Zemlak", "Kaci Gerlach", "Jarred D'Amore", "Thalia Murphy",
+    "Junior Feeney", "Zack Halvorson", "Derrick O'Reilly", "Wendell Jacobson",
+    "Lisandro Prohaska", "Jewell Hodkiewicz", "Thad Mayert", "Walton Beer",
+    "Gwen Moen", "Saul Wisoky", "Russ Funk", "Emanuel Hahn", "Abby Hammes",
+    "Maximo Casper", "Eleanore Strosin", "Torey Mraz", "Braxton D'Amore",
+    "Nora Koepp", "Freda Dietrich", "Skye Shields", "Lindsey Cormier", "Ellis Berge",
+    "Josiane Stamm", "Dorthy Zboncak", "Aracely Gulgowski", "Leila Thompson",
+    "Robin Cummings", "Felipa Rodriguez", "Dedric Larkin", "Carmella Stark",
+    "Jana Vandervort", "Roscoe Swaniawski", "Hertha Rowe", "Jany Lind", "Isabel Kirlin",
+    "Amy Kuhn", "Mavis Strosin", "Davin Ortiz", "Mylene Bartoletti", "Kamille Crona",
+    "Maia Watsica", "Helga Hane", "Amira Fahey", "Lenora Schmidt", "Nick Gislason",
+    "Johnpaul Gerlach", "Darrell Bayer", "Roger Doyle", "Bret Nicolas",
+    "Alaina Roob"
+];
+
+module.exports = {
+    names: names,
+    occupations: occupations
+};
+},{}],3:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31,7 +1590,7 @@ var ctor = ( typeof Float32Array === 'function' ) ? Float32Array : null; // esli
 
 module.exports = ctor;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -85,7 +1644,7 @@ if ( hasFloat32ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./float32array.js":2,"./polyfill.js":4,"@stdlib/assert/has-float32array-support":37}],4:[function(require,module,exports){
+},{"./float32array.js":3,"./polyfill.js":5,"@stdlib/assert/has-float32array-support":38}],5:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -124,7 +1683,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -154,7 +1713,7 @@ var ctor = ( typeof Float64Array === 'function' ) ? Float64Array : null; // esli
 
 module.exports = ctor;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -208,7 +1767,7 @@ if ( hasFloat64ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./float64array.js":5,"./polyfill.js":7,"@stdlib/assert/has-float64array-support":40}],7:[function(require,module,exports){
+},{"./float64array.js":6,"./polyfill.js":8,"@stdlib/assert/has-float64array-support":41}],8:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -247,7 +1806,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -301,7 +1860,7 @@ if ( hasInt16ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./int16array.js":9,"./polyfill.js":10,"@stdlib/assert/has-int16array-support":45}],9:[function(require,module,exports){
+},{"./int16array.js":10,"./polyfill.js":11,"@stdlib/assert/has-int16array-support":46}],10:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -331,7 +1890,7 @@ var ctor = ( typeof Int16Array === 'function' ) ? Int16Array : null; // eslint-d
 
 module.exports = ctor;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -370,7 +1929,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -424,7 +1983,7 @@ if ( hasInt32ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./int32array.js":12,"./polyfill.js":13,"@stdlib/assert/has-int32array-support":48}],12:[function(require,module,exports){
+},{"./int32array.js":13,"./polyfill.js":14,"@stdlib/assert/has-int32array-support":49}],13:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -454,7 +2013,7 @@ var ctor = ( typeof Int32Array === 'function' ) ? Int32Array : null; // eslint-d
 
 module.exports = ctor;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -493,7 +2052,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -547,7 +2106,7 @@ if ( hasInt8ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./int8array.js":15,"./polyfill.js":16,"@stdlib/assert/has-int8array-support":51}],15:[function(require,module,exports){
+},{"./int8array.js":16,"./polyfill.js":17,"@stdlib/assert/has-int8array-support":52}],16:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -577,7 +2136,7 @@ var ctor = ( typeof Int8Array === 'function' ) ? Int8Array : null; // eslint-dis
 
 module.exports = ctor;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -616,7 +2175,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -669,7 +2228,7 @@ var CTORS = [
 
 module.exports = CTORS;
 
-},{"@stdlib/array/float32":3,"@stdlib/array/float64":6,"@stdlib/array/int16":8,"@stdlib/array/int32":11,"@stdlib/array/int8":14,"@stdlib/array/uint16":21,"@stdlib/array/uint32":24,"@stdlib/array/uint8":27,"@stdlib/array/uint8c":30}],18:[function(require,module,exports){
+},{"@stdlib/array/float32":4,"@stdlib/array/float64":7,"@stdlib/array/int16":9,"@stdlib/array/int32":12,"@stdlib/array/int8":15,"@stdlib/array/uint16":22,"@stdlib/array/uint32":25,"@stdlib/array/uint8":28,"@stdlib/array/uint8c":31}],19:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -713,7 +2272,7 @@ var toJSON = require( './to_json.js' );
 
 module.exports = toJSON;
 
-},{"./to_json.js":19}],19:[function(require,module,exports){
+},{"./to_json.js":20}],20:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -782,7 +2341,7 @@ function toJSON( arr ) {
 
 module.exports = toJSON;
 
-},{"./type.js":20,"@stdlib/assert/is-typed-array":162}],20:[function(require,module,exports){
+},{"./type.js":21,"@stdlib/assert/is-typed-array":163}],21:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -854,7 +2413,7 @@ function typeName( arr ) {
 
 module.exports = typeName;
 
-},{"./ctors.js":17,"@stdlib/assert/instance-of":77,"@stdlib/utils/constructor-name":411,"@stdlib/utils/get-prototype-of":432}],21:[function(require,module,exports){
+},{"./ctors.js":18,"@stdlib/assert/instance-of":78,"@stdlib/utils/constructor-name":412,"@stdlib/utils/get-prototype-of":433}],22:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -908,7 +2467,7 @@ if ( hasUint16ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./polyfill.js":22,"./uint16array.js":23,"@stdlib/assert/has-uint16array-support":65}],22:[function(require,module,exports){
+},{"./polyfill.js":23,"./uint16array.js":24,"@stdlib/assert/has-uint16array-support":66}],23:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -947,7 +2506,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -977,7 +2536,7 @@ var ctor = ( typeof Uint16Array === 'function' ) ? Uint16Array : null; // eslint
 
 module.exports = ctor;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1031,7 +2590,7 @@ if ( hasUint32ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./polyfill.js":25,"./uint32array.js":26,"@stdlib/assert/has-uint32array-support":68}],25:[function(require,module,exports){
+},{"./polyfill.js":26,"./uint32array.js":27,"@stdlib/assert/has-uint32array-support":69}],26:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1070,7 +2629,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1100,7 +2659,7 @@ var ctor = ( typeof Uint32Array === 'function' ) ? Uint32Array : null; // eslint
 
 module.exports = ctor;
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1154,7 +2713,7 @@ if ( hasUint8ArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./polyfill.js":28,"./uint8array.js":29,"@stdlib/assert/has-uint8array-support":71}],28:[function(require,module,exports){
+},{"./polyfill.js":29,"./uint8array.js":30,"@stdlib/assert/has-uint8array-support":72}],29:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1193,7 +2752,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1223,7 +2782,7 @@ var ctor = ( typeof Uint8Array === 'function' ) ? Uint8Array : null; // eslint-d
 
 module.exports = ctor;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1277,7 +2836,7 @@ if ( hasUint8ClampedArraySupport() ) {
 
 module.exports = ctor;
 
-},{"./polyfill.js":31,"./uint8clampedarray.js":32,"@stdlib/assert/has-uint8clampedarray-support":74}],31:[function(require,module,exports){
+},{"./polyfill.js":32,"./uint8clampedarray.js":33,"@stdlib/assert/has-uint8clampedarray-support":75}],32:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1316,7 +2875,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1346,7 +2905,7 @@ var ctor = ( typeof Uint8ClampedArray === 'function' ) ? Uint8ClampedArray : nul
 
 module.exports = ctor;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1376,7 +2935,7 @@ var main = ( typeof Object.defineProperty === 'function' ) ? Object.defineProper
 
 module.exports = main;
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1418,7 +2977,7 @@ var hasDefinePropertySupport = require( './main.js' );
 
 module.exports = hasDefinePropertySupport;
 
-},{"./main.js":35}],35:[function(require,module,exports){
+},{"./main.js":36}],36:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1476,7 +3035,7 @@ function hasDefinePropertySupport() {
 
 module.exports = hasDefinePropertySupport;
 
-},{"./define_property.js":33}],36:[function(require,module,exports){
+},{"./define_property.js":34}],37:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1506,7 +3065,7 @@ var main = ( typeof Float32Array === 'function' ) ? Float32Array : null; // esli
 
 module.exports = main;
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1548,7 +3107,7 @@ var hasFloat32ArraySupport = require( './main.js' );
 
 module.exports = hasFloat32ArraySupport;
 
-},{"./main.js":38}],38:[function(require,module,exports){
+},{"./main.js":39}],39:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1615,7 +3174,7 @@ function hasFloat32ArraySupport() {
 
 module.exports = hasFloat32ArraySupport;
 
-},{"./float32array.js":36,"@stdlib/assert/is-float32array":103,"@stdlib/constants/math/float64-pinf":199}],39:[function(require,module,exports){
+},{"./float32array.js":37,"@stdlib/assert/is-float32array":104,"@stdlib/constants/math/float64-pinf":200}],40:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1645,7 +3204,7 @@ var main = ( typeof Float64Array === 'function' ) ? Float64Array : null; // esli
 
 module.exports = main;
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1687,7 +3246,7 @@ var hasFloat64ArraySupport = require( './main.js' );
 
 module.exports = hasFloat64ArraySupport;
 
-},{"./main.js":41}],41:[function(require,module,exports){
+},{"./main.js":42}],42:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1753,7 +3312,7 @@ function hasFloat64ArraySupport() {
 
 module.exports = hasFloat64ArraySupport;
 
-},{"./float64array.js":39,"@stdlib/assert/is-float64array":105}],42:[function(require,module,exports){
+},{"./float64array.js":40,"@stdlib/assert/is-float64array":106}],43:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1788,7 +3347,7 @@ function foo() {
 
 module.exports = foo;
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1830,7 +3389,7 @@ var hasFunctionNameSupport = require( './main.js' );
 
 module.exports = hasFunctionNameSupport;
 
-},{"./main.js":44}],44:[function(require,module,exports){
+},{"./main.js":45}],45:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1876,7 +3435,7 @@ function hasFunctionNameSupport() {
 
 module.exports = hasFunctionNameSupport;
 
-},{"./foo.js":42}],45:[function(require,module,exports){
+},{"./foo.js":43}],46:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1918,7 +3477,7 @@ var hasInt16ArraySupport = require( './main.js' );
 
 module.exports = hasInt16ArraySupport;
 
-},{"./main.js":47}],46:[function(require,module,exports){
+},{"./main.js":48}],47:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -1948,7 +3507,7 @@ var main = ( typeof Int16Array === 'function' ) ? Int16Array : null; // eslint-d
 
 module.exports = main;
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2016,7 +3575,7 @@ function hasInt16ArraySupport() {
 
 module.exports = hasInt16ArraySupport;
 
-},{"./int16array.js":46,"@stdlib/assert/is-int16array":109,"@stdlib/constants/math/int16-max":203,"@stdlib/constants/math/int16-min":204}],48:[function(require,module,exports){
+},{"./int16array.js":47,"@stdlib/assert/is-int16array":110,"@stdlib/constants/math/int16-max":204,"@stdlib/constants/math/int16-min":205}],49:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2058,7 +3617,7 @@ var hasInt32ArraySupport = require( './main.js' );
 
 module.exports = hasInt32ArraySupport;
 
-},{"./main.js":50}],49:[function(require,module,exports){
+},{"./main.js":51}],50:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2088,7 +3647,7 @@ var main = ( typeof Int32Array === 'function' ) ? Int32Array : null; // eslint-d
 
 module.exports = main;
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2156,7 +3715,7 @@ function hasInt32ArraySupport() {
 
 module.exports = hasInt32ArraySupport;
 
-},{"./int32array.js":49,"@stdlib/assert/is-int32array":111,"@stdlib/constants/math/int32-max":205,"@stdlib/constants/math/int32-min":206}],51:[function(require,module,exports){
+},{"./int32array.js":50,"@stdlib/assert/is-int32array":112,"@stdlib/constants/math/int32-max":206,"@stdlib/constants/math/int32-min":207}],52:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2198,7 +3757,7 @@ var hasInt8ArraySupport = require( './main.js' );
 
 module.exports = hasInt8ArraySupport;
 
-},{"./main.js":53}],52:[function(require,module,exports){
+},{"./main.js":54}],53:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2228,7 +3787,7 @@ var main = ( typeof Int8Array === 'function' ) ? Int8Array : null; // eslint-dis
 
 module.exports = main;
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2296,7 +3855,7 @@ function hasInt8ArraySupport() {
 
 module.exports = hasInt8ArraySupport;
 
-},{"./int8array.js":52,"@stdlib/assert/is-int8array":113,"@stdlib/constants/math/int8-max":207,"@stdlib/constants/math/int8-min":208}],54:[function(require,module,exports){
+},{"./int8array.js":53,"@stdlib/assert/is-int8array":114,"@stdlib/constants/math/int8-max":208,"@stdlib/constants/math/int8-min":209}],55:[function(require,module,exports){
 (function (Buffer){
 /**
 * @license Apache-2.0
@@ -2328,7 +3887,7 @@ var main = ( typeof Buffer === 'function' ) ? Buffer : null; // eslint-disable-l
 module.exports = main;
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":491}],55:[function(require,module,exports){
+},{"buffer":492}],56:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2370,7 +3929,7 @@ var hasNodeBufferSupport = require( './main.js' );
 
 module.exports = hasNodeBufferSupport;
 
-},{"./main.js":56}],56:[function(require,module,exports){
+},{"./main.js":57}],57:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2440,7 +3999,7 @@ function hasNodeBufferSupport() {
 
 module.exports = hasNodeBufferSupport;
 
-},{"./buffer.js":54,"@stdlib/assert/is-buffer":93}],57:[function(require,module,exports){
+},{"./buffer.js":55,"@stdlib/assert/is-buffer":94}],58:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2489,7 +4048,7 @@ var hasOwnProp = require( './main.js' );
 
 module.exports = hasOwnProp;
 
-},{"./main.js":58}],58:[function(require,module,exports){
+},{"./main.js":59}],59:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2555,7 +4114,7 @@ function hasOwnProp( value, property ) {
 
 module.exports = hasOwnProp;
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2604,7 +4163,7 @@ var hasProp = require( './main.js' );
 
 module.exports = hasProp;
 
-},{"./main.js":60}],60:[function(require,module,exports){
+},{"./main.js":61}],61:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2665,7 +4224,7 @@ function hasProp( value, property ) {
 
 module.exports = hasProp;
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2707,7 +4266,7 @@ var hasSymbolSupport = require( './main.js' );
 
 module.exports = hasSymbolSupport;
 
-},{"./main.js":62}],62:[function(require,module,exports){
+},{"./main.js":63}],63:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2751,7 +4310,7 @@ function hasSymbolSupport() {
 
 module.exports = hasSymbolSupport;
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2793,7 +4352,7 @@ var hasToStringTagSupport = require( './main.js' );
 
 module.exports = hasToStringTagSupport;
 
-},{"./main.js":64}],64:[function(require,module,exports){
+},{"./main.js":65}],65:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2844,7 +4403,7 @@ function hasToStringTagSupport() {
 
 module.exports = hasToStringTagSupport;
 
-},{"@stdlib/assert/has-symbol-support":61}],65:[function(require,module,exports){
+},{"@stdlib/assert/has-symbol-support":62}],66:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2886,7 +4445,7 @@ var hasUint16ArraySupport = require( './main.js' );
 
 module.exports = hasUint16ArraySupport;
 
-},{"./main.js":66}],66:[function(require,module,exports){
+},{"./main.js":67}],67:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2955,7 +4514,7 @@ function hasUint16ArraySupport() {
 
 module.exports = hasUint16ArraySupport;
 
-},{"./uint16array.js":67,"@stdlib/assert/is-uint16array":165,"@stdlib/constants/math/uint16-max":209}],67:[function(require,module,exports){
+},{"./uint16array.js":68,"@stdlib/assert/is-uint16array":166,"@stdlib/constants/math/uint16-max":210}],68:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -2985,7 +4544,7 @@ var main = ( typeof Uint16Array === 'function' ) ? Uint16Array : null; // eslint
 
 module.exports = main;
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3027,7 +4586,7 @@ var hasUint32ArraySupport = require( './main.js' );
 
 module.exports = hasUint32ArraySupport;
 
-},{"./main.js":69}],69:[function(require,module,exports){
+},{"./main.js":70}],70:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3096,7 +4655,7 @@ function hasUint32ArraySupport() {
 
 module.exports = hasUint32ArraySupport;
 
-},{"./uint32array.js":70,"@stdlib/assert/is-uint32array":167,"@stdlib/constants/math/uint32-max":210}],70:[function(require,module,exports){
+},{"./uint32array.js":71,"@stdlib/assert/is-uint32array":168,"@stdlib/constants/math/uint32-max":211}],71:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3126,7 +4685,7 @@ var main = ( typeof Uint32Array === 'function' ) ? Uint32Array : null; // eslint
 
 module.exports = main;
 
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3168,7 +4727,7 @@ var hasUint8ArraySupport = require( './main.js' );
 
 module.exports = hasUint8ArraySupport;
 
-},{"./main.js":72}],72:[function(require,module,exports){
+},{"./main.js":73}],73:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3237,7 +4796,7 @@ function hasUint8ArraySupport() {
 
 module.exports = hasUint8ArraySupport;
 
-},{"./uint8array.js":73,"@stdlib/assert/is-uint8array":169,"@stdlib/constants/math/uint8-max":211}],73:[function(require,module,exports){
+},{"./uint8array.js":74,"@stdlib/assert/is-uint8array":170,"@stdlib/constants/math/uint8-max":212}],74:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3267,7 +4826,7 @@ var main = ( typeof Uint8Array === 'function' ) ? Uint8Array : null; // eslint-d
 
 module.exports = main;
 
-},{}],74:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3309,7 +4868,7 @@ var hasUint8ClampedArraySupport = require( './main.js' );
 
 module.exports = hasUint8ClampedArraySupport;
 
-},{"./main.js":75}],75:[function(require,module,exports){
+},{"./main.js":76}],76:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3378,7 +4937,7 @@ function hasUint8ClampedArraySupport() { // eslint-disable-line id-length
 
 module.exports = hasUint8ClampedArraySupport;
 
-},{"./uint8clampedarray.js":76,"@stdlib/assert/is-uint8clampedarray":171}],76:[function(require,module,exports){
+},{"./uint8clampedarray.js":77,"@stdlib/assert/is-uint8clampedarray":172}],77:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3408,7 +4967,7 @@ var main = ( typeof Uint8ClampedArray === 'function' ) ? Uint8ClampedArray : nul
 
 module.exports = main;
 
-},{}],77:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3462,7 +5021,7 @@ var instanceOf = require( './main.js' );
 
 module.exports = instanceOf;
 
-},{"./main.js":78}],78:[function(require,module,exports){
+},{"./main.js":79}],79:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3526,7 +5085,7 @@ function instanceOf( value, constructor ) {
 
 module.exports = instanceOf;
 
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3583,7 +5142,7 @@ bool = detect();
 
 module.exports = bool;
 
-},{"./main.js":81}],80:[function(require,module,exports){
+},{"./main.js":82}],81:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3644,7 +5203,7 @@ if ( hasArgumentsClass ) {
 
 module.exports = isArguments;
 
-},{"./detect.js":79,"./main.js":81,"./polyfill.js":82}],81:[function(require,module,exports){
+},{"./detect.js":80,"./main.js":82,"./polyfill.js":83}],82:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3700,7 +5259,7 @@ function isArguments( value ) {
 
 module.exports = isArguments;
 
-},{"@stdlib/utils/native-class":460}],82:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],83:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3770,7 +5329,7 @@ function isArguments( value ) {
 
 module.exports = isArguments;
 
-},{"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-array":85,"@stdlib/assert/is-enumerable-property":98,"@stdlib/constants/math/uint32-max":210,"@stdlib/math/base/assert/is-integer":216}],83:[function(require,module,exports){
+},{"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-array":86,"@stdlib/assert/is-enumerable-property":99,"@stdlib/constants/math/uint32-max":211,"@stdlib/math/base/assert/is-integer":217}],84:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3818,7 +5377,7 @@ var isArrayLike = require( './main.js' );
 
 module.exports = isArrayLike;
 
-},{"./main.js":84}],84:[function(require,module,exports){
+},{"./main.js":85}],85:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3878,7 +5437,7 @@ function isArrayLike( value ) {
 
 module.exports = isArrayLike;
 
-},{"@stdlib/constants/array/max-array-length":187,"@stdlib/math/base/assert/is-integer":216}],85:[function(require,module,exports){
+},{"@stdlib/constants/array/max-array-length":188,"@stdlib/math/base/assert/is-integer":217}],86:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3923,7 +5482,7 @@ var isArray = require( './main.js' );
 
 module.exports = isArray;
 
-},{"./main.js":86}],86:[function(require,module,exports){
+},{"./main.js":87}],87:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -3988,7 +5547,7 @@ if ( Array.isArray ) {
 
 module.exports = f;
 
-},{"@stdlib/utils/native-class":460}],87:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],88:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4062,7 +5621,7 @@ setReadOnly( isBoolean, 'isObject', isObject );
 
 module.exports = isBoolean;
 
-},{"./main.js":88,"./object.js":89,"./primitive.js":90,"@stdlib/utils/define-nonenumerable-read-only-property":419}],88:[function(require,module,exports){
+},{"./main.js":89,"./object.js":90,"./primitive.js":91,"@stdlib/utils/define-nonenumerable-read-only-property":420}],89:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4122,7 +5681,7 @@ function isBoolean( value ) {
 
 module.exports = isBoolean;
 
-},{"./object.js":89,"./primitive.js":90}],89:[function(require,module,exports){
+},{"./object.js":90,"./primitive.js":91}],90:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4189,7 +5748,7 @@ function isBoolean( value ) {
 
 module.exports = isBoolean;
 
-},{"./try2serialize.js":92,"@stdlib/assert/has-tostringtag-support":63,"@stdlib/utils/native-class":460}],90:[function(require,module,exports){
+},{"./try2serialize.js":93,"@stdlib/assert/has-tostringtag-support":64,"@stdlib/utils/native-class":461}],91:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4237,7 +5796,7 @@ function isBoolean( value ) {
 
 module.exports = isBoolean;
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4266,7 +5825,7 @@ var toString = Boolean.prototype.toString; // non-generic
 
 module.exports = toString;
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4315,7 +5874,7 @@ function test( value ) {
 
 module.exports = test;
 
-},{"./tostring.js":91}],93:[function(require,module,exports){
+},{"./tostring.js":92}],94:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4360,7 +5919,7 @@ var isBuffer = require( './main.js' );
 
 module.exports = isBuffer;
 
-},{"./main.js":94}],94:[function(require,module,exports){
+},{"./main.js":95}],95:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4432,7 +5991,7 @@ function isBuffer( value ) {
 
 module.exports = isBuffer;
 
-},{"@stdlib/assert/is-object-like":137}],95:[function(require,module,exports){
+},{"@stdlib/assert/is-object-like":138}],96:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4477,7 +6036,7 @@ var isCollection = require( './main.js' );
 
 module.exports = isCollection;
 
-},{"./main.js":96}],96:[function(require,module,exports){
+},{"./main.js":97}],97:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4536,7 +6095,7 @@ function isCollection( value ) {
 
 module.exports = isCollection;
 
-},{"@stdlib/constants/array/max-typed-array-length":188,"@stdlib/math/base/assert/is-integer":216}],97:[function(require,module,exports){
+},{"@stdlib/constants/array/max-typed-array-length":189,"@stdlib/math/base/assert/is-integer":217}],98:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4589,7 +6148,7 @@ bool = detect();
 
 module.exports = bool;
 
-},{"./native.js":100}],98:[function(require,module,exports){
+},{"./native.js":101}],99:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4638,7 +6197,7 @@ var isEnumerableProperty = require( './main.js' );
 
 module.exports = isEnumerableProperty;
 
-},{"./main.js":99}],99:[function(require,module,exports){
+},{"./main.js":100}],100:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4720,7 +6279,7 @@ function isEnumerableProperty( value, property ) {
 
 module.exports = isEnumerableProperty;
 
-},{"./has_string_enumerability_bug.js":97,"./native.js":100,"@stdlib/assert/is-integer":115,"@stdlib/assert/is-nan":123,"@stdlib/assert/is-string":155}],100:[function(require,module,exports){
+},{"./has_string_enumerability_bug.js":98,"./native.js":101,"@stdlib/assert/is-integer":116,"@stdlib/assert/is-nan":124,"@stdlib/assert/is-string":156}],101:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4776,7 +6335,7 @@ var isEnumerableProperty = Object.prototype.propertyIsEnumerable;
 
 module.exports = isEnumerableProperty;
 
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4821,7 +6380,7 @@ var isError = require( './main.js' );
 
 module.exports = isError;
 
-},{"./main.js":102}],102:[function(require,module,exports){
+},{"./main.js":103}],103:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4887,7 +6446,7 @@ function isError( value ) {
 
 module.exports = isError;
 
-},{"@stdlib/utils/get-prototype-of":432,"@stdlib/utils/native-class":460}],103:[function(require,module,exports){
+},{"@stdlib/utils/get-prototype-of":433,"@stdlib/utils/native-class":461}],104:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4932,7 +6491,7 @@ var isFloat32Array = require( './main.js' );
 
 module.exports = isFloat32Array;
 
-},{"./main.js":104}],104:[function(require,module,exports){
+},{"./main.js":105}],105:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -4991,7 +6550,7 @@ function isFloat32Array( value ) {
 
 module.exports = isFloat32Array;
 
-},{"@stdlib/utils/native-class":460}],105:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],106:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5036,7 +6595,7 @@ var isFloat64Array = require( './main.js' );
 
 module.exports = isFloat64Array;
 
-},{"./main.js":106}],106:[function(require,module,exports){
+},{"./main.js":107}],107:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5095,7 +6654,7 @@ function isFloat64Array( value ) {
 
 module.exports = isFloat64Array;
 
-},{"@stdlib/utils/native-class":460}],107:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],108:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5141,7 +6700,7 @@ var isFunction = require( './main.js' );
 
 module.exports = isFunction;
 
-},{"./main.js":108}],108:[function(require,module,exports){
+},{"./main.js":109}],109:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5193,7 +6752,7 @@ function isFunction( value ) {
 
 module.exports = isFunction;
 
-},{"@stdlib/utils/type-of":481}],109:[function(require,module,exports){
+},{"@stdlib/utils/type-of":482}],110:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5238,7 +6797,7 @@ var isInt16Array = require( './main.js' );
 
 module.exports = isInt16Array;
 
-},{"./main.js":110}],110:[function(require,module,exports){
+},{"./main.js":111}],111:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5297,7 +6856,7 @@ function isInt16Array( value ) {
 
 module.exports = isInt16Array;
 
-},{"@stdlib/utils/native-class":460}],111:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],112:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5342,7 +6901,7 @@ var isInt32Array = require( './main.js' );
 
 module.exports = isInt32Array;
 
-},{"./main.js":112}],112:[function(require,module,exports){
+},{"./main.js":113}],113:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5401,7 +6960,7 @@ function isInt32Array( value ) {
 
 module.exports = isInt32Array;
 
-},{"@stdlib/utils/native-class":460}],113:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],114:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5446,7 +7005,7 @@ var isInt8Array = require( './main.js' );
 
 module.exports = isInt8Array;
 
-},{"./main.js":114}],114:[function(require,module,exports){
+},{"./main.js":115}],115:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5505,7 +7064,7 @@ function isInt8Array( value ) {
 
 module.exports = isInt8Array;
 
-},{"@stdlib/utils/native-class":460}],115:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],116:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5585,7 +7144,7 @@ setReadOnly( isInteger, 'isObject', isObject );
 
 module.exports = isInteger;
 
-},{"./main.js":117,"./object.js":118,"./primitive.js":119,"@stdlib/utils/define-nonenumerable-read-only-property":419}],116:[function(require,module,exports){
+},{"./main.js":118,"./object.js":119,"./primitive.js":120,"@stdlib/utils/define-nonenumerable-read-only-property":420}],117:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5635,7 +7194,7 @@ function isInteger( value ) {
 
 module.exports = isInteger;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-integer":216}],117:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-integer":217}],118:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5695,7 +7254,7 @@ function isInteger( value ) {
 
 module.exports = isInteger;
 
-},{"./object.js":118,"./primitive.js":119}],118:[function(require,module,exports){
+},{"./object.js":119,"./primitive.js":120}],119:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5750,7 +7309,7 @@ function isInteger( value ) {
 
 module.exports = isInteger;
 
-},{"./integer.js":116,"@stdlib/assert/is-number":131}],119:[function(require,module,exports){
+},{"./integer.js":117,"@stdlib/assert/is-number":132}],120:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5805,7 +7364,7 @@ function isInteger( value ) {
 
 module.exports = isInteger;
 
-},{"./integer.js":116,"@stdlib/assert/is-number":131}],120:[function(require,module,exports){
+},{"./integer.js":117,"@stdlib/assert/is-number":132}],121:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5844,7 +7403,7 @@ var ctors = {
 
 module.exports = ctors;
 
-},{"@stdlib/array/uint16":21,"@stdlib/array/uint8":27}],121:[function(require,module,exports){
+},{"@stdlib/array/uint16":22,"@stdlib/array/uint8":28}],122:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5886,7 +7445,7 @@ var IS_LITTLE_ENDIAN = require( './main.js' );
 
 module.exports = IS_LITTLE_ENDIAN;
 
-},{"./main.js":122}],122:[function(require,module,exports){
+},{"./main.js":123}],123:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -5959,7 +7518,7 @@ bool = isLittleEndian();
 
 module.exports = bool;
 
-},{"./ctors.js":120}],123:[function(require,module,exports){
+},{"./ctors.js":121}],124:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6040,7 +7599,7 @@ setReadOnly( isnan, 'isObject', isObject );
 
 module.exports = isnan;
 
-},{"./main.js":124,"./object.js":125,"./primitive.js":126,"@stdlib/utils/define-nonenumerable-read-only-property":419}],124:[function(require,module,exports){
+},{"./main.js":125,"./object.js":126,"./primitive.js":127,"@stdlib/utils/define-nonenumerable-read-only-property":420}],125:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6100,7 +7659,7 @@ function isnan( value ) {
 
 module.exports = isnan;
 
-},{"./object.js":125,"./primitive.js":126}],125:[function(require,module,exports){
+},{"./object.js":126,"./primitive.js":127}],126:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6155,7 +7714,7 @@ function isnan( value ) {
 
 module.exports = isnan;
 
-},{"@stdlib/assert/is-number":131,"@stdlib/math/base/assert/is-nan":218}],126:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132,"@stdlib/math/base/assert/is-nan":219}],127:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6214,7 +7773,7 @@ function isnan( value ) {
 
 module.exports = isnan;
 
-},{"@stdlib/assert/is-number":131,"@stdlib/math/base/assert/is-nan":218}],127:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132,"@stdlib/math/base/assert/is-nan":219}],128:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6295,7 +7854,7 @@ setReadOnly( isNonNegativeInteger, 'isObject', isObject );
 
 module.exports = isNonNegativeInteger;
 
-},{"./main.js":128,"./object.js":129,"./primitive.js":130,"@stdlib/utils/define-nonenumerable-read-only-property":419}],128:[function(require,module,exports){
+},{"./main.js":129,"./object.js":130,"./primitive.js":131,"@stdlib/utils/define-nonenumerable-read-only-property":420}],129:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6359,7 +7918,7 @@ function isNonNegativeInteger( value ) {
 
 module.exports = isNonNegativeInteger;
 
-},{"./object.js":129,"./primitive.js":130}],129:[function(require,module,exports){
+},{"./object.js":130,"./primitive.js":131}],130:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6413,7 +7972,7 @@ function isNonNegativeInteger( value ) {
 
 module.exports = isNonNegativeInteger;
 
-},{"@stdlib/assert/is-integer":115}],130:[function(require,module,exports){
+},{"@stdlib/assert/is-integer":116}],131:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6467,7 +8026,7 @@ function isNonNegativeInteger( value ) {
 
 module.exports = isNonNegativeInteger;
 
-},{"@stdlib/assert/is-integer":115}],131:[function(require,module,exports){
+},{"@stdlib/assert/is-integer":116}],132:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6548,7 +8107,7 @@ setReadOnly( isNumber, 'isObject', isObject );
 
 module.exports = isNumber;
 
-},{"./main.js":132,"./object.js":133,"./primitive.js":134,"@stdlib/utils/define-nonenumerable-read-only-property":419}],132:[function(require,module,exports){
+},{"./main.js":133,"./object.js":134,"./primitive.js":135,"@stdlib/utils/define-nonenumerable-read-only-property":420}],133:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6608,7 +8167,7 @@ function isNumber( value ) {
 
 module.exports = isNumber;
 
-},{"./object.js":133,"./primitive.js":134}],133:[function(require,module,exports){
+},{"./object.js":134,"./primitive.js":135}],134:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6676,7 +8235,7 @@ function isNumber( value ) {
 
 module.exports = isNumber;
 
-},{"./try2serialize.js":136,"@stdlib/assert/has-tostringtag-support":63,"@stdlib/number/ctor":286,"@stdlib/utils/native-class":460}],134:[function(require,module,exports){
+},{"./try2serialize.js":137,"@stdlib/assert/has-tostringtag-support":64,"@stdlib/number/ctor":287,"@stdlib/utils/native-class":461}],135:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6724,7 +8283,7 @@ function isNumber( value ) {
 
 module.exports = isNumber;
 
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6760,9 +8319,9 @@ var toString = Number.prototype.toString; // non-generic
 
 module.exports = toString;
 
-},{"@stdlib/number/ctor":286}],136:[function(require,module,exports){
-arguments[4][92][0].apply(exports,arguments)
-},{"./tostring.js":135,"dup":92}],137:[function(require,module,exports){
+},{"@stdlib/number/ctor":287}],137:[function(require,module,exports){
+arguments[4][93][0].apply(exports,arguments)
+},{"./tostring.js":136,"dup":93}],138:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6826,7 +8385,7 @@ setReadOnly( isObjectLike, 'isObjectLikeArray', arrayfun( isObjectLike ) );
 
 module.exports = isObjectLike;
 
-},{"./main.js":138,"@stdlib/assert/tools/array-function":176,"@stdlib/utils/define-nonenumerable-read-only-property":419}],138:[function(require,module,exports){
+},{"./main.js":139,"@stdlib/assert/tools/array-function":177,"@stdlib/utils/define-nonenumerable-read-only-property":420}],139:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6877,7 +8436,7 @@ function isObjectLike( value ) {
 
 module.exports = isObjectLike;
 
-},{}],139:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6922,7 +8481,7 @@ var isObject = require( './main.js' );
 
 module.exports = isObject;
 
-},{"./main.js":140}],140:[function(require,module,exports){
+},{"./main.js":141}],141:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -6977,7 +8536,7 @@ function isObject( value ) {
 
 module.exports = isObject;
 
-},{"@stdlib/assert/is-array":85}],141:[function(require,module,exports){
+},{"@stdlib/assert/is-array":86}],142:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7022,7 +8581,7 @@ var isPlainObject = require( './main.js' );
 
 module.exports = isPlainObject;
 
-},{"./main.js":142}],142:[function(require,module,exports){
+},{"./main.js":143}],143:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7136,7 +8695,7 @@ function isPlainObject( value ) {
 
 module.exports = isPlainObject;
 
-},{"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-function":107,"@stdlib/assert/is-object":139,"@stdlib/utils/get-prototype-of":432,"@stdlib/utils/native-class":460}],143:[function(require,module,exports){
+},{"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-function":108,"@stdlib/assert/is-object":140,"@stdlib/utils/get-prototype-of":433,"@stdlib/utils/native-class":461}],144:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7217,7 +8776,7 @@ setReadOnly( isPositiveInteger, 'isObject', isObject );
 
 module.exports = isPositiveInteger;
 
-},{"./main.js":144,"./object.js":145,"./primitive.js":146,"@stdlib/utils/define-nonenumerable-read-only-property":419}],144:[function(require,module,exports){
+},{"./main.js":145,"./object.js":146,"./primitive.js":147,"@stdlib/utils/define-nonenumerable-read-only-property":420}],145:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7285,7 +8844,7 @@ function isPositiveInteger( value ) {
 
 module.exports = isPositiveInteger;
 
-},{"./object.js":145,"./primitive.js":146}],145:[function(require,module,exports){
+},{"./object.js":146,"./primitive.js":147}],146:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7339,7 +8898,7 @@ function isPositiveInteger( value ) {
 
 module.exports = isPositiveInteger;
 
-},{"@stdlib/assert/is-integer":115}],146:[function(require,module,exports){
+},{"@stdlib/assert/is-integer":116}],147:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7393,7 +8952,7 @@ function isPositiveInteger( value ) {
 
 module.exports = isPositiveInteger;
 
-},{"@stdlib/assert/is-integer":115}],147:[function(require,module,exports){
+},{"@stdlib/assert/is-integer":116}],148:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7474,7 +9033,7 @@ setReadOnly( isPositiveNumber, 'isObject', isObject );
 
 module.exports = isPositiveNumber;
 
-},{"./main.js":148,"./object.js":149,"./primitive.js":150,"@stdlib/utils/define-nonenumerable-read-only-property":419}],148:[function(require,module,exports){
+},{"./main.js":149,"./object.js":150,"./primitive.js":151,"@stdlib/utils/define-nonenumerable-read-only-property":420}],149:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7538,7 +9097,7 @@ function isPositiveNumber( value ) {
 
 module.exports = isPositiveNumber;
 
-},{"./object.js":149,"./primitive.js":150}],149:[function(require,module,exports){
+},{"./object.js":150,"./primitive.js":151}],150:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7592,7 +9151,7 @@ function isPositiveNumber( value ) {
 
 module.exports = isPositiveNumber;
 
-},{"@stdlib/assert/is-number":131}],150:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132}],151:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7646,7 +9205,7 @@ function isPositiveNumber( value ) {
 
 module.exports = isPositiveNumber;
 
-},{"@stdlib/assert/is-number":131}],151:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132}],152:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7727,7 +9286,7 @@ setReadOnly( isProbability, 'isObject', isObject );
 
 module.exports = isProbability;
 
-},{"./main.js":152,"./object.js":153,"./primitive.js":154,"@stdlib/utils/define-nonenumerable-read-only-property":419}],152:[function(require,module,exports){
+},{"./main.js":153,"./object.js":154,"./primitive.js":155,"@stdlib/utils/define-nonenumerable-read-only-property":420}],153:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7791,7 +9350,7 @@ function isProbability( value ) {
 
 module.exports = isProbability;
 
-},{"./object.js":153,"./primitive.js":154}],153:[function(require,module,exports){
+},{"./object.js":154,"./primitive.js":155}],154:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7846,7 +9405,7 @@ function isProbability( value ) {
 
 module.exports = isProbability;
 
-},{"@stdlib/assert/is-number":131}],154:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132}],155:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7901,7 +9460,7 @@ function isProbability( value ) {
 
 module.exports = isProbability;
 
-},{"@stdlib/assert/is-number":131}],155:[function(require,module,exports){
+},{"@stdlib/assert/is-number":132}],156:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -7976,7 +9535,7 @@ setReadOnly( isString, 'isObject', isObject );
 
 module.exports = isString;
 
-},{"./main.js":156,"./object.js":157,"./primitive.js":158,"@stdlib/utils/define-nonenumerable-read-only-property":419}],156:[function(require,module,exports){
+},{"./main.js":157,"./object.js":158,"./primitive.js":159,"@stdlib/utils/define-nonenumerable-read-only-property":420}],157:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8028,7 +9587,7 @@ function isString( value ) {
 
 module.exports = isString;
 
-},{"./object.js":157,"./primitive.js":158}],157:[function(require,module,exports){
+},{"./object.js":158,"./primitive.js":159}],158:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8095,7 +9654,7 @@ function isString( value ) {
 
 module.exports = isString;
 
-},{"./try2valueof.js":159,"@stdlib/assert/has-tostringtag-support":63,"@stdlib/utils/native-class":460}],158:[function(require,module,exports){
+},{"./try2valueof.js":160,"@stdlib/assert/has-tostringtag-support":64,"@stdlib/utils/native-class":461}],159:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8139,7 +9698,7 @@ function isString( value ) {
 
 module.exports = isString;
 
-},{}],159:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8188,7 +9747,7 @@ function test( value ) {
 
 module.exports = test;
 
-},{"./valueof.js":160}],160:[function(require,module,exports){
+},{"./valueof.js":161}],161:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8217,7 +9776,7 @@ var valueOf = String.prototype.valueOf; // non-generic
 
 module.exports = valueOf;
 
-},{}],161:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8270,7 +9829,7 @@ var CTORS = [
 
 module.exports = CTORS;
 
-},{"@stdlib/array/float32":3,"@stdlib/array/float64":6,"@stdlib/array/int16":8,"@stdlib/array/int32":11,"@stdlib/array/int8":14,"@stdlib/array/uint16":21,"@stdlib/array/uint32":24,"@stdlib/array/uint8":27,"@stdlib/array/uint8c":30}],162:[function(require,module,exports){
+},{"@stdlib/array/float32":4,"@stdlib/array/float64":7,"@stdlib/array/int16":9,"@stdlib/array/int32":12,"@stdlib/array/int8":15,"@stdlib/array/uint16":22,"@stdlib/array/uint32":25,"@stdlib/array/uint8":28,"@stdlib/array/uint8c":31}],163:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8313,7 +9872,7 @@ var isTypedArray = require( './main.js' );
 
 module.exports = isTypedArray;
 
-},{"./main.js":163}],163:[function(require,module,exports){
+},{"./main.js":164}],164:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8414,7 +9973,7 @@ function isTypedArray( value ) {
 
 module.exports = isTypedArray;
 
-},{"./ctors.js":161,"./names.json":164,"@stdlib/array/float64":6,"@stdlib/assert/has-float64array-support":40,"@stdlib/utils/constructor-name":411,"@stdlib/utils/function-name":429,"@stdlib/utils/get-prototype-of":432}],164:[function(require,module,exports){
+},{"./ctors.js":162,"./names.json":165,"@stdlib/array/float64":7,"@stdlib/assert/has-float64array-support":41,"@stdlib/utils/constructor-name":412,"@stdlib/utils/function-name":430,"@stdlib/utils/get-prototype-of":433}],165:[function(require,module,exports){
 module.exports=[
 	"Int8Array",
 	"Uint8Array",
@@ -8427,7 +9986,7 @@ module.exports=[
 	"Float64Array"
 ]
 
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8472,7 +10031,7 @@ var isUint16Array = require( './main.js' );
 
 module.exports = isUint16Array;
 
-},{"./main.js":166}],166:[function(require,module,exports){
+},{"./main.js":167}],167:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8531,7 +10090,7 @@ function isUint16Array( value ) {
 
 module.exports = isUint16Array;
 
-},{"@stdlib/utils/native-class":460}],167:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],168:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8576,7 +10135,7 @@ var isUint32Array = require( './main.js' );
 
 module.exports = isUint32Array;
 
-},{"./main.js":168}],168:[function(require,module,exports){
+},{"./main.js":169}],169:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8635,7 +10194,7 @@ function isUint32Array( value ) {
 
 module.exports = isUint32Array;
 
-},{"@stdlib/utils/native-class":460}],169:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],170:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8680,7 +10239,7 @@ var isUint8Array = require( './main.js' );
 
 module.exports = isUint8Array;
 
-},{"./main.js":170}],170:[function(require,module,exports){
+},{"./main.js":171}],171:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8739,7 +10298,7 @@ function isUint8Array( value ) {
 
 module.exports = isUint8Array;
 
-},{"@stdlib/utils/native-class":460}],171:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],172:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8784,7 +10343,7 @@ var isUint8ClampedArray = require( './main.js' );
 
 module.exports = isUint8ClampedArray;
 
-},{"./main.js":172}],172:[function(require,module,exports){
+},{"./main.js":173}],173:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8843,7 +10402,7 @@ function isUint8ClampedArray( value ) {
 
 module.exports = isUint8ClampedArray;
 
-},{"@stdlib/utils/native-class":460}],173:[function(require,module,exports){
+},{"@stdlib/utils/native-class":461}],174:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8894,7 +10453,7 @@ var isUnityProbabilityArray = require( './main.js' );
 
 module.exports = isUnityProbabilityArray;
 
-},{"./main.js":174}],174:[function(require,module,exports){
+},{"./main.js":175}],175:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -8986,7 +10545,7 @@ function isUnityProbabilityArray( v ) {
 
 module.exports = isUnityProbabilityArray;
 
-},{"@stdlib/assert/is-array":85,"@stdlib/assert/is-number":131,"@stdlib/assert/is-typed-array":162,"@stdlib/constants/math/float64-sqrt-eps":201,"@stdlib/math/base/utils/absolute-difference":284}],175:[function(require,module,exports){
+},{"@stdlib/assert/is-array":86,"@stdlib/assert/is-number":132,"@stdlib/assert/is-typed-array":163,"@stdlib/constants/math/float64-sqrt-eps":202,"@stdlib/math/base/utils/absolute-difference":285}],176:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9072,7 +10631,7 @@ function arrayfcn( predicate ) {
 
 module.exports = arrayfcn;
 
-},{"@stdlib/assert/is-array":85}],176:[function(require,module,exports){
+},{"@stdlib/assert/is-array":86}],177:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9123,7 +10682,7 @@ var arrayfcn = require( './arrayfcn.js' );
 
 module.exports = arrayfcn;
 
-},{"./arrayfcn.js":175}],177:[function(require,module,exports){
+},{"./arrayfcn.js":176}],178:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9185,7 +10744,7 @@ setReadOnly( gcopy, 'ndarray', ndarray );
 
 module.exports = gcopy;
 
-},{"./main.js":178,"./ndarray.js":179,"@stdlib/utils/define-nonenumerable-read-only-property":419}],178:[function(require,module,exports){
+},{"./main.js":179,"./ndarray.js":180,"@stdlib/utils/define-nonenumerable-read-only-property":420}],179:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9286,7 +10845,7 @@ function gcopy( N, x, strideX, y, strideY ) {
 
 module.exports = gcopy;
 
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9386,7 +10945,7 @@ function gcopy( N, x, strideX, offsetX, y, strideY, offsetY ) {
 
 module.exports = gcopy;
 
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9416,7 +10975,7 @@ var ctor = require( 'buffer' ).Buffer; // eslint-disable-line stdlib/require-glo
 
 module.exports = ctor;
 
-},{"buffer":491}],181:[function(require,module,exports){
+},{"buffer":492}],182:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9470,7 +11029,7 @@ if ( hasNodeBufferSupport() ) {
 
 module.exports = ctor;
 
-},{"./buffer.js":180,"./polyfill.js":182,"@stdlib/assert/has-node-buffer-support":55}],182:[function(require,module,exports){
+},{"./buffer.js":181,"./polyfill.js":183,"@stdlib/assert/has-node-buffer-support":56}],183:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9509,7 +11068,7 @@ function polyfill() {
 
 module.exports = polyfill;
 
-},{}],183:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9545,7 +11104,7 @@ var bool = isFunction( Buffer.from );
 
 module.exports = bool;
 
-},{"@stdlib/assert/is-function":107,"@stdlib/buffer/ctor":181}],184:[function(require,module,exports){
+},{"@stdlib/assert/is-function":108,"@stdlib/buffer/ctor":182}],185:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9603,7 +11162,7 @@ if ( hasFrom ) {
 
 module.exports = copyBuffer;
 
-},{"./has_from.js":183,"./main.js":185,"./polyfill.js":186}],185:[function(require,module,exports){
+},{"./has_from.js":184,"./main.js":186,"./polyfill.js":187}],186:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9660,7 +11219,7 @@ function fromBuffer( buffer ) {
 
 module.exports = fromBuffer;
 
-},{"@stdlib/assert/is-buffer":93,"@stdlib/buffer/ctor":181}],186:[function(require,module,exports){
+},{"@stdlib/assert/is-buffer":94,"@stdlib/buffer/ctor":182}],187:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9717,7 +11276,7 @@ function fromBuffer( buffer ) {
 
 module.exports = fromBuffer;
 
-},{"@stdlib/assert/is-buffer":93,"@stdlib/buffer/ctor":181}],187:[function(require,module,exports){
+},{"@stdlib/assert/is-buffer":94,"@stdlib/buffer/ctor":182}],188:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9768,7 +11327,7 @@ var MAX_ARRAY_LENGTH = 4294967295>>>0; // asm type annotation
 
 module.exports = MAX_ARRAY_LENGTH;
 
-},{}],188:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9819,7 +11378,7 @@ var MAX_TYPED_ARRAY_LENGTH = 9007199254740991;
 
 module.exports = MAX_TYPED_ARRAY_LENGTH;
 
-},{}],189:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9870,7 +11429,7 @@ var E = 2.718281828459045235360287471352662497757247093699959574966;
 
 module.exports = E;
 
-},{}],190:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9930,7 +11489,7 @@ var FLOAT64_EXPONENT_BIAS = 1023|0; // asm type annotation
 
 module.exports = FLOAT64_EXPONENT_BIAS;
 
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -9988,7 +11547,7 @@ var FLOAT64_HIGH_WORD_EXPONENT_MASK = 0x7ff00000;
 
 module.exports = FLOAT64_HIGH_WORD_EXPONENT_MASK;
 
-},{}],192:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10041,7 +11600,7 @@ var LN_TWO_PI = 1.837877066409345483560659472811235279722794947275566825634;
 
 module.exports = LN_TWO_PI;
 
-},{}],193:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10094,7 +11653,7 @@ var LN2 = 6.93147180559945309417232121458176568075500134360255254120680009493393
 
 module.exports = LN2;
 
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10150,7 +11709,7 @@ var FLOAT64_MAX_BASE2_EXPONENT_SUBNORMAL = -1023|0; // asm type annotation
 
 module.exports = FLOAT64_MAX_BASE2_EXPONENT_SUBNORMAL;
 
-},{}],195:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10206,7 +11765,7 @@ var FLOAT64_MAX_BASE2_EXPONENT = 1023|0; // asm type annotation
 
 module.exports = FLOAT64_MAX_BASE2_EXPONENT;
 
-},{}],196:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10265,7 +11824,7 @@ var FLOAT64_MAX_SAFE_INTEGER = 9007199254740991;
 
 module.exports = FLOAT64_MAX_SAFE_INTEGER;
 
-},{}],197:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10321,7 +11880,7 @@ var FLOAT64_MIN_BASE2_EXPONENT_SUBNORMAL = -1074|0; // asm type annotation
 
 module.exports = FLOAT64_MIN_BASE2_EXPONENT_SUBNORMAL;
 
-},{}],198:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10383,7 +11942,7 @@ var FLOAT64_NINF = Number.NEGATIVE_INFINITY;
 
 module.exports = FLOAT64_NINF;
 
-},{"@stdlib/number/ctor":286}],199:[function(require,module,exports){
+},{"@stdlib/number/ctor":287}],200:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10441,7 +12000,7 @@ var FLOAT64_PINF = Number.POSITIVE_INFINITY; // eslint-disable-line stdlib/requi
 
 module.exports = FLOAT64_PINF;
 
-},{}],200:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10505,7 +12064,7 @@ var FLOAT64_SMALLEST_NORMAL = 2.2250738585072014e-308;
 
 module.exports = FLOAT64_SMALLEST_NORMAL;
 
-},{}],201:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10560,7 +12119,7 @@ var FLOAT64_SQRT_EPSILON = 0.1490116119384765625e-7;
 
 module.exports = FLOAT64_SQRT_EPSILON;
 
-},{}],202:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10610,7 +12169,7 @@ var TWO_PI = 6.28318530717958647692528676655900576839433879875021164194988918461
 
 module.exports = TWO_PI;
 
-},{}],203:[function(require,module,exports){
+},{}],204:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10673,7 +12232,7 @@ var INT16_MAX = 32767|0; // asm type annotation
 
 module.exports = INT16_MAX;
 
-},{}],204:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10736,7 +12295,7 @@ var INT16_MIN = -32768|0; // asm type annotation
 
 module.exports = INT16_MIN;
 
-},{}],205:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10799,7 +12358,7 @@ var INT32_MAX = 2147483647|0; // asm type annotation
 
 module.exports = INT32_MAX;
 
-},{}],206:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10862,7 +12421,7 @@ var INT32_MIN = -2147483648|0; // asm type annotation
 
 module.exports = INT32_MIN;
 
-},{}],207:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10925,7 +12484,7 @@ var INT8_MAX = 127|0; // asm type annotation
 
 module.exports = INT8_MAX;
 
-},{}],208:[function(require,module,exports){
+},{}],209:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -10988,7 +12547,7 @@ var INT8_MIN = -128|0; // asm type annotation
 
 module.exports = INT8_MIN;
 
-},{}],209:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11051,7 +12610,7 @@ var UINT16_MAX = 65535|0; // asm type annotation
 
 module.exports = UINT16_MAX;
 
-},{}],210:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11114,7 +12673,7 @@ var UINT32_MAX = 4294967295;
 
 module.exports = UINT32_MAX;
 
-},{}],211:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11177,7 +12736,7 @@ var UINT8_MAX = 255|0; // asm type annotation
 
 module.exports = UINT8_MAX;
 
-},{}],212:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11228,7 +12787,7 @@ var isEven = require( './is_even.js' );
 
 module.exports = isEven;
 
-},{"./is_even.js":213}],213:[function(require,module,exports){
+},{"./is_even.js":214}],214:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11287,7 +12846,7 @@ function isEven( x ) {
 
 module.exports = isEven;
 
-},{"@stdlib/math/base/assert/is-integer":216}],214:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-integer":217}],215:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11338,7 +12897,7 @@ var isInfinite = require( './is_infinite.js' );
 
 module.exports = isInfinite;
 
-},{"./is_infinite.js":215}],215:[function(require,module,exports){
+},{"./is_infinite.js":216}],216:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11398,7 +12957,7 @@ function isInfinite( x ) {
 
 module.exports = isInfinite;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199}],216:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200}],217:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11443,7 +13002,7 @@ var isInteger = require( './is_integer.js' );
 
 module.exports = isInteger;
 
-},{"./is_integer.js":217}],217:[function(require,module,exports){
+},{"./is_integer.js":218}],218:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11494,7 +13053,7 @@ function isInteger( x ) {
 
 module.exports = isInteger;
 
-},{"@stdlib/math/base/special/floor":256}],218:[function(require,module,exports){
+},{"@stdlib/math/base/special/floor":257}],219:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11539,7 +13098,7 @@ var isnan = require( './is_nan.js' );
 
 module.exports = isnan;
 
-},{"./is_nan.js":219}],219:[function(require,module,exports){
+},{"./is_nan.js":220}],220:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11585,7 +13144,7 @@ function isnan( x ) {
 
 module.exports = isnan;
 
-},{}],220:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11636,7 +13195,7 @@ var isOdd = require( './is_odd.js' );
 
 module.exports = isOdd;
 
-},{"./is_odd.js":221}],221:[function(require,module,exports){
+},{"./is_odd.js":222}],222:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11699,7 +13258,7 @@ function isOdd( x ) {
 
 module.exports = isOdd;
 
-},{"@stdlib/math/base/assert/is-even":212}],222:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-even":213}],223:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11747,7 +13306,7 @@ var isPositiveInteger = require( './is_positive_integer.js' );
 
 module.exports = isPositiveInteger;
 
-},{"./is_positive_integer.js":223}],223:[function(require,module,exports){
+},{"./is_positive_integer.js":224}],224:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11802,7 +13361,7 @@ function isPositiveInteger( x ) {
 
 module.exports = isPositiveInteger;
 
-},{"@stdlib/math/base/special/floor":256}],224:[function(require,module,exports){
+},{"@stdlib/math/base/special/floor":257}],225:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11847,7 +13406,7 @@ var isPositiveZero = require( './is_positive_zero.js' );
 
 module.exports = isPositiveZero;
 
-},{"./is_positive_zero.js":225}],225:[function(require,module,exports){
+},{"./is_positive_zero.js":226}],226:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11898,7 +13457,7 @@ function isPositiveZero( x ) {
 
 module.exports = isPositiveZero;
 
-},{"@stdlib/constants/math/float64-pinf":199}],226:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200}],227:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11946,7 +13505,7 @@ var isProbability = require( './is_probability.js' );
 
 module.exports = isProbability;
 
-},{"./is_probability.js":227}],227:[function(require,module,exports){
+},{"./is_probability.js":228}],228:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -11994,7 +13553,7 @@ function isProbability( x ) {
 
 module.exports = isProbability;
 
-},{}],228:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12056,7 +13615,7 @@ function abs( x ) {
 
 module.exports = abs;
 
-},{}],229:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12110,7 +13669,7 @@ var abs = require( './abs.js' );
 
 module.exports = abs;
 
-},{"./abs.js":228}],230:[function(require,module,exports){
+},{"./abs.js":229}],231:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12162,7 +13721,7 @@ var ceil = Math.ceil; // eslint-disable-line stdlib/no-builtin-math
 
 module.exports = ceil;
 
-},{}],231:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12213,7 +13772,7 @@ var ceil = require( './ceil.js' );
 
 module.exports = ceil;
 
-},{"./ceil.js":230}],232:[function(require,module,exports){
+},{"./ceil.js":231}],233:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12311,7 +13870,7 @@ function copysign( x, y ) {
 
 module.exports = copysign;
 
-},{"@stdlib/number/float64/base/from-words":290,"@stdlib/number/float64/base/get-high-word":294,"@stdlib/number/float64/base/to-words":305}],233:[function(require,module,exports){
+},{"@stdlib/number/float64/base/from-words":291,"@stdlib/number/float64/base/get-high-word":295,"@stdlib/number/float64/base/to-words":306}],234:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12365,7 +13924,7 @@ var copysign = require( './copysign.js' );
 
 module.exports = copysign;
 
-},{"./copysign.js":232}],234:[function(require,module,exports){
+},{"./copysign.js":233}],235:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12779,7 +14338,7 @@ function erfc( x ) {
 
 module.exports = erfc;
 
-},{"./polyval_pa.js":236,"./polyval_pp.js":237,"./polyval_qa.js":238,"./polyval_qq.js":239,"./polyval_ra.js":240,"./polyval_rb.js":241,"./polyval_sa.js":242,"./polyval_sb.js":243,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/exp":253,"@stdlib/number/float64/base/set-low-word":302}],235:[function(require,module,exports){
+},{"./polyval_pa.js":237,"./polyval_pp.js":238,"./polyval_qa.js":239,"./polyval_qq.js":240,"./polyval_ra.js":241,"./polyval_rb.js":242,"./polyval_sa.js":243,"./polyval_sb.js":244,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/exp":254,"@stdlib/number/float64/base/set-low-word":303}],236:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12836,7 +14395,7 @@ var erfc = require( './erfc.js' );
 
 module.exports = erfc;
 
-},{"./erfc.js":234}],236:[function(require,module,exports){
+},{"./erfc.js":235}],237:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12886,7 +14445,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],237:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12936,7 +14495,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],238:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -12986,7 +14545,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],239:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13036,7 +14595,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],240:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13086,7 +14645,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13136,7 +14695,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13186,7 +14745,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13236,7 +14795,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13468,7 +15027,7 @@ function erfinv( x ) {
 
 module.exports = erfinv;
 
-},{"./rational_p1q1.js":246,"./rational_p2q2.js":247,"./rational_p3q3.js":248,"./rational_p4q4.js":249,"./rational_p5q5.js":250,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/ln":259,"@stdlib/math/base/special/sqrt":278}],245:[function(require,module,exports){
+},{"./rational_p1q1.js":247,"./rational_p2q2.js":248,"./rational_p3q3.js":249,"./rational_p4q4.js":250,"./rational_p5q5.js":251,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/ln":260,"@stdlib/math/base/special/sqrt":279}],246:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13528,7 +15087,7 @@ var erfinv = require( './erfinv.js' );
 
 module.exports = erfinv;
 
-},{"./erfinv.js":244}],246:[function(require,module,exports){
+},{"./erfinv.js":245}],247:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13595,7 +15154,7 @@ function evalrational( x ) {
 
 module.exports = evalrational;
 
-},{}],247:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13662,7 +15221,7 @@ function evalrational( x ) {
 
 module.exports = evalrational;
 
-},{}],248:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13729,7 +15288,7 @@ function evalrational( x ) {
 
 module.exports = evalrational;
 
-},{}],249:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13796,7 +15355,7 @@ function evalrational( x ) {
 
 module.exports = evalrational;
 
-},{}],250:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -13863,7 +15422,7 @@ function evalrational( x ) {
 
 module.exports = evalrational;
 
-},{}],251:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14071,7 +15630,7 @@ function exp( x ) {
 
 module.exports = exp;
 
-},{"./expmulti.js":252,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/trunc":280}],252:[function(require,module,exports){
+},{"./expmulti.js":253,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/trunc":281}],253:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14142,7 +15701,7 @@ function expmulti( hi, lo, k ) {
 
 module.exports = expmulti;
 
-},{"./polyval_p.js":254,"@stdlib/math/base/special/ldexp":257}],253:[function(require,module,exports){
+},{"./polyval_p.js":255,"@stdlib/math/base/special/ldexp":258}],254:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14193,7 +15752,7 @@ var exp = require( './exp.js' );
 
 module.exports = exp;
 
-},{"./exp.js":251}],254:[function(require,module,exports){
+},{"./exp.js":252}],255:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14243,7 +15802,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],255:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14295,7 +15854,7 @@ var floor = Math.floor; // eslint-disable-line stdlib/no-builtin-math
 
 module.exports = floor;
 
-},{}],256:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14346,7 +15905,7 @@ var floor = require( './floor.js' );
 
 module.exports = floor;
 
-},{"./floor.js":255}],257:[function(require,module,exports){
+},{"./floor.js":256}],258:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14406,7 +15965,7 @@ var ldexp = require( './ldexp.js' );
 
 module.exports = ldexp;
 
-},{"./ldexp.js":258}],258:[function(require,module,exports){
+},{"./ldexp.js":259}],259:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14557,7 +16116,7 @@ function ldexp( frac, exp ) {
 
 module.exports = ldexp;
 
-},{"@stdlib/constants/math/float64-exponent-bias":190,"@stdlib/constants/math/float64-max-base2-exponent":195,"@stdlib/constants/math/float64-max-base2-exponent-subnormal":194,"@stdlib/constants/math/float64-min-base2-exponent-subnormal":197,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-infinite":214,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/copysign":233,"@stdlib/number/float64/base/exponent":288,"@stdlib/number/float64/base/from-words":290,"@stdlib/number/float64/base/normalize":296,"@stdlib/number/float64/base/to-words":305}],259:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-exponent-bias":191,"@stdlib/constants/math/float64-max-base2-exponent":196,"@stdlib/constants/math/float64-max-base2-exponent-subnormal":195,"@stdlib/constants/math/float64-min-base2-exponent-subnormal":198,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-infinite":215,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/copysign":234,"@stdlib/number/float64/base/exponent":289,"@stdlib/number/float64/base/from-words":291,"@stdlib/number/float64/base/normalize":297,"@stdlib/number/float64/base/to-words":306}],260:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14611,7 +16170,7 @@ var ln = require( './ln.js' );
 
 module.exports = ln;
 
-},{"./ln.js":260}],260:[function(require,module,exports){
+},{"./ln.js":261}],261:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14787,7 +16346,7 @@ function ln( x ) {
 
 module.exports = ln;
 
-},{"./polyval_p.js":261,"./polyval_q.js":262,"@stdlib/constants/math/float64-exponent-bias":190,"@stdlib/constants/math/float64-ninf":198,"@stdlib/math/base/assert/is-nan":218,"@stdlib/number/float64/base/get-high-word":294,"@stdlib/number/float64/base/set-high-word":300}],261:[function(require,module,exports){
+},{"./polyval_p.js":262,"./polyval_q.js":263,"@stdlib/constants/math/float64-exponent-bias":191,"@stdlib/constants/math/float64-ninf":199,"@stdlib/math/base/assert/is-nan":219,"@stdlib/number/float64/base/get-high-word":295,"@stdlib/number/float64/base/set-high-word":301}],262:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14837,7 +16396,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],262:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14887,7 +16446,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],263:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -14938,7 +16497,7 @@ var max = require( './max.js' );
 
 module.exports = max;
 
-},{"./max.js":264}],264:[function(require,module,exports){
+},{"./max.js":265}],265:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15042,7 +16601,7 @@ function max( x, y ) {
 
 module.exports = max;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/assert/is-positive-zero":224}],265:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/assert/is-positive-zero":225}],266:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15105,7 +16664,7 @@ var pow = require( './pow.js' );
 
 module.exports = pow;
 
-},{"./pow.js":271}],266:[function(require,module,exports){
+},{"./pow.js":272}],267:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15321,7 +16880,7 @@ function log2ax( out, ax, ahx ) {
 
 module.exports = log2ax;
 
-},{"./polyval_l.js":268,"@stdlib/constants/math/float64-exponent-bias":190,"@stdlib/number/float64/base/get-high-word":294,"@stdlib/number/float64/base/set-high-word":300,"@stdlib/number/float64/base/set-low-word":302}],267:[function(require,module,exports){
+},{"./polyval_l.js":269,"@stdlib/constants/math/float64-exponent-bias":191,"@stdlib/number/float64/base/get-high-word":295,"@stdlib/number/float64/base/set-high-word":301,"@stdlib/number/float64/base/set-low-word":303}],268:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15414,7 +16973,7 @@ function logx( out, ax ) {
 
 module.exports = logx;
 
-},{"./polyval_w.js":270,"@stdlib/number/float64/base/set-low-word":302}],268:[function(require,module,exports){
+},{"./polyval_w.js":271,"@stdlib/number/float64/base/set-low-word":303}],269:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15464,9 +17023,9 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],269:[function(require,module,exports){
-arguments[4][254][0].apply(exports,arguments)
-},{"dup":254}],270:[function(require,module,exports){
+},{}],270:[function(require,module,exports){
+arguments[4][255][0].apply(exports,arguments)
+},{"dup":255}],271:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15516,7 +17075,7 @@ function evalpoly( x ) {
 
 module.exports = evalpoly;
 
-},{}],271:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -15905,7 +17464,7 @@ function pow( x, y ) {
 
 module.exports = pow;
 
-},{"./log2ax.js":266,"./logx.js":267,"./pow2.js":272,"./x_is_zero.js":273,"./y_is_huge.js":274,"./y_is_infinite.js":275,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-infinite":214,"@stdlib/math/base/assert/is-integer":216,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/assert/is-odd":220,"@stdlib/math/base/special/abs":229,"@stdlib/math/base/special/sqrt":278,"@stdlib/number/float64/base/set-low-word":302,"@stdlib/number/float64/base/to-words":305,"@stdlib/number/uint32/base/to-int32":309}],272:[function(require,module,exports){
+},{"./log2ax.js":267,"./logx.js":268,"./pow2.js":273,"./x_is_zero.js":274,"./y_is_huge.js":275,"./y_is_infinite.js":276,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-infinite":215,"@stdlib/math/base/assert/is-integer":217,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/assert/is-odd":221,"@stdlib/math/base/special/abs":230,"@stdlib/math/base/special/sqrt":279,"@stdlib/number/float64/base/set-low-word":303,"@stdlib/number/float64/base/to-words":306,"@stdlib/number/uint32/base/to-int32":310}],273:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16048,7 +17607,7 @@ function pow2( j, hp, lp ) {
 
 module.exports = pow2;
 
-},{"./polyval_p.js":269,"@stdlib/constants/math/float64-exponent-bias":190,"@stdlib/constants/math/float64-ln-two":193,"@stdlib/math/base/special/ldexp":257,"@stdlib/number/float64/base/get-high-word":294,"@stdlib/number/float64/base/set-high-word":300,"@stdlib/number/float64/base/set-low-word":302,"@stdlib/number/uint32/base/to-int32":309}],273:[function(require,module,exports){
+},{"./polyval_p.js":270,"@stdlib/constants/math/float64-exponent-bias":191,"@stdlib/constants/math/float64-ln-two":194,"@stdlib/math/base/special/ldexp":258,"@stdlib/number/float64/base/get-high-word":295,"@stdlib/number/float64/base/set-high-word":301,"@stdlib/number/float64/base/set-low-word":303,"@stdlib/number/uint32/base/to-int32":310}],274:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16150,7 +17709,7 @@ function pow( x, y ) {
 
 module.exports = pow;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-odd":220,"@stdlib/math/base/special/copysign":233}],274:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-odd":221,"@stdlib/math/base/special/copysign":234}],275:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16250,7 +17809,7 @@ function pow( x, y ) {
 
 module.exports = pow;
 
-},{"@stdlib/number/float64/base/get-high-word":294}],275:[function(require,module,exports){
+},{"@stdlib/number/float64/base/get-high-word":295}],276:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16340,7 +17899,7 @@ function pow( x, y ) {
 
 module.exports = pow;
 
-},{"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/special/abs":229}],276:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/special/abs":230}],277:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16394,7 +17953,7 @@ var signum = require( './signum.js' );
 
 module.exports = signum;
 
-},{"./signum.js":277}],277:[function(require,module,exports){
+},{"./signum.js":278}],278:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16460,7 +18019,7 @@ function signum( x ) {
 
 module.exports = signum;
 
-},{"@stdlib/math/base/assert/is-nan":218}],278:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],279:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16514,7 +18073,7 @@ var sqrt = require( './main.js' );
 
 module.exports = sqrt;
 
-},{"./main.js":279}],279:[function(require,module,exports){
+},{"./main.js":280}],280:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16567,7 +18126,7 @@ var sqrt = Math.sqrt; // eslint-disable-line stdlib/no-builtin-math
 
 module.exports = sqrt;
 
-},{}],280:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16627,7 +18186,7 @@ var trunc = require( './trunc.js' );
 
 module.exports = trunc;
 
-},{"./trunc.js":281}],281:[function(require,module,exports){
+},{"./trunc.js":282}],282:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16702,7 +18261,7 @@ function trunc( x ) {
 
 module.exports = trunc;
 
-},{"@stdlib/math/base/special/ceil":231,"@stdlib/math/base/special/floor":256}],282:[function(require,module,exports){
+},{"@stdlib/math/base/special/ceil":232,"@stdlib/math/base/special/floor":257}],283:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16744,7 +18303,7 @@ var uimul = require( './main.js' );
 
 module.exports = uimul;
 
-},{"./main.js":283}],283:[function(require,module,exports){
+},{"./main.js":284}],284:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16879,7 +18438,7 @@ function uimul( a, b ) {
 
 module.exports = uimul;
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -16939,7 +18498,7 @@ var absoluteDifference = require( './main.js' );
 
 module.exports = absoluteDifference;
 
-},{"./main.js":285}],285:[function(require,module,exports){
+},{"./main.js":286}],286:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17023,7 +18582,7 @@ function absoluteDifference( x, y ) {
 
 module.exports = absoluteDifference;
 
-},{"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-infinite":214,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/abs":229}],286:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-infinite":215,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/abs":230}],287:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17065,7 +18624,7 @@ var Number = require( './number.js' );
 
 module.exports = Number;
 
-},{"./number.js":287}],287:[function(require,module,exports){
+},{"./number.js":288}],288:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17090,7 +18649,7 @@ module.exports = Number;
 
 module.exports = Number; // eslint-disable-line stdlib/require-globals
 
-},{}],288:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17141,7 +18700,7 @@ var exponent = require( './main.js' );
 
 module.exports = exponent;
 
-},{"./main.js":289}],289:[function(require,module,exports){
+},{"./main.js":290}],290:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17209,7 +18768,7 @@ function exponent( x ) {
 
 module.exports = exponent;
 
-},{"@stdlib/constants/math/float64-exponent-bias":190,"@stdlib/constants/math/float64-high-word-exponent-mask":191,"@stdlib/number/float64/base/get-high-word":294}],290:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-exponent-bias":191,"@stdlib/constants/math/float64-high-word-exponent-mask":192,"@stdlib/number/float64/base/get-high-word":295}],291:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17269,7 +18828,7 @@ var fromWords = require( './main.js' );
 
 module.exports = fromWords;
 
-},{"./main.js":292}],291:[function(require,module,exports){
+},{"./main.js":293}],292:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17318,7 +18877,7 @@ indices = {
 
 module.exports = indices;
 
-},{"@stdlib/assert/is-little-endian":121}],292:[function(require,module,exports){
+},{"@stdlib/assert/is-little-endian":122}],293:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17442,7 +19001,7 @@ function fromWords( high, low ) {
 
 module.exports = fromWords;
 
-},{"./indices.js":291,"@stdlib/array/float64":6,"@stdlib/array/uint32":24}],293:[function(require,module,exports){
+},{"./indices.js":292,"@stdlib/array/float64":7,"@stdlib/array/uint32":25}],294:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17482,7 +19041,7 @@ if ( isLittleEndian === true ) {
 
 module.exports = HIGH;
 
-},{"@stdlib/assert/is-little-endian":121}],294:[function(require,module,exports){
+},{"@stdlib/assert/is-little-endian":122}],295:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17524,7 +19083,7 @@ var getHighWord = require( './main.js' );
 
 module.exports = getHighWord;
 
-},{"./main.js":295}],295:[function(require,module,exports){
+},{"./main.js":296}],296:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17618,7 +19177,7 @@ function getHighWord( x ) {
 
 module.exports = getHighWord;
 
-},{"./high.js":293,"@stdlib/array/float64":6,"@stdlib/array/uint32":24}],296:[function(require,module,exports){
+},{"./high.js":294,"@stdlib/array/float64":7,"@stdlib/array/uint32":25}],297:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17679,7 +19238,7 @@ var normalize = require( './main.js' );
 
 module.exports = normalize;
 
-},{"./main.js":297}],297:[function(require,module,exports){
+},{"./main.js":298}],298:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17766,7 +19325,7 @@ function normalize( out, x ) {
 
 module.exports = normalize;
 
-},{"./normalize.js":298}],298:[function(require,module,exports){
+},{"./normalize.js":299}],299:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17860,9 +19419,9 @@ function normalize( out, x ) {
 
 module.exports = normalize;
 
-},{"@stdlib/constants/math/float64-smallest-normal":200,"@stdlib/math/base/assert/is-infinite":214,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/abs":229}],299:[function(require,module,exports){
-arguments[4][293][0].apply(exports,arguments)
-},{"@stdlib/assert/is-little-endian":121,"dup":293}],300:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-smallest-normal":201,"@stdlib/math/base/assert/is-infinite":215,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/abs":230}],300:[function(require,module,exports){
+arguments[4][294][0].apply(exports,arguments)
+},{"@stdlib/assert/is-little-endian":122,"dup":294}],301:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -17916,7 +19475,7 @@ var setHighWord = require( './main.js' );
 
 module.exports = setHighWord;
 
-},{"./main.js":301}],301:[function(require,module,exports){
+},{"./main.js":302}],302:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18023,7 +19582,7 @@ function setHighWord( x, high ) {
 
 module.exports = setHighWord;
 
-},{"./high.js":299,"@stdlib/array/float64":6,"@stdlib/array/uint32":24}],302:[function(require,module,exports){
+},{"./high.js":300,"@stdlib/array/float64":7,"@stdlib/array/uint32":25}],303:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18085,7 +19644,7 @@ var setLowWord = require( './main.js' );
 
 module.exports = setLowWord;
 
-},{"./main.js":304}],303:[function(require,module,exports){
+},{"./main.js":305}],304:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18125,7 +19684,7 @@ if ( isLittleEndian === true ) {
 
 module.exports = LOW;
 
-},{"@stdlib/assert/is-little-endian":121}],304:[function(require,module,exports){
+},{"@stdlib/assert/is-little-endian":122}],305:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18240,7 +19799,7 @@ function setLowWord( x, low ) {
 
 module.exports = setLowWord;
 
-},{"./low.js":303,"@stdlib/array/float64":6,"@stdlib/array/uint32":24}],305:[function(require,module,exports){
+},{"./low.js":304,"@stdlib/array/float64":7,"@stdlib/array/uint32":25}],306:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18294,9 +19853,9 @@ var toWords = require( './main.js' );
 
 module.exports = toWords;
 
-},{"./main.js":307}],306:[function(require,module,exports){
-arguments[4][291][0].apply(exports,arguments)
-},{"@stdlib/assert/is-little-endian":121,"dup":291}],307:[function(require,module,exports){
+},{"./main.js":308}],307:[function(require,module,exports){
+arguments[4][292][0].apply(exports,arguments)
+},{"@stdlib/assert/is-little-endian":122,"dup":292}],308:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18358,7 +19917,7 @@ function toWords( out, x ) {
 
 module.exports = toWords;
 
-},{"./to_words.js":308}],308:[function(require,module,exports){
+},{"./to_words.js":309}],309:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18467,7 +20026,7 @@ function toWords( out, x ) {
 
 module.exports = toWords;
 
-},{"./indices.js":306,"@stdlib/array/float64":6,"@stdlib/array/uint32":24}],309:[function(require,module,exports){
+},{"./indices.js":307,"@stdlib/array/float64":7,"@stdlib/array/uint32":25}],310:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18513,7 +20072,7 @@ var uint32ToInt32 = require( './main.js' );
 
 module.exports = uint32ToInt32;
 
-},{"./main.js":310}],310:[function(require,module,exports){
+},{"./main.js":311}],311:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18562,7 +20121,7 @@ function uint32ToInt32( x ) {
 
 module.exports = uint32ToInt32;
 
-},{}],311:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18830,7 +20389,7 @@ function factory() {
 
 module.exports = factory;
 
-},{"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-function":107,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-probability":151,"@stdlib/math/base/assert/is-nan":218,"@stdlib/random/base/mt19937":344,"@stdlib/utils/constant-function":410,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421,"@stdlib/utils/noop":465}],312:[function(require,module,exports){
+},{"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-function":108,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-probability":152,"@stdlib/math/base/assert/is-nan":219,"@stdlib/random/base/mt19937":345,"@stdlib/utils/constant-function":411,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422,"@stdlib/utils/noop":466}],313:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18899,7 +20458,7 @@ setReadOnly( bernoulli, 'factory', factory );
 
 module.exports = bernoulli;
 
-},{"./factory.js":311,"./main.js":313,"@stdlib/utils/define-nonenumerable-read-only-property":419}],313:[function(require,module,exports){
+},{"./factory.js":312,"./main.js":314,"@stdlib/utils/define-nonenumerable-read-only-property":420}],314:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -18958,7 +20517,7 @@ var bernoulli = factory();
 
 module.exports = bernoulli;
 
-},{"./factory.js":311}],314:[function(require,module,exports){
+},{"./factory.js":312}],315:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19011,7 +20570,7 @@ function sample( rand, n, p ) {
 
 module.exports = sample;
 
-},{"./sample1.js":319,"./sample2.js":320}],315:[function(require,module,exports){
+},{"./sample1.js":320,"./sample2.js":321}],316:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19092,7 +20651,7 @@ function correction( k ) {
 
 module.exports = correction;
 
-},{"@stdlib/math/base/special/pow":265}],316:[function(require,module,exports){
+},{"@stdlib/math/base/special/pow":266}],317:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19372,7 +20931,7 @@ function factory() {
 
 module.exports = factory;
 
-},{"./binomial.js":314,"./validate.js":321,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-function":107,"@stdlib/assert/is-plain-object":141,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/assert/is-positive-integer":222,"@stdlib/math/base/assert/is-probability":226,"@stdlib/random/base/mt19937":344,"@stdlib/utils/constant-function":410,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421,"@stdlib/utils/noop":465}],317:[function(require,module,exports){
+},{"./binomial.js":315,"./validate.js":322,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-function":108,"@stdlib/assert/is-plain-object":142,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/assert/is-positive-integer":223,"@stdlib/math/base/assert/is-probability":227,"@stdlib/random/base/mt19937":345,"@stdlib/utils/constant-function":411,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422,"@stdlib/utils/noop":466}],318:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19431,7 +20990,7 @@ setReadOnly( binomial, 'factory', factory );
 
 module.exports = binomial;
 
-},{"./factory.js":316,"./main.js":318,"@stdlib/utils/define-nonenumerable-read-only-property":419}],318:[function(require,module,exports){
+},{"./factory.js":317,"./main.js":319,"@stdlib/utils/define-nonenumerable-read-only-property":420}],319:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19492,7 +21051,7 @@ var binomial = factory();
 
 module.exports = binomial;
 
-},{"./factory.js":316}],319:[function(require,module,exports){
+},{"./factory.js":317}],320:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19538,7 +21097,7 @@ function sample( rand, n, p ) {
 
 module.exports = sample;
 
-},{}],320:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19707,7 +21266,7 @@ function sample( rand, n, p ) {
 
 module.exports = sample;
 
-},{"./correction.js":315,"@stdlib/math/base/special/abs":229,"@stdlib/math/base/special/floor":256,"@stdlib/math/base/special/ln":259,"@stdlib/math/base/special/signum":276,"@stdlib/math/base/special/sqrt":278}],321:[function(require,module,exports){
+},{"./correction.js":316,"@stdlib/math/base/special/abs":230,"@stdlib/math/base/special/floor":257,"@stdlib/math/base/special/ln":260,"@stdlib/math/base/special/signum":277,"@stdlib/math/base/special/sqrt":279}],322:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19765,7 +21324,7 @@ function validate( n, p ) {
 
 module.exports = validate;
 
-},{"@stdlib/assert/is-positive-integer":143,"@stdlib/assert/is-probability":151}],322:[function(require,module,exports){
+},{"@stdlib/assert/is-positive-integer":144,"@stdlib/assert/is-probability":152}],323:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -19835,7 +21394,7 @@ function coordsArray( N, rTail ) {
 
 module.exports = coordsArray;
 
-},{"@stdlib/math/base/special/exp":253,"@stdlib/math/base/special/ln":259,"@stdlib/math/base/special/sqrt":278}],323:[function(require,module,exports){
+},{"@stdlib/math/base/special/exp":254,"@stdlib/math/base/special/ln":260,"@stdlib/math/base/special/sqrt":279}],324:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20072,7 +21631,7 @@ function factory( options ) {
 
 module.exports = factory;
 
-},{"./improved_ziggurat.js":324,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-function":107,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-uint32array":167,"@stdlib/constants/math/uint32-max":210,"@stdlib/math/base/special/floor":256,"@stdlib/random/base/mt19937":344,"@stdlib/utils/constant-function":410,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421,"@stdlib/utils/noop":465}],324:[function(require,module,exports){
+},{"./improved_ziggurat.js":325,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-function":108,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-uint32array":168,"@stdlib/constants/math/uint32-max":211,"@stdlib/math/base/special/floor":257,"@stdlib/random/base/mt19937":345,"@stdlib/utils/constant-function":411,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422,"@stdlib/utils/noop":466}],325:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20181,7 +21740,7 @@ function wrap( randu, randi ) {
 
 module.exports = wrap;
 
-},{"./coords_array.js":322,"./ratio_array.js":327,"./sample_tail.js":328,"@stdlib/math/base/special/abs":229,"@stdlib/math/base/special/exp":253}],325:[function(require,module,exports){
+},{"./coords_array.js":323,"./ratio_array.js":328,"./sample_tail.js":329,"@stdlib/math/base/special/abs":230,"@stdlib/math/base/special/exp":254}],326:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20240,7 +21799,7 @@ setReadOnly( randn, 'factory', factory );
 
 module.exports = randn;
 
-},{"./factory.js":323,"./main.js":326,"@stdlib/utils/define-nonenumerable-read-only-property":419}],326:[function(require,module,exports){
+},{"./factory.js":324,"./main.js":327,"@stdlib/utils/define-nonenumerable-read-only-property":420}],327:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20320,7 +21879,7 @@ var randn = factory();
 
 module.exports = randn;
 
-},{"./factory.js":323}],327:[function(require,module,exports){
+},{"./factory.js":324}],328:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20370,7 +21929,7 @@ function ratioArray( X ) {
 
 module.exports = ratioArray;
 
-},{}],328:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20426,7 +21985,7 @@ function sampleTail( rand, rTail, isNegative ) {
 
 module.exports = sampleTail;
 
-},{"@stdlib/math/base/special/ln":259}],329:[function(require,module,exports){
+},{"@stdlib/math/base/special/ln":260}],330:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20707,7 +22266,7 @@ function factory() {
 
 module.exports = factory;
 
-},{"./lognormal.js":331,"./validate.js":333,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-function":107,"@stdlib/assert/is-plain-object":141,"@stdlib/math/base/assert/is-nan":218,"@stdlib/random/base/improved-ziggurat":325,"@stdlib/utils/constant-function":410,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421,"@stdlib/utils/noop":465}],330:[function(require,module,exports){
+},{"./lognormal.js":332,"./validate.js":334,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-function":108,"@stdlib/assert/is-plain-object":142,"@stdlib/math/base/assert/is-nan":219,"@stdlib/random/base/improved-ziggurat":326,"@stdlib/utils/constant-function":411,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422,"@stdlib/utils/noop":466}],331:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20774,7 +22333,7 @@ setReadOnly( lognormal, 'factory', factory );
 
 module.exports = lognormal;
 
-},{"./factory.js":329,"./main.js":332,"@stdlib/utils/define-nonenumerable-read-only-property":419}],331:[function(require,module,exports){
+},{"./factory.js":330,"./main.js":333,"@stdlib/utils/define-nonenumerable-read-only-property":420}],332:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20820,7 +22379,7 @@ function lognormal( randn, mu, sigma ) {
 
 module.exports = lognormal;
 
-},{"@stdlib/math/base/special/exp":253}],332:[function(require,module,exports){
+},{"@stdlib/math/base/special/exp":254}],333:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20872,7 +22431,7 @@ var lognormal = factory();
 
 module.exports = lognormal;
 
-},{"./factory.js":329}],333:[function(require,module,exports){
+},{"./factory.js":330}],334:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20931,7 +22490,7 @@ function validate( mu, sigma ) {
 
 module.exports = validate;
 
-},{"@stdlib/assert/is-nan":123,"@stdlib/assert/is-number":131,"@stdlib/assert/is-positive-number":147}],334:[function(require,module,exports){
+},{"@stdlib/assert/is-nan":124,"@stdlib/assert/is-number":132,"@stdlib/assert/is-positive-number":148}],335:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -20999,7 +22558,7 @@ function createTable( rand, table, N ) {
 
 module.exports = createTable;
 
-},{"@stdlib/math/base/assert/is-nan":218}],335:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],336:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -21472,7 +23031,7 @@ function factory( options ) {
 
 module.exports = factory;
 
-},{"./create_table.js":334,"./rand_int32.js":338,"@stdlib/array/int32":11,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-collection":95,"@stdlib/assert/is-int32array":111,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-positive-integer":143,"@stdlib/blas/base/gcopy":177,"@stdlib/constants/math/int32-max":205,"@stdlib/math/base/special/floor":256,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421}],336:[function(require,module,exports){
+},{"./create_table.js":335,"./rand_int32.js":339,"@stdlib/array/int32":12,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-collection":96,"@stdlib/assert/is-int32array":112,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-positive-integer":144,"@stdlib/blas/base/gcopy":178,"@stdlib/constants/math/int32-max":206,"@stdlib/math/base/special/floor":257,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422}],337:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -21531,7 +23090,7 @@ setReadOnly( minstd, 'factory', factory );
 
 module.exports = minstd;
 
-},{"./factory.js":335,"./main.js":337,"@stdlib/utils/define-nonenumerable-read-only-property":419}],337:[function(require,module,exports){
+},{"./factory.js":336,"./main.js":338,"@stdlib/utils/define-nonenumerable-read-only-property":420}],338:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -21641,7 +23200,7 @@ var minstd = factory({
 
 module.exports = minstd;
 
-},{"./factory.js":335,"./rand_int32.js":338}],338:[function(require,module,exports){
+},{"./factory.js":336,"./rand_int32.js":339}],339:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -21695,7 +23254,7 @@ function randint32() {
 
 module.exports = randint32;
 
-},{"@stdlib/constants/math/int32-max":205,"@stdlib/math/base/special/floor":256}],339:[function(require,module,exports){
+},{"@stdlib/constants/math/int32-max":206,"@stdlib/math/base/special/floor":257}],340:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -22112,7 +23671,7 @@ function factory( options ) {
 
 module.exports = factory;
 
-},{"./rand_int32.js":342,"@stdlib/array/int32":11,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-collection":95,"@stdlib/assert/is-int32array":111,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-positive-integer":143,"@stdlib/blas/base/gcopy":177,"@stdlib/constants/math/int32-max":205,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421}],340:[function(require,module,exports){
+},{"./rand_int32.js":343,"@stdlib/array/int32":12,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-collection":96,"@stdlib/assert/is-int32array":112,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-positive-integer":144,"@stdlib/blas/base/gcopy":178,"@stdlib/constants/math/int32-max":206,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422}],341:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -22171,7 +23730,7 @@ setReadOnly( minstd, 'factory', factory );
 
 module.exports = minstd;
 
-},{"./factory.js":339,"./main.js":341,"@stdlib/utils/define-nonenumerable-read-only-property":419}],341:[function(require,module,exports){
+},{"./factory.js":340,"./main.js":342,"@stdlib/utils/define-nonenumerable-read-only-property":420}],342:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -22278,9 +23837,9 @@ var minstd = factory({
 
 module.exports = minstd;
 
-},{"./factory.js":339,"./rand_int32.js":342}],342:[function(require,module,exports){
-arguments[4][338][0].apply(exports,arguments)
-},{"@stdlib/constants/math/int32-max":205,"@stdlib/math/base/special/floor":256,"dup":338}],343:[function(require,module,exports){
+},{"./factory.js":340,"./rand_int32.js":343}],343:[function(require,module,exports){
+arguments[4][339][0].apply(exports,arguments)
+},{"@stdlib/constants/math/int32-max":206,"@stdlib/math/base/special/floor":257,"dup":339}],344:[function(require,module,exports){
 /* eslint-disable max-lines, max-len */
 
 /**
@@ -22979,7 +24538,7 @@ function factory( options ) {
 
 module.exports = factory;
 
-},{"./rand_uint32.js":346,"@stdlib/array/to-json":18,"@stdlib/array/uint32":24,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-collection":95,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-positive-integer":143,"@stdlib/assert/is-uint32array":167,"@stdlib/blas/base/gcopy":177,"@stdlib/constants/math/float64-max-safe-integer":196,"@stdlib/constants/math/uint32-max":210,"@stdlib/math/base/special/max":263,"@stdlib/math/base/special/uimul":282,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421}],344:[function(require,module,exports){
+},{"./rand_uint32.js":347,"@stdlib/array/to-json":19,"@stdlib/array/uint32":25,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-collection":96,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-positive-integer":144,"@stdlib/assert/is-uint32array":168,"@stdlib/blas/base/gcopy":178,"@stdlib/constants/math/float64-max-safe-integer":197,"@stdlib/constants/math/uint32-max":211,"@stdlib/math/base/special/max":264,"@stdlib/math/base/special/uimul":283,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422}],345:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23038,7 +24597,7 @@ setReadOnly( mt19937, 'factory', factory );
 
 module.exports = mt19937;
 
-},{"./factory.js":343,"./main.js":345,"@stdlib/utils/define-nonenumerable-read-only-property":419}],345:[function(require,module,exports){
+},{"./factory.js":344,"./main.js":346,"@stdlib/utils/define-nonenumerable-read-only-property":420}],346:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23146,7 +24705,7 @@ var mt19937 = factory({
 
 module.exports = mt19937;
 
-},{"./factory.js":343,"./rand_uint32.js":346}],346:[function(require,module,exports){
+},{"./factory.js":344,"./rand_uint32.js":347}],347:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23200,13 +24759,13 @@ function randuint32() {
 
 module.exports = randuint32;
 
-},{"@stdlib/constants/math/uint32-max":210,"@stdlib/math/base/special/floor":256}],347:[function(require,module,exports){
+},{"@stdlib/constants/math/uint32-max":211,"@stdlib/math/base/special/floor":257}],348:[function(require,module,exports){
 module.exports={
 	"name": "mt19937",
 	"copy": true
 }
 
-},{}],348:[function(require,module,exports){
+},{}],349:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23447,7 +25006,7 @@ function factory( options ) {
 
 module.exports = factory;
 
-},{"./defaults.json":347,"./prngs.js":351,"@stdlib/array/to-json":18,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-plain-object":141,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-nonenumerable-read-write-accessor":421}],349:[function(require,module,exports){
+},{"./defaults.json":348,"./prngs.js":352,"@stdlib/array/to-json":19,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-plain-object":142,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-nonenumerable-read-write-accessor":422}],350:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23507,7 +25066,7 @@ setReadOnly( randu, 'factory', factory );
 
 module.exports = randu;
 
-},{"./factory.js":348,"./main.js":350,"@stdlib/utils/define-nonenumerable-read-only-property":419}],350:[function(require,module,exports){
+},{"./factory.js":349,"./main.js":351,"@stdlib/utils/define-nonenumerable-read-only-property":420}],351:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23553,7 +25112,7 @@ var randu = factory();
 
 module.exports = randu;
 
-},{"./factory.js":348}],351:[function(require,module,exports){
+},{"./factory.js":349}],352:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23587,13 +25146,13 @@ prngs[ 'mt19937' ] = require( '@stdlib/random/base/mt19937' );
 
 module.exports = prngs;
 
-},{"@stdlib/random/base/minstd":340,"@stdlib/random/base/minstd-shuffle":336,"@stdlib/random/base/mt19937":344}],352:[function(require,module,exports){
+},{"@stdlib/random/base/minstd":341,"@stdlib/random/base/minstd-shuffle":337,"@stdlib/random/base/mt19937":345}],353:[function(require,module,exports){
 module.exports={
 	"mutate": false,
 	"replace": true
 }
 
-},{}],353:[function(require,module,exports){
+},{}],354:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23650,7 +25209,7 @@ function discreteUniform( x, size, rand ) {
 
 module.exports = discreteUniform;
 
-},{"@stdlib/math/base/special/floor":256}],354:[function(require,module,exports){
+},{"@stdlib/math/base/special/floor":257}],355:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -23981,7 +25540,7 @@ function factory() {
 
 module.exports = factory;
 
-},{"./defaults.json":352,"./discrete_uniform.js":353,"./fisher_yates.js":355,"./renormalizing.js":357,"./validate.js":359,"./vose.js":360,"@stdlib/assert/is-array-like":83,"@stdlib/assert/is-string":155,"@stdlib/random/base/mt19937":344,"@stdlib/utils/copy":415,"@stdlib/utils/define-nonenumerable-read-only-property":419}],355:[function(require,module,exports){
+},{"./defaults.json":353,"./discrete_uniform.js":354,"./fisher_yates.js":356,"./renormalizing.js":358,"./validate.js":360,"./vose.js":361,"@stdlib/assert/is-array-like":84,"@stdlib/assert/is-string":156,"@stdlib/random/base/mt19937":345,"@stdlib/utils/copy":416,"@stdlib/utils/define-nonenumerable-read-only-property":420}],356:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24053,7 +25612,7 @@ function fisherYates( x, size, rand ) {
 
 module.exports = fisherYates;
 
-},{"@stdlib/math/base/special/floor":256}],356:[function(require,module,exports){
+},{"@stdlib/math/base/special/floor":257}],357:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24119,7 +25678,7 @@ setReadOnly( sample, 'factory', factory );
 
 module.exports = sample;
 
-},{"./factory.js":354,"./sample.js":358,"@stdlib/utils/define-nonenumerable-read-only-property":419}],357:[function(require,module,exports){
+},{"./factory.js":355,"./sample.js":359,"@stdlib/utils/define-nonenumerable-read-only-property":420}],358:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24197,7 +25756,7 @@ function renormalizing( x, size, rand, probabilities ) {
 
 module.exports = renormalizing;
 
-},{}],358:[function(require,module,exports){
+},{}],359:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24252,7 +25811,7 @@ var sample = factory();
 
 module.exports = sample;
 
-},{"./factory.js":354}],359:[function(require,module,exports){
+},{"./factory.js":355}],360:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24345,7 +25904,7 @@ function validate( opts, options ) {
 
 module.exports = validate;
 
-},{"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-boolean":87,"@stdlib/assert/is-nonnegative-integer":127,"@stdlib/assert/is-plain-object":141,"@stdlib/assert/is-unity-probability-array":173}],360:[function(require,module,exports){
+},{"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-boolean":88,"@stdlib/assert/is-nonnegative-integer":128,"@stdlib/assert/is-plain-object":142,"@stdlib/assert/is-unity-probability-array":174}],361:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24453,7 +26012,7 @@ function vose( x, size, rand, probabilities ) {
 
 module.exports = vose;
 
-},{"@stdlib/math/base/special/floor":256}],361:[function(require,module,exports){
+},{"@stdlib/math/base/special/floor":257}],362:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24537,7 +26096,7 @@ var RE_FUNCTION_NAME = /^\s*function\s*([^(]*)/i;
 
 module.exports = RE_FUNCTION_NAME;
 
-},{}],362:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24627,7 +26186,7 @@ var RE_REGEXP = /^\/((?:\\\/|[^\/])+)\/([imgy]*)$/; // eslint-disable-line no-us
 
 module.exports = RE_REGEXP;
 
-},{}],363:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24694,7 +26253,7 @@ function cdf( x, mu ) {
 
 module.exports = cdf;
 
-},{"@stdlib/math/base/assert/is-nan":218}],364:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],365:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24771,7 +26330,7 @@ function factory( mu ) {
 
 module.exports = factory;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/utils/constant-function":410}],365:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/utils/constant-function":411}],366:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24831,7 +26390,7 @@ setReadOnly( cdf, 'factory', factory );
 
 module.exports = cdf;
 
-},{"./cdf.js":363,"./factory.js":364,"@stdlib/utils/define-nonenumerable-read-only-property":419}],366:[function(require,module,exports){
+},{"./cdf.js":364,"./factory.js":365,"@stdlib/utils/define-nonenumerable-read-only-property":420}],367:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24907,7 +26466,7 @@ function factory( mu ) {
 
 module.exports = factory;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/utils/constant-function":410}],367:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/utils/constant-function":411}],368:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -24964,7 +26523,7 @@ setReadOnly( logpdf, 'factory', factory );
 
 module.exports = logpdf;
 
-},{"./factory.js":366,"./logpdf.js":368,"@stdlib/utils/define-nonenumerable-read-only-property":419}],368:[function(require,module,exports){
+},{"./factory.js":367,"./logpdf.js":369,"@stdlib/utils/define-nonenumerable-read-only-property":420}],369:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25029,7 +26588,7 @@ function logpdf( x, mu ) {
 
 module.exports = logpdf;
 
-},{"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218}],369:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219}],370:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25104,7 +26663,7 @@ function factory( mu ) {
 
 module.exports = factory;
 
-},{"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/utils/constant-function":410}],370:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/utils/constant-function":411}],371:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25161,7 +26720,7 @@ setReadOnly( pdf, 'factory', factory );
 
 module.exports = pdf;
 
-},{"./factory.js":369,"./pdf.js":371,"@stdlib/utils/define-nonenumerable-read-only-property":419}],371:[function(require,module,exports){
+},{"./factory.js":370,"./pdf.js":372,"@stdlib/utils/define-nonenumerable-read-only-property":420}],372:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25225,7 +26784,7 @@ function pdf( x, mu ) {
 
 module.exports = pdf;
 
-},{"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218}],372:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219}],373:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25302,7 +26861,7 @@ function factory( mu ) {
 
 module.exports = factory;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/utils/constant-function":410}],373:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/utils/constant-function":411}],374:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25359,7 +26918,7 @@ setReadOnly( quantile, 'factory', factory );
 
 module.exports = quantile;
 
-},{"./factory.js":372,"./quantile.js":374,"@stdlib/utils/define-nonenumerable-read-only-property":419}],374:[function(require,module,exports){
+},{"./factory.js":373,"./quantile.js":375,"@stdlib/utils/define-nonenumerable-read-only-property":420}],375:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25430,7 +26989,7 @@ function quantile( p, mu ) {
 
 module.exports = quantile;
 
-},{"@stdlib/math/base/assert/is-nan":218}],375:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],376:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25521,7 +27080,7 @@ function cdf( x, mu, sigma ) {
 
 module.exports = cdf;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/erfc":235,"@stdlib/math/base/special/sqrt":278}],376:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/erfc":236,"@stdlib/math/base/special/sqrt":279}],377:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25609,7 +27168,7 @@ function factory( mu, sigma ) {
 
 module.exports = factory;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/erfc":235,"@stdlib/math/base/special/sqrt":278,"@stdlib/stats/base/dists/degenerate/cdf":365,"@stdlib/utils/constant-function":410}],377:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/erfc":236,"@stdlib/math/base/special/sqrt":279,"@stdlib/stats/base/dists/degenerate/cdf":366,"@stdlib/utils/constant-function":411}],378:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -25662,7 +27221,7 @@ setReadOnly( cdf, 'factory', factory );
 
 module.exports = cdf;
 
-},{"./cdf.js":375,"./factory.js":376,"@stdlib/utils/define-nonenumerable-read-only-property":419}],378:[function(require,module,exports){
+},{"./cdf.js":376,"./factory.js":377,"@stdlib/utils/define-nonenumerable-read-only-property":420}],379:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26076,7 +27635,7 @@ setReadOnly( Normal.prototype, 'quantile', normalQuantile );
 
 module.exports = Normal;
 
-},{"@stdlib/assert/is-nan":123,"@stdlib/assert/is-number":131,"@stdlib/assert/is-positive-number":147,"@stdlib/stats/base/dists/normal/cdf":377,"@stdlib/stats/base/dists/normal/entropy":381,"@stdlib/stats/base/dists/normal/kurtosis":382,"@stdlib/stats/base/dists/normal/logpdf":386,"@stdlib/stats/base/dists/normal/mean":388,"@stdlib/stats/base/dists/normal/median":390,"@stdlib/stats/base/dists/normal/mgf":393,"@stdlib/stats/base/dists/normal/mode":395,"@stdlib/stats/base/dists/normal/pdf":398,"@stdlib/stats/base/dists/normal/quantile":401,"@stdlib/stats/base/dists/normal/skewness":403,"@stdlib/stats/base/dists/normal/stdev":405,"@stdlib/stats/base/dists/normal/variance":407,"@stdlib/utils/define-nonenumerable-read-only-accessor":417,"@stdlib/utils/define-nonenumerable-read-only-property":419,"@stdlib/utils/define-property":424}],379:[function(require,module,exports){
+},{"@stdlib/assert/is-nan":124,"@stdlib/assert/is-number":132,"@stdlib/assert/is-positive-number":148,"@stdlib/stats/base/dists/normal/cdf":378,"@stdlib/stats/base/dists/normal/entropy":382,"@stdlib/stats/base/dists/normal/kurtosis":383,"@stdlib/stats/base/dists/normal/logpdf":387,"@stdlib/stats/base/dists/normal/mean":389,"@stdlib/stats/base/dists/normal/median":391,"@stdlib/stats/base/dists/normal/mgf":394,"@stdlib/stats/base/dists/normal/mode":396,"@stdlib/stats/base/dists/normal/pdf":399,"@stdlib/stats/base/dists/normal/quantile":402,"@stdlib/stats/base/dists/normal/skewness":404,"@stdlib/stats/base/dists/normal/stdev":406,"@stdlib/stats/base/dists/normal/variance":408,"@stdlib/utils/define-nonenumerable-read-only-accessor":418,"@stdlib/utils/define-nonenumerable-read-only-property":420,"@stdlib/utils/define-property":425}],380:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26123,7 +27682,7 @@ var ctor = require( './ctor.js' );
 
 module.exports = ctor;
 
-},{"./ctor.js":378}],380:[function(require,module,exports){
+},{"./ctor.js":379}],381:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26197,7 +27756,7 @@ function entropy( mu, sigma ) {
 
 module.exports = entropy;
 
-},{"@stdlib/constants/math/float64-e":189,"@stdlib/constants/math/float64-two-pi":202,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/ln":259}],381:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-e":190,"@stdlib/constants/math/float64-two-pi":203,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/ln":260}],382:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26242,7 +27801,7 @@ var entropy = require( './entropy.js' );
 
 module.exports = entropy;
 
-},{"./entropy.js":380}],382:[function(require,module,exports){
+},{"./entropy.js":381}],383:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26287,7 +27846,7 @@ var kurtosis = require( './kurtosis.js' );
 
 module.exports = kurtosis;
 
-},{"./kurtosis.js":383}],383:[function(require,module,exports){
+},{"./kurtosis.js":384}],384:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26358,7 +27917,7 @@ function kurtosis( mu, sigma ) {
 
 module.exports = kurtosis;
 
-},{"@stdlib/math/base/assert/is-nan":218}],384:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],385:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26528,7 +28087,7 @@ setReadOnly( normal, 'variance', require( '@stdlib/stats/base/dists/normal/varia
 
 module.exports = normal;
 
-},{"@stdlib/stats/base/dists/normal/cdf":377,"@stdlib/stats/base/dists/normal/ctor":379,"@stdlib/stats/base/dists/normal/entropy":381,"@stdlib/stats/base/dists/normal/kurtosis":382,"@stdlib/stats/base/dists/normal/logpdf":386,"@stdlib/stats/base/dists/normal/mean":388,"@stdlib/stats/base/dists/normal/median":390,"@stdlib/stats/base/dists/normal/mgf":393,"@stdlib/stats/base/dists/normal/mode":395,"@stdlib/stats/base/dists/normal/pdf":398,"@stdlib/stats/base/dists/normal/quantile":401,"@stdlib/stats/base/dists/normal/skewness":403,"@stdlib/stats/base/dists/normal/stdev":405,"@stdlib/stats/base/dists/normal/variance":407,"@stdlib/utils/define-read-only-property":426}],385:[function(require,module,exports){
+},{"@stdlib/stats/base/dists/normal/cdf":378,"@stdlib/stats/base/dists/normal/ctor":380,"@stdlib/stats/base/dists/normal/entropy":382,"@stdlib/stats/base/dists/normal/kurtosis":383,"@stdlib/stats/base/dists/normal/logpdf":387,"@stdlib/stats/base/dists/normal/mean":389,"@stdlib/stats/base/dists/normal/median":391,"@stdlib/stats/base/dists/normal/mgf":394,"@stdlib/stats/base/dists/normal/mode":396,"@stdlib/stats/base/dists/normal/pdf":399,"@stdlib/stats/base/dists/normal/quantile":402,"@stdlib/stats/base/dists/normal/skewness":404,"@stdlib/stats/base/dists/normal/stdev":406,"@stdlib/stats/base/dists/normal/variance":408,"@stdlib/utils/define-read-only-property":427}],386:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26616,7 +28175,7 @@ function factory( mu, sigma ) {
 
 module.exports = factory;
 
-},{"@stdlib/constants/math/float64-ln-two-pi":192,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/ln":259,"@stdlib/math/base/special/pow":265,"@stdlib/stats/base/dists/degenerate/logpdf":367,"@stdlib/utils/constant-function":410}],386:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ln-two-pi":193,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/ln":260,"@stdlib/math/base/special/pow":266,"@stdlib/stats/base/dists/degenerate/logpdf":368,"@stdlib/utils/constant-function":411}],387:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26669,7 +28228,7 @@ setReadOnly( logpdf, 'factory', factory );
 
 module.exports = logpdf;
 
-},{"./factory.js":385,"./logpdf.js":387,"@stdlib/utils/define-nonenumerable-read-only-property":419}],387:[function(require,module,exports){
+},{"./factory.js":386,"./logpdf.js":388,"@stdlib/utils/define-nonenumerable-read-only-property":420}],388:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26769,7 +28328,7 @@ function logpdf( x, mu, sigma ) {
 
 module.exports = logpdf;
 
-},{"@stdlib/constants/math/float64-ln-two-pi":192,"@stdlib/constants/math/float64-ninf":198,"@stdlib/constants/math/float64-pinf":199,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/ln":259,"@stdlib/math/base/special/pow":265}],388:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-ln-two-pi":193,"@stdlib/constants/math/float64-ninf":199,"@stdlib/constants/math/float64-pinf":200,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/ln":260,"@stdlib/math/base/special/pow":266}],389:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26814,7 +28373,7 @@ var mean = require( './mean.js' );
 
 module.exports = mean;
 
-},{"./mean.js":389}],389:[function(require,module,exports){
+},{"./mean.js":390}],390:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26885,7 +28444,7 @@ function mean( mu, sigma ) {
 
 module.exports = mean;
 
-},{"@stdlib/math/base/assert/is-nan":218}],390:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],391:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -26930,7 +28489,7 @@ var median = require( './median.js' );
 
 module.exports = median;
 
-},{"./median.js":391}],391:[function(require,module,exports){
+},{"./median.js":392}],392:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27001,7 +28560,7 @@ function median( mu, sigma ) {
 
 module.exports = median;
 
-},{"@stdlib/math/base/assert/is-nan":218}],392:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],393:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27082,7 +28641,7 @@ function factory( mu, sigma ) {
 
 module.exports = factory;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/exp":253,"@stdlib/math/base/special/pow":265,"@stdlib/utils/constant-function":410}],393:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/exp":254,"@stdlib/math/base/special/pow":266,"@stdlib/utils/constant-function":411}],394:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27145,7 +28704,7 @@ setReadOnly( mgf, 'factory', factory );
 
 module.exports = mgf;
 
-},{"./factory.js":392,"./mgf.js":394,"@stdlib/utils/define-nonenumerable-read-only-property":419}],394:[function(require,module,exports){
+},{"./factory.js":393,"./mgf.js":395,"@stdlib/utils/define-nonenumerable-read-only-property":420}],395:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27228,7 +28787,7 @@ function mgf( t, mu, sigma ) {
 
 module.exports = mgf;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/exp":253,"@stdlib/math/base/special/pow":265}],395:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/exp":254,"@stdlib/math/base/special/pow":266}],396:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27273,7 +28832,7 @@ var mode = require( './mode.js' );
 
 module.exports = mode;
 
-},{"./mode.js":396}],396:[function(require,module,exports){
+},{"./mode.js":397}],397:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27344,7 +28903,7 @@ function mode( mu, sigma ) {
 
 module.exports = mode;
 
-},{"@stdlib/math/base/assert/is-nan":218}],397:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],398:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27436,7 +28995,7 @@ function factory( mu, sigma ) {
 
 module.exports = factory;
 
-},{"@stdlib/constants/math/float64-two-pi":202,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/exp":253,"@stdlib/math/base/special/pow":265,"@stdlib/math/base/special/sqrt":278,"@stdlib/stats/base/dists/degenerate/pdf":370,"@stdlib/utils/constant-function":410}],398:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-two-pi":203,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/exp":254,"@stdlib/math/base/special/pow":266,"@stdlib/math/base/special/sqrt":279,"@stdlib/stats/base/dists/degenerate/pdf":371,"@stdlib/utils/constant-function":411}],399:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27489,7 +29048,7 @@ setReadOnly( pdf, 'factory', factory );
 
 module.exports = pdf;
 
-},{"./factory.js":397,"./pdf.js":399,"@stdlib/utils/define-nonenumerable-read-only-property":419}],399:[function(require,module,exports){
+},{"./factory.js":398,"./pdf.js":400,"@stdlib/utils/define-nonenumerable-read-only-property":420}],400:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27589,7 +29148,7 @@ function pdf( x, mu, sigma ) {
 
 module.exports = pdf;
 
-},{"@stdlib/constants/math/float64-pinf":199,"@stdlib/constants/math/float64-two-pi":202,"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/exp":253,"@stdlib/math/base/special/pow":265,"@stdlib/math/base/special/sqrt":278}],400:[function(require,module,exports){
+},{"@stdlib/constants/math/float64-pinf":200,"@stdlib/constants/math/float64-two-pi":203,"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/exp":254,"@stdlib/math/base/special/pow":266,"@stdlib/math/base/special/sqrt":279}],401:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27673,7 +29232,7 @@ function factory( mu, sigma ) {
 
 module.exports = factory;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/erfinv":245,"@stdlib/math/base/special/sqrt":278,"@stdlib/stats/base/dists/degenerate/quantile":373,"@stdlib/utils/constant-function":410}],401:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/erfinv":246,"@stdlib/math/base/special/sqrt":279,"@stdlib/stats/base/dists/degenerate/quantile":374,"@stdlib/utils/constant-function":411}],402:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27726,7 +29285,7 @@ setReadOnly( quantile, 'factory', factory );
 
 module.exports = quantile;
 
-},{"./factory.js":400,"./quantile.js":402,"@stdlib/utils/define-nonenumerable-read-only-property":419}],402:[function(require,module,exports){
+},{"./factory.js":401,"./quantile.js":403,"@stdlib/utils/define-nonenumerable-read-only-property":420}],403:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27824,7 +29383,7 @@ function quantile( p, mu, sigma ) {
 
 module.exports = quantile;
 
-},{"@stdlib/math/base/assert/is-nan":218,"@stdlib/math/base/special/erfinv":245,"@stdlib/math/base/special/sqrt":278}],403:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219,"@stdlib/math/base/special/erfinv":246,"@stdlib/math/base/special/sqrt":279}],404:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27869,7 +29428,7 @@ var skewness = require( './skewness.js' );
 
 module.exports = skewness;
 
-},{"./skewness.js":404}],404:[function(require,module,exports){
+},{"./skewness.js":405}],405:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27940,7 +29499,7 @@ function skewness( mu, sigma ) {
 
 module.exports = skewness;
 
-},{"@stdlib/math/base/assert/is-nan":218}],405:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],406:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -27985,7 +29544,7 @@ var stdev = require( './stdev.js' );
 
 module.exports = stdev;
 
-},{"./stdev.js":406}],406:[function(require,module,exports){
+},{"./stdev.js":407}],407:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28056,7 +29615,7 @@ function stdev( mu, sigma ) {
 
 module.exports = stdev;
 
-},{"@stdlib/math/base/assert/is-nan":218}],407:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],408:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28101,7 +29660,7 @@ var variance = require( './variance.js' );
 
 module.exports = variance;
 
-},{"./variance.js":408}],408:[function(require,module,exports){
+},{"./variance.js":409}],409:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28172,7 +29731,7 @@ function variance( mu, sigma ) {
 
 module.exports = variance;
 
-},{"@stdlib/math/base/assert/is-nan":218}],409:[function(require,module,exports){
+},{"@stdlib/math/base/assert/is-nan":219}],410:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28230,7 +29789,7 @@ function wrap( value ) {
 
 module.exports = wrap;
 
-},{}],410:[function(require,module,exports){
+},{}],411:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28280,7 +29839,7 @@ var constantFunction = require( './constant_function.js' );
 
 module.exports = constantFunction;
 
-},{"./constant_function.js":409}],411:[function(require,module,exports){
+},{"./constant_function.js":410}],412:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28328,7 +29887,7 @@ var constructorName = require( './main.js' );
 
 module.exports = constructorName;
 
-},{"./main.js":412}],412:[function(require,module,exports){
+},{"./main.js":413}],413:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28410,7 +29969,7 @@ function constructorName( v ) {
 
 module.exports = constructorName;
 
-},{"@stdlib/assert/is-buffer":93,"@stdlib/regexp/function-name":361,"@stdlib/utils/native-class":460}],413:[function(require,module,exports){
+},{"@stdlib/assert/is-buffer":94,"@stdlib/regexp/function-name":362,"@stdlib/utils/native-class":461}],414:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28488,7 +30047,7 @@ function copy( value, level ) {
 
 module.exports = copy;
 
-},{"./deep_copy.js":414,"@stdlib/assert/is-array":85,"@stdlib/assert/is-nonnegative-integer":127,"@stdlib/constants/math/float64-pinf":199}],414:[function(require,module,exports){
+},{"./deep_copy.js":415,"@stdlib/assert/is-array":86,"@stdlib/assert/is-nonnegative-integer":128,"@stdlib/constants/math/float64-pinf":200}],415:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28796,7 +30355,7 @@ function deepCopy( val, copy, cache, refs, level ) {
 
 module.exports = deepCopy;
 
-},{"./typed_arrays.js":416,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-array":85,"@stdlib/assert/is-buffer":93,"@stdlib/assert/is-error":101,"@stdlib/buffer/from-buffer":184,"@stdlib/utils/define-property":424,"@stdlib/utils/get-prototype-of":432,"@stdlib/utils/index-of":442,"@stdlib/utils/keys":453,"@stdlib/utils/property-descriptor":469,"@stdlib/utils/property-names":473,"@stdlib/utils/regexp-from-string":476,"@stdlib/utils/type-of":481}],415:[function(require,module,exports){
+},{"./typed_arrays.js":417,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-array":86,"@stdlib/assert/is-buffer":94,"@stdlib/assert/is-error":102,"@stdlib/buffer/from-buffer":185,"@stdlib/utils/define-property":425,"@stdlib/utils/get-prototype-of":433,"@stdlib/utils/index-of":443,"@stdlib/utils/keys":454,"@stdlib/utils/property-descriptor":470,"@stdlib/utils/property-names":474,"@stdlib/utils/regexp-from-string":477,"@stdlib/utils/type-of":482}],416:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -28854,7 +30413,7 @@ var copy = require( './copy.js' );
 
 module.exports = copy;
 
-},{"./copy.js":413}],416:[function(require,module,exports){
+},{"./copy.js":414}],417:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29025,7 +30584,7 @@ hash = typedarrays();
 
 module.exports = hash;
 
-},{"@stdlib/array/float32":3,"@stdlib/array/float64":6,"@stdlib/array/int16":8,"@stdlib/array/int32":11,"@stdlib/array/int8":14,"@stdlib/array/uint16":21,"@stdlib/array/uint32":24,"@stdlib/array/uint8":27,"@stdlib/array/uint8c":30}],417:[function(require,module,exports){
+},{"@stdlib/array/float32":4,"@stdlib/array/float64":7,"@stdlib/array/int16":9,"@stdlib/array/int32":12,"@stdlib/array/int8":15,"@stdlib/array/uint16":22,"@stdlib/array/uint32":25,"@stdlib/array/uint8":28,"@stdlib/array/uint8c":31}],418:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29078,7 +30637,7 @@ var setNonEnumerableReadOnlyAccessor = require( './main.js' ); // eslint-disable
 
 module.exports = setNonEnumerableReadOnlyAccessor;
 
-},{"./main.js":418}],418:[function(require,module,exports){
+},{"./main.js":419}],419:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29141,7 +30700,7 @@ function setNonEnumerableReadOnlyAccessor( obj, prop, getter ) { // eslint-disab
 
 module.exports = setNonEnumerableReadOnlyAccessor;
 
-},{"@stdlib/utils/define-property":424}],419:[function(require,module,exports){
+},{"@stdlib/utils/define-property":425}],420:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29190,7 +30749,7 @@ var setNonEnumerableReadOnly = require( './main.js' );
 
 module.exports = setNonEnumerableReadOnly;
 
-},{"./main.js":420}],420:[function(require,module,exports){
+},{"./main.js":421}],421:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29250,7 +30809,7 @@ function setNonEnumerableReadOnly( obj, prop, value ) {
 
 module.exports = setNonEnumerableReadOnly;
 
-},{"@stdlib/utils/define-property":424}],421:[function(require,module,exports){
+},{"@stdlib/utils/define-property":425}],422:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29310,7 +30869,7 @@ var setNonEnumerableReadWriteAccessor = require( './main.js' );
 
 module.exports = setNonEnumerableReadWriteAccessor;
 
-},{"./main.js":422}],422:[function(require,module,exports){
+},{"./main.js":423}],423:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29382,7 +30941,7 @@ function setNonEnumerableReadWriteAccessor( obj, prop, getter, setter ) { // esl
 
 module.exports = setNonEnumerableReadWriteAccessor;
 
-},{"@stdlib/utils/define-property":424}],423:[function(require,module,exports){
+},{"@stdlib/utils/define-property":425}],424:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29445,7 +31004,7 @@ var defineProperty = Object.defineProperty;
 
 module.exports = defineProperty;
 
-},{}],424:[function(require,module,exports){
+},{}],425:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29505,7 +31064,7 @@ if ( hasDefinePropertySupport() ) {
 
 module.exports = defineProperty;
 
-},{"./builtin.js":423,"./polyfill.js":425,"@stdlib/assert/has-define-property-support":34}],425:[function(require,module,exports){
+},{"./builtin.js":424,"./polyfill.js":426,"@stdlib/assert/has-define-property-support":35}],426:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29629,7 +31188,7 @@ function defineProperty( obj, prop, descriptor ) {
 
 module.exports = defineProperty;
 
-},{"@stdlib/assert/has-property":59,"@stdlib/assert/is-object":139}],426:[function(require,module,exports){
+},{"@stdlib/assert/has-property":60,"@stdlib/assert/is-object":140}],427:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29678,7 +31237,7 @@ var setReadOnly = require( './main.js' );
 
 module.exports = setReadOnly;
 
-},{"./main.js":427}],427:[function(require,module,exports){
+},{"./main.js":428}],428:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29738,7 +31297,7 @@ function setReadOnly( obj, prop, value ) {
 
 module.exports = setReadOnly;
 
-},{"@stdlib/utils/define-property":424}],428:[function(require,module,exports){
+},{"@stdlib/utils/define-property":425}],429:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29812,7 +31371,7 @@ function functionName( fcn ) {
 
 module.exports = functionName;
 
-},{"@stdlib/assert/has-function-name-support":43,"@stdlib/assert/is-function":107,"@stdlib/regexp/function-name":361}],429:[function(require,module,exports){
+},{"@stdlib/assert/has-function-name-support":44,"@stdlib/assert/is-function":108,"@stdlib/regexp/function-name":362}],430:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29860,7 +31419,7 @@ var functionName = require( './function_name.js' );
 
 module.exports = functionName;
 
-},{"./function_name.js":428}],430:[function(require,module,exports){
+},{"./function_name.js":429}],431:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29902,7 +31461,7 @@ if ( isFunction( Object.getPrototypeOf ) ) {
 
 module.exports = getProto;
 
-},{"./native.js":433,"./polyfill.js":434,"@stdlib/assert/is-function":107}],431:[function(require,module,exports){
+},{"./native.js":434,"./polyfill.js":435,"@stdlib/assert/is-function":108}],432:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -29958,7 +31517,7 @@ function getPrototypeOf( value ) {
 
 module.exports = getPrototypeOf;
 
-},{"./detect.js":430}],432:[function(require,module,exports){
+},{"./detect.js":431}],433:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30000,7 +31559,7 @@ var getPrototype = require( './get_prototype_of.js' );
 
 module.exports = getPrototype;
 
-},{"./get_prototype_of.js":431}],433:[function(require,module,exports){
+},{"./get_prototype_of.js":432}],434:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30030,7 +31589,7 @@ var getProto = Object.getPrototypeOf;
 
 module.exports = getProto;
 
-},{}],434:[function(require,module,exports){
+},{}],435:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30087,7 +31646,7 @@ function getPrototypeOf( obj ) {
 
 module.exports = getPrototypeOf;
 
-},{"./proto.js":435,"@stdlib/utils/native-class":460}],435:[function(require,module,exports){
+},{"./proto.js":436,"@stdlib/utils/native-class":461}],436:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30125,7 +31684,7 @@ function getProto( obj ) {
 
 module.exports = getProto;
 
-},{}],436:[function(require,module,exports){
+},{}],437:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30163,7 +31722,7 @@ function getGlobal() {
 
 module.exports = getGlobal;
 
-},{}],437:[function(require,module,exports){
+},{}],438:[function(require,module,exports){
 (function (global){
 /**
 * @license Apache-2.0
@@ -30195,7 +31754,7 @@ var obj = ( typeof global === 'object' ) ? global : null;
 module.exports = obj;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],438:[function(require,module,exports){
+},{}],439:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30237,7 +31796,7 @@ var getGlobal = require( './main.js' );
 
 module.exports = getGlobal;
 
-},{"./main.js":439}],439:[function(require,module,exports){
+},{"./main.js":440}],440:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30316,7 +31875,7 @@ function getGlobal( codegen ) {
 
 module.exports = getGlobal;
 
-},{"./codegen.js":436,"./global.js":437,"./self.js":440,"./window.js":441,"@stdlib/assert/is-boolean":87}],440:[function(require,module,exports){
+},{"./codegen.js":437,"./global.js":438,"./self.js":441,"./window.js":442,"@stdlib/assert/is-boolean":88}],441:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30346,7 +31905,7 @@ var obj = ( typeof self === 'object' ) ? self : null;
 
 module.exports = obj;
 
-},{}],441:[function(require,module,exports){
+},{}],442:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30376,7 +31935,7 @@ var obj = ( typeof window === 'object' ) ? window : null;
 
 module.exports = obj;
 
-},{}],442:[function(require,module,exports){
+},{}],443:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30451,7 +32010,7 @@ var indexOf = require( './index_of.js' );
 
 module.exports = indexOf;
 
-},{"./index_of.js":443}],443:[function(require,module,exports){
+},{"./index_of.js":444}],444:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30585,7 +32144,7 @@ function indexOf( arr, searchElement, fromIndex ) {
 
 module.exports = indexOf;
 
-},{"@stdlib/assert/is-collection":95,"@stdlib/assert/is-integer":115,"@stdlib/assert/is-nan":123,"@stdlib/assert/is-string":155}],444:[function(require,module,exports){
+},{"@stdlib/assert/is-collection":96,"@stdlib/assert/is-integer":116,"@stdlib/assert/is-nan":124,"@stdlib/assert/is-string":156}],445:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30637,7 +32196,7 @@ function keys( value ) {
 
 module.exports = keys;
 
-},{}],445:[function(require,module,exports){
+},{}],446:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30699,7 +32258,7 @@ function keys( value ) {
 
 module.exports = keys;
 
-},{"./builtin.js":444,"@stdlib/assert/is-arguments":80}],446:[function(require,module,exports){
+},{"./builtin.js":445,"@stdlib/assert/is-arguments":81}],447:[function(require,module,exports){
 module.exports=[
 	"console",
 	"external",
@@ -30723,7 +32282,7 @@ module.exports=[
 	"window"
 ]
 
-},{}],447:[function(require,module,exports){
+},{}],448:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30783,7 +32342,7 @@ function check() {
 
 module.exports = check;
 
-},{"./builtin.js":444}],448:[function(require,module,exports){
+},{"./builtin.js":445}],449:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30861,7 +32420,7 @@ bool = check();
 
 module.exports = bool;
 
-},{"./excluded_keys.json":446,"./is_constructor_prototype.js":454,"./window.js":459,"@stdlib/assert/has-own-property":57,"@stdlib/utils/index-of":442,"@stdlib/utils/type-of":481}],449:[function(require,module,exports){
+},{"./excluded_keys.json":447,"./is_constructor_prototype.js":455,"./window.js":460,"@stdlib/assert/has-own-property":58,"@stdlib/utils/index-of":443,"@stdlib/utils/type-of":482}],450:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30891,7 +32450,7 @@ var bool = ( typeof Object.keys !== 'undefined' );
 
 module.exports = bool;
 
-},{}],450:[function(require,module,exports){
+},{}],451:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30928,7 +32487,7 @@ var bool = isEnumerableProperty( noop, 'prototype' );
 
 module.exports = bool;
 
-},{"@stdlib/assert/is-enumerable-property":98,"@stdlib/utils/noop":465}],451:[function(require,module,exports){
+},{"@stdlib/assert/is-enumerable-property":99,"@stdlib/utils/noop":466}],452:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -30971,7 +32530,7 @@ var bool = !isEnumerableProperty( obj, 'toString' );
 
 module.exports = bool;
 
-},{"@stdlib/assert/is-enumerable-property":98}],452:[function(require,module,exports){
+},{"@stdlib/assert/is-enumerable-property":99}],453:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31001,7 +32560,7 @@ var bool = ( typeof window !== 'undefined' );
 
 module.exports = bool;
 
-},{}],453:[function(require,module,exports){
+},{}],454:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31048,7 +32607,7 @@ var keys = require( './main.js' );
 
 module.exports = keys;
 
-},{"./main.js":456}],454:[function(require,module,exports){
+},{"./main.js":457}],455:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31087,7 +32646,7 @@ function isConstructorPrototype( value ) {
 
 module.exports = isConstructorPrototype;
 
-},{}],455:[function(require,module,exports){
+},{}],456:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31140,7 +32699,7 @@ function wrapper( value ) {
 
 module.exports = wrapper;
 
-},{"./has_automation_equality_bug.js":448,"./has_window.js":452,"./is_constructor_prototype.js":454}],456:[function(require,module,exports){
+},{"./has_automation_equality_bug.js":449,"./has_window.js":453,"./is_constructor_prototype.js":455}],457:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31205,7 +32764,7 @@ if ( HAS_BUILTIN ) {
 
 module.exports = keys;
 
-},{"./builtin.js":444,"./builtin_wrapper.js":445,"./has_arguments_bug.js":447,"./has_builtin.js":449,"./polyfill.js":458}],457:[function(require,module,exports){
+},{"./builtin.js":445,"./builtin_wrapper.js":446,"./has_arguments_bug.js":448,"./has_builtin.js":450,"./polyfill.js":459}],458:[function(require,module,exports){
 module.exports=[
 	"toString",
 	"toLocaleString",
@@ -31216,7 +32775,7 @@ module.exports=[
 	"constructor"
 ]
 
-},{}],458:[function(require,module,exports){
+},{}],459:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31320,7 +32879,7 @@ function keys( value ) {
 
 module.exports = keys;
 
-},{"./has_enumerable_prototype_bug.js":450,"./has_non_enumerable_properties_bug.js":451,"./is_constructor_prototype_wrapper.js":455,"./non_enumerable.json":457,"@stdlib/assert/has-own-property":57,"@stdlib/assert/is-arguments":80,"@stdlib/assert/is-object-like":137}],459:[function(require,module,exports){
+},{"./has_enumerable_prototype_bug.js":451,"./has_non_enumerable_properties_bug.js":452,"./is_constructor_prototype_wrapper.js":456,"./non_enumerable.json":458,"@stdlib/assert/has-own-property":58,"@stdlib/assert/is-arguments":81,"@stdlib/assert/is-object-like":138}],460:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31350,7 +32909,7 @@ var w = ( typeof window === 'undefined' ) ? void 0 : window;
 
 module.exports = w;
 
-},{}],460:[function(require,module,exports){
+},{}],461:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31413,7 +32972,7 @@ if ( hasToStringTag() ) {
 
 module.exports = nativeClass;
 
-},{"./native_class.js":461,"./polyfill.js":462,"@stdlib/assert/has-tostringtag-support":63}],461:[function(require,module,exports){
+},{"./native_class.js":462,"./polyfill.js":463,"@stdlib/assert/has-tostringtag-support":64}],462:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31471,7 +33030,7 @@ function nativeClass( v ) {
 
 module.exports = nativeClass;
 
-},{"./tostring.js":463}],462:[function(require,module,exports){
+},{"./tostring.js":464}],463:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31554,7 +33113,7 @@ function nativeClass( v ) {
 
 module.exports = nativeClass;
 
-},{"./tostring.js":463,"./tostringtag.js":464,"@stdlib/assert/has-own-property":57}],463:[function(require,module,exports){
+},{"./tostring.js":464,"./tostringtag.js":465,"@stdlib/assert/has-own-property":58}],464:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31584,7 +33143,7 @@ var toStr = Object.prototype.toString;
 
 module.exports = toStr;
 
-},{}],464:[function(require,module,exports){
+},{}],465:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31614,7 +33173,7 @@ var toStrTag = ( typeof Symbol === 'function' ) ? Symbol.toStringTag : '';
 
 module.exports = toStrTag;
 
-},{}],465:[function(require,module,exports){
+},{}],466:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31656,7 +33215,7 @@ var noop = require( './noop.js' );
 
 module.exports = noop;
 
-},{"./noop.js":466}],466:[function(require,module,exports){
+},{"./noop.js":467}],467:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31693,7 +33252,7 @@ function noop() {
 
 module.exports = noop;
 
-},{}],467:[function(require,module,exports){
+},{}],468:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31757,7 +33316,7 @@ function getOwnPropertyDescriptor( value, property ) {
 
 module.exports = getOwnPropertyDescriptor;
 
-},{}],468:[function(require,module,exports){
+},{}],469:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31787,7 +33346,7 @@ var bool = ( typeof Object.getOwnPropertyDescriptor !== 'undefined' );
 
 module.exports = bool;
 
-},{}],469:[function(require,module,exports){
+},{}],470:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31846,7 +33405,7 @@ if ( HAS_BUILTIN ) {
 
 module.exports = main;
 
-},{"./builtin.js":467,"./has_builtin.js":468,"./polyfill.js":470}],470:[function(require,module,exports){
+},{"./builtin.js":468,"./has_builtin.js":469,"./polyfill.js":471}],471:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31914,7 +33473,7 @@ function getOwnPropertyDescriptor( value, property ) {
 
 module.exports = getOwnPropertyDescriptor;
 
-},{"@stdlib/assert/has-own-property":57}],471:[function(require,module,exports){
+},{"@stdlib/assert/has-own-property":58}],472:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -31971,7 +33530,7 @@ function getOwnPropertyNames( value ) {
 
 module.exports = getOwnPropertyNames;
 
-},{}],472:[function(require,module,exports){
+},{}],473:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32001,7 +33560,7 @@ var bool = ( typeof Object.getOwnPropertyNames !== 'undefined' );
 
 module.exports = bool;
 
-},{}],473:[function(require,module,exports){
+},{}],474:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32058,7 +33617,7 @@ if ( HAS_BUILTIN ) {
 
 module.exports = main;
 
-},{"./builtin.js":471,"./has_builtin.js":472,"./polyfill.js":474}],474:[function(require,module,exports){
+},{"./builtin.js":472,"./has_builtin.js":473,"./polyfill.js":475}],475:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32116,7 +33675,7 @@ function getOwnPropertyNames( value ) {
 
 module.exports = getOwnPropertyNames;
 
-},{"@stdlib/utils/keys":453}],475:[function(require,module,exports){
+},{"@stdlib/utils/keys":454}],476:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32172,7 +33731,7 @@ function reFromString( str ) {
 
 module.exports = reFromString;
 
-},{"@stdlib/assert/is-string":155,"@stdlib/regexp/regexp":362}],476:[function(require,module,exports){
+},{"@stdlib/assert/is-string":156,"@stdlib/regexp/regexp":363}],477:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32214,7 +33773,7 @@ var reFromString = require( './from_string.js' );
 
 module.exports = reFromString;
 
-},{"./from_string.js":475}],477:[function(require,module,exports){
+},{"./from_string.js":476}],478:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32271,7 +33830,7 @@ function check() {
 
 module.exports = check;
 
-},{"./fixtures/nodelist.js":478,"./fixtures/re.js":479,"./fixtures/typedarray.js":480}],478:[function(require,module,exports){
+},{"./fixtures/nodelist.js":479,"./fixtures/re.js":480,"./fixtures/typedarray.js":481}],479:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32307,7 +33866,7 @@ var nodeList = root.document && root.document.childNodes;
 
 module.exports = nodeList;
 
-},{"@stdlib/utils/global":438}],479:[function(require,module,exports){
+},{"@stdlib/utils/global":439}],480:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32335,7 +33894,7 @@ var RE = /./;
 
 module.exports = RE;
 
-},{}],480:[function(require,module,exports){
+},{}],481:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32363,7 +33922,7 @@ var typedarray = Int8Array; // eslint-disable-line stdlib/require-globals
 
 module.exports = typedarray;
 
-},{}],481:[function(require,module,exports){
+},{}],482:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32415,7 +33974,7 @@ var main = ( usePolyfill() ) ? polyfill : typeOf;
 
 module.exports = main;
 
-},{"./check.js":477,"./polyfill.js":482,"./typeof.js":483}],482:[function(require,module,exports){
+},{"./check.js":478,"./polyfill.js":483,"./typeof.js":484}],483:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32458,7 +34017,7 @@ function typeOf( v ) {
 
 module.exports = typeOf;
 
-},{"@stdlib/utils/constructor-name":411}],483:[function(require,module,exports){
+},{"@stdlib/utils/constructor-name":412}],484:[function(require,module,exports){
 /**
 * @license Apache-2.0
 *
@@ -32536,7 +34095,7 @@ function typeOf( v ) {
 
 module.exports = typeOf;
 
-},{"@stdlib/utils/constructor-name":411}],484:[function(require,module,exports){
+},{"@stdlib/utils/constructor-name":412}],485:[function(require,module,exports){
 (function (global){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -34288,7 +35847,7 @@ function stubFalse() {
 module.exports = cloneDeep;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],485:[function(require,module,exports){
+},{}],486:[function(require,module,exports){
 (function (global){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -35188,25 +36747,25 @@ function noop() {
 module.exports = uniq;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],486:[function(require,module,exports){
+},{}],487:[function(require,module,exports){
 let cloneDeep = require('lodash.clonedeep');
 let uniq = require('lodash.uniq');
 let Virus = require('./virus');
 let Random = require('./random');
 let People = require('./people');
 
-
-function getInteractionWeights(populationSize, iEgo, isolation){
-    let weights = [];
-    for(let i = 0; i < populationSize; i++){
-        weights.push(i - iEgo);
+function isParticipating(person, precaution){
+    // Determine whether or not a person is participating in a precaution / mitigation behavior.
+    if (precaution.symptomaticOnly && person.symptoms){
+        return true
+    } else if(precaution.everyoneUnder != null || precaution.everyoneOver != null){
+        let under = person.age < (precaution.everyoneUnder | person.age + 1);
+        let over = person.age > (precaution.everyoneOver | person.age - 1);
+        return under && over
+    } else{
+        return false
     }
-    weights = weights.map(function(w){return Random.normalDist.pdf(w, 0, (1 - isolation) * (populationSize / 6))});
-    weights[iEgo] = 0; // Can't interact with yourself
-    total = weights.reduce(function(total, current){return total + current}, 0);
-    return weights.map(function(w){return w / total})
 }
-
 
 function updateStatus(person){
     if (person.infected){
@@ -35239,16 +36798,39 @@ function updateStatus(person){
     }
 }
 
-function getPInfection(victim, pInteraction, nInfected, nSymptomatic){
+function getPInfection(victim, pInteraction, infectionInfo, options){
     let p = 0;
-    if (nInfected > 0){
-        // Probability of infection via asymptomatic person
-        p = Random.pOneEventNTrials(pInteraction * victim.pInfection, nInfected - nSymptomatic);
-        if (nSymptomatic > 0){
-            // Probability of infection via symptomatic person
-            p2 = Random.pOneEventNTrials(pInteraction * victim.pInfection * Virus.symptomsMultiplier, nSymptomatic);
+    let victimPInfection = victim.pInfection;
+
+    if (isParticipating(victim, options.receptionMitigation)){
+        victimPInfection *= options.receptionMitigation.multiplier;
+    }
+
+    if (infectionInfo.totalInfected > 0){
+        // Probability of infection via asymptomatic non-mitigating person
+        pAsymptomaticNotMitigating = Random.pOneEventNTrials(
+            pInteraction * victimPInfection,
+            infectionInfo.asymptomatic.nNotMitigating);
+            // Probability of infection via asymptomatic mitigating person
+        pAsymptomaticMitigating = Random.pOneEventNTrials(
+            pInteraction * victimPInfection * options.transmissionMitigation.multiplier,
+            infectionInfo.asymptomatic.nMitigating);
+        if (infectionInfo.totalSymptomatic > 0){
+            // Probability of infection via symptomatic non-mitigating person
+            pSymptomaticNotMitigating = Random.pOneEventNTrials(
+                pInteraction * victimPInfection * Virus.symptomsMultiplier,
+                infectionInfo.symptomatic.nNotMitigating);
+            // Probability of infection via symptomatic mitigating person
+            pSymptomaticMitigating = Random.pOneEventNTrials(
+                pInteraction * victimPInfection * options.transmissionMitigation.multiplier * Virus.symptomsMultiplier,
+                infectionInfo.symptomatic.nMitigating);
             // Probability of infection by any person
-            p = 1 - ((1 - p) * (1 - p2));
+            p = 1 -
+            ((1 - pAsymptomaticNotMitigating) * (1 - pAsymptomaticMitigating) *
+            (1 - pSymptomaticNotMitigating) * (1 - pSymptomaticMitigating));
+        }else {
+            // Probability of infection by any person
+            p = 1 - ((1 - pAsymptomaticNotMitigating) * (1 - pAsymptomaticMitigating));
         }
     }
     return p
@@ -35263,7 +36845,7 @@ function simulateExposure(person, pInfection){
     }
 }
 
-function simulateInteractionLegacy(personA, personB){
+function simulateInteractionLegacy(personA, personB, options){
     // Determine which person is the victim (if applicable)
     let carrier = null;
     let other = null;
@@ -35281,30 +36863,49 @@ function simulateInteractionLegacy(personA, personB){
         other = personA;
     }
     if (carrier){
-        simulateExposure(other, getPInfection(other, 1, 1, carrier.symptoms? 1 : 0));
+        let mitigating = isParticipating(carrier, options.transmissionMitigation) ?
+            {nMitigating: 1, nNotMitigating: 0} :
+            {nMitigating: 0, nNotMitigating: 1};
+        let infectionInfo = {
+            totalInfected: 1,
+            totalSymptomatic: carrier.symptoms ? 1 : 0,
+            asymptomatic: carrier.symptoms ? {nMitigating: 0, nNotMitigating: 0} : mitigating,
+            symptomatic: carrier.symptoms ? mitigating : {nMitigating: 0, nNotMitigating: 0},
+        };
+        simulateExposure(other, getPInfection(other, 1, infectionInfo, options));
     }
 }
 
-function simulateInteraction(visitors, event){
+function simulateInteraction(visitors, event, options){
     // Determine how many infected/symptomatic people visited.
     let infectionInfo = visitors.reduce(
         (info, person) => {
             if (person.infected){
-                info.nInfected++;
+                info.totalInfected++;
+                let mitigating = isParticipating(person, options.transmissionMitigation);
+                let key = mitigating ? 'nMitigating' : 'nNotMitigating';
                 if (person.symptoms){
-                    info.nSymptomatic++;
+                    info.totalSymptomatic++;
+                    info.symptomatic[key]++;
+                }else{
+                    info.asymptomatic[key]++;
                 }
             }
             return info
         },
-        {nInfected: 0, nSymptomatic: 0}
+        {
+            totalInfected: 0,
+            totalSymptomatic: 0,
+            asymptomatic: {nMitigating: 0, nNotMitigating: 0},
+            symptomatic: {nMitigating: 0, nNotMitigating: 0}
+        }
     );
     // If anyone infected was present, simulate potential infection of everyone
-    if (infectionInfo.nInfected > 0){
+    if (infectionInfo.totalInfected > 0){
         visitors.forEach((visitor) => {
             simulateExposure(
                 visitor,
-                getPInfection(visitor, event.pContact, infectionInfo.nInfected, infectionInfo.nSymptomatic)
+                getPInfection(visitor, event.pContact, infectionInfo, options)
             );
         });
     }
@@ -35329,13 +36930,11 @@ function simulateSocialDistancing(options, people){
         weights = people.map((person) => 0.1);
     } else {
         weights = people.map((person) => {
-            if((options.socialDistancing.symptomaticStayHome && person.symptoms) ||
-            (options.socialDistancing.eldersStayHome && person.age > 60)){
-                return 0.1
-            } else{
-                nNotIsolating++;
-                return 1
+            if (isParticipating(person, options.socialDistancing)){
+                return options.socialDistancing.multiplier
             }
+            nNotIsolating++;
+            return 1
         });
     }
     return {weights: Random.normalize(weights), weightMagnitude: Math.round(weights.reduce((total, x) => total + x))}
@@ -35349,13 +36948,13 @@ function simulateDay(options, world){
         let nVisitors = Random.randBinomial(socialDistancing.weightMagnitude, (event.timesPerMonth / 30));
         if (nVisitors > 0){
             let visitors = Random.sample(world.peopleAlive, {'size': nVisitors, 'replace': true, weights: socialDistancing.weights});
-            simulateInteraction(visitors, event);
+            simulateInteraction(visitors, event, options);
             visitors.forEach((visitor) => {eventVisits.push({attendee: visitor, event: event})})
         }
     });
     // Everyone interacts with all people in thier house
     world.houses.forEach((house) => {
-        simulateInteraction(house.residents, {pContact: 1});
+        simulateInteraction(house.residents, {pContact: 1}, options);
     });
     // Update each person's status and separate alive from deceased.
     let nInfected = 0;
@@ -35440,7 +37039,7 @@ function simulate(options, individualData){
                 'probs': getInteractionWeights(alive.length, i, options.isolation),
                 'replace': false
             }).forEach(function(other){
-                simulateInteraction(person, other);
+                simulateInteraction(person, other, options);
             });
             
         });
@@ -35504,12 +37103,15 @@ module.exports = {
     simulateNeighborhood: simulateNeighborhood,
     generatePopulation: People.generatePopulation,
     simulateInteraction: simulateInteractionLegacy,
-    updateStatus: updateStatus
+    updateStatus: updateStatus,
+    randomFactory: Random.randomFactory,
+    isParticipating: isParticipating
 };
 
-},{"./people":487,"./random":488,"./virus":489,"lodash.clonedeep":484,"lodash.uniq":485}],487:[function(require,module,exports){
+},{"./people":488,"./random":489,"./virus":490,"lodash.clonedeep":485,"lodash.uniq":486}],488:[function(require,module,exports){
 let Virus = require('./virus');
 let Random = require('./random');
+let PersonalInfo = require('../data/personal-info');
 
 function generatePerson(values, options){
     let infected = values.infected | Boolean(Random.randBernoulli(options.propInfected));
@@ -35521,8 +37123,8 @@ function generatePerson(values, options){
         criticalCare: false,
         deceased: false,
         recovered: false,
-        // name: values.name | faker.fake("{{name.firstName}} {{name.lastName}}"),
-        // occupation: values.occupation | faker.name.title(),
+        name: values.hasOwnProperty("name") ? values.name : Random.sample(PersonalInfo.names, {size: 1})[0],
+        occupation: values.hasOwnProperty("occupation") ? values.occupation : Random.sample(PersonalInfo.occupations, {size: 1})[0],
         age: values.age | Math.round(Random.randLogNormal(Math.log(options.avgAge), 0.25)),
         houseId: null
     }, values);
@@ -35616,14 +37218,13 @@ module.exports = {
     generatePerson: generatePerson,
     generatePopulation: generatePopulation
 };
-},{"./random":488,"./virus":489}],488:[function(require,module,exports){
+},{"../data/personal-info":2,"./random":489,"./virus":490}],489:[function(require,module,exports){
 let randu = require('@stdlib/random/base/randu');
 let bernoulli = require('@stdlib/random/base/bernoulli');
 let binomial = require('@stdlib/random/base/binomial');
 let logNormal = require('@stdlib/random/base/lognormal');
 let arraySample = require('@stdlib/random/sample');
 var normalDist = require('@stdlib/stats/base/dists/normal');
-// let faker = require('faker');
 
 
 // Set up random generators
@@ -35633,7 +37234,6 @@ let randBernoulli = bernoulli.factory({'seed': randomSeed});
 let randBinomial = binomial.factory({'seed': randomSeed});
 let randLogNormal = logNormal.factory({'seed': randomSeed});
 let sample = arraySample.factory({'seed': randomSeed});
-// faker.seed(randomSeed);
 
 function resetRandomGenerators(module, seed){
     if(seed){
@@ -35644,7 +37244,6 @@ function resetRandomGenerators(module, seed){
     module.randBinomial = binomial.factory({'seed': module.seed});
     module.randLogNormal = logNormal.factory({'seed': module.seed});
     module.sample = arraySample.factory({'seed': module.seed});
-    // module.faker.seed(module.seed);
 }
 
 function normalize(a){
@@ -35663,17 +37262,17 @@ function pOneEventNTrials(p, n){
 module.exports = {
     seed: 7,
     random: random,
+    randomFactory: randu,
     randBernoulli: randBernoulli,
     randBinomial: randBinomial,
     randLogNormal: randLogNormal,
     sample: sample,
     normalDist: normalDist,
-    // faker: faker,
     resetRandomGenerators: resetRandomGenerators,
     normalize: normalize,
     pOneEventNTrials: pOneEventNTrials
 };
-},{"@stdlib/random/base/bernoulli":312,"@stdlib/random/base/binomial":317,"@stdlib/random/base/lognormal":330,"@stdlib/random/base/randu":349,"@stdlib/random/sample":356,"@stdlib/stats/base/dists/normal":384}],489:[function(require,module,exports){
+},{"@stdlib/random/base/bernoulli":313,"@stdlib/random/base/binomial":318,"@stdlib/random/base/lognormal":331,"@stdlib/random/base/randu":350,"@stdlib/random/sample":357,"@stdlib/stats/base/dists/normal":385}],490:[function(require,module,exports){
 let diseaseProgression = require("../data/disease-progression-rates").diseaseProgression;
 diseaseProgression.keys.sort();
 diseaseProgression.keys = diseaseProgression.keys.map((k) => {
@@ -35757,7 +37356,7 @@ module.exports = {
     pInfection : basePInfection,
     assignProgressionProbs: assignProgressionProbs
 };
-},{"../data/disease-progression-rates":1}],490:[function(require,module,exports){
+},{"../data/disease-progression-rates":1}],491:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -35911,7 +37510,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],491:[function(require,module,exports){
+},{}],492:[function(require,module,exports){
 (function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
@@ -37720,7 +39319,7 @@ var hexSliceLookupTable = (function () {
 })()
 
 }).call(this,require("buffer").Buffer)
-},{"base64-js":490,"buffer":491,"ieee754":492}],492:[function(require,module,exports){
+},{"base64-js":491,"buffer":492,"ieee754":493}],493:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -37806,5 +39405,5 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}]},{},[486])(486)
+},{}]},{},[487])(487)
 });

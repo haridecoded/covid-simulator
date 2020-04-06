@@ -22,30 +22,43 @@ var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
     avgAge: 38.1, // Average age of population
-    socialDistancing: {
-        everyoneStaysHome: false,
-        symptomaticStayHome: false,
-        eldersStayHome: false,
-
-    },
-    infectionMultiplier: 1.0,
+    infectionMultiplier: 0.25, // Adjusts the rate of infection given exposure (use to simulate hygeine / overall susceptibility)
     propInfected: 0.001, // What proportion of people are infected at the beginning
     randomSeed: 7,
+    transmissionMitigation: {
+        multiplier: 0.5,
+        symptomaticOnly: false,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
+    receptionMitigation: {
+        multiplier: 0.5,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
+    socialDistancing: {
+        multiplier: 0.1,
+        symptomaticOnly: false,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
     user: {
         age: 30, // User Age
         houseSize: 7 // User House Size
     },
     neighborhood: {
         nHouses: 31,
+        // neighborVisitsPerMonth: 5,
+        // pNeighborContact: 1,
         events: [
             {
                 id: "groceryShopping",
-                timesPerMonth: 4, // Average number of times per month people visit
-                pContact: 0.6 // If two people are here at the same time, what is the prob. they interact
+                timesPerMonth: 5, // Average number of times per month people visit
+                pContact: 0.7 // If two people are here at the same time, what is the prob. they interact
             },
             {
                 id: "walkInPark",
-                timesPerMonth: 21, 
+                timesPerMonth: 20, 
                 pContact: 0.05
             },
             // {
@@ -1165,7 +1178,7 @@ class SimulationWorld {
                         console.log("Detected NaN");
                     }
                     // Uncomment this to use model to determine whether dots get infected on collision.
-                    covidModel.simulateInteraction(obj1.data, obj2.data);
+                    covidModel.simulateInteraction(obj1.data, obj2.data, currentSimulationOptions);
                     if (obj1.data.infected){
                         obj1.infectedState = 'sick';
                         if (!obj1.infectedTime) obj1.infectedTime = Date.now();

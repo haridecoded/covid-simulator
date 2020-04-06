@@ -3,7 +3,6 @@
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
 
-
 var currentStep = 1;
 var simulationData;
 var trendData = []; 
@@ -17,6 +16,7 @@ var sdSimulationData = [];
 var userSimulationData = [];
 var simulationWorld;
 var pid;
+var defaultRandomSeed = 1234
 
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
@@ -69,6 +69,12 @@ var defaultSimulationOptions = {
         ]
     }
 };
+
+var randomGenerator = covidModel.randomFactory.factory({'seed': defaultRandomSeed});
+
+function resetRandomGenerator(seed){
+    randomGenerator = covidModel.randomFactory.factory({'seed': seed | defaultRandomSeed});
+}
 
 // user simulation parameters
 var sliders = {    
@@ -1001,7 +1007,7 @@ class SimulationWorld {
         this.modelParam = modelParam;
 
         this.init(canvasId);
-       
+        resetRandomGenerator();
        
     }
 
@@ -1027,6 +1033,7 @@ class SimulationWorld {
     }
 
     resetWorld() {
+        resetRandomGenerator();
         this.gameObjects = [];
         this.reset = true;
     }
@@ -1046,13 +1053,13 @@ class SimulationWorld {
         let speedMultiplier = 0.5;
 
         let moving = Array.from(Array(movingCount)).map((val, index) => {
-            let rand = (Math.random() * 100) - 50;
+            let rand = (randomGenerator() * 100) - 50;
             return new Person(this.context, {
                 index,
                 movingState: 'moving',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
+                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -1063,8 +1070,8 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
+                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 speedMultiplier
             });
@@ -1075,8 +1082,8 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: Math.ceil((Math.random() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((Math.random() * this.canvasBottom + 1) / 10) * 10,
+                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
+                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
                 radius: Math.max(this.canvas.width / 225, 4),
                 infectedTime: Date.now(),
                 speedMultiplier
@@ -1256,7 +1263,7 @@ function IDGenerator() {
     this.timestamp = +new Date;
 
     var _getRandomInt = function (min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(randomGenerator() * (max - min + 1)) + min;
     };
 
     this.generate = function () {
@@ -1286,7 +1293,7 @@ function addCommas(nStr) {
 }
 
 function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(randomGenerator() * (max - min + 1) + min);
 }
 
 

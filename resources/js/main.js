@@ -152,6 +152,7 @@ function onBtnNextClick() {
             $("#surveyCode").text(pid);
             break;
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // PANEL 1

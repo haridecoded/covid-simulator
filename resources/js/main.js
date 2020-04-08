@@ -989,12 +989,67 @@ function onQuestionSelect() {
     }
 }
 
-function onBehaviorSelectionChanged() {
-
+function onBehaviorSelectionChanged(cb) {
+    switch (cb.value) {
+        case "6feet":
+            break;
+        case "handwash":
+            break;
+        case "mask":
+            break;
+        case "facetouch":
+            break;
+        case "shelter":
+            break;
+    }
 }
 
-function onPopulationSelectionChanged() {
-
+function onPopulationSelectionChanged(cb) {
+    switch (cb.value) {
+        case "60plus":
+            if (cb.checked) {
+                if ($("#25plus").prop("checked") && $("#under25").prop("checked")) {
+                    $("#everyone").prop("checked", true);
+                }
+            }
+            else {
+                $("#everyone").prop("checked", false);
+            }
+            break;
+        case "25plus":
+            if (cb.checked) {
+                if ($("#60plus").prop("checked") && $("#under25").prop("checked")) {
+                    $("#everyone").prop("checked", true);
+                }
+            }
+            else {
+                $("#everyone").prop("checked", false);
+            }
+            break;
+        case "under25":
+            if (cb.checked) {
+                if ($("#25plus").prop("checked") && $("#60plus").prop("checked")) {
+                    $("#everyone").prop("checked", true);
+                };
+            }
+            else {
+                $("#everyone").prop("checked", false);
+            }
+            break;
+        case "everyone":
+            if (cb.checked) {
+                $("#60plus").prop("checked", true);
+                $("#25plus").prop("checked", true);
+                $("#under25").prop("checked", true);
+            } else {
+                $("#60plus").prop("checked", false);
+                $("#25plus").prop("checked", false);
+                $("#under25").prop("checked", false);
+            }           
+            break;
+        case "symptomatic":
+            break;
+    }
 }
 
 function simulateUserSelectedWorld() {

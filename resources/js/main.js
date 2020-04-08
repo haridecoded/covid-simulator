@@ -14,6 +14,7 @@ var covid_all;
 var normalSimulationData = [];
 var sdSimulationData = [];
 var userSimulationData = [];
+var userPreviousSimulationData = [];
 var simulationWorld;
 var pid;
 var defaultRandomSeed = 1234;
@@ -1057,7 +1058,7 @@ function onPopulationSelectionChanged(cb) {
     }
 }
 
-function simulateUserSelectedWorld() {
+function simulateUserSpread() {
 
 }
 

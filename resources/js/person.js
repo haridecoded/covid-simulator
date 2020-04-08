@@ -46,7 +46,7 @@ class Person {
     }
 
     highlight() {
-        this.context.fillStyle = "#ffbf00";
+        this.context.fillStyle = "#03A9F4";
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fill();

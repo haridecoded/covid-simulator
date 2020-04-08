@@ -16,7 +16,7 @@ var sdSimulationData = [];
 var userSimulationData = [];
 var simulationWorld;
 var pid;
-var defaultRandomSeed = 1234
+var defaultRandomSeed = 1234;
 
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
@@ -333,8 +333,10 @@ function setupNormalSimulation() {
     //$("#btnNext").hide();
     drawNormalSimulationChart();
 
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
     // initialize simulation canvas
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
+    simulationWorld = new SimulationWorld('normalCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
 function drawNormalSimulationChart() {
@@ -455,7 +457,7 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ffbf00", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#03A9F4", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
@@ -483,11 +485,12 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    simulationWorld.resetWorld();
-    simulationWorld = null;
-    var simOptions = _.cloneDeep(defaultSimulationOptions);
-    simOptions.infectionMultiplier = 6.0;
-    simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, simOptions);   
+       
+    simulationWorld.update = updateChart;
+    simulationWorld.days = defaultSimulationOptions.nDays + 1;
+    simulationWorld.totalPeople = defaultSimulationOptions.populationSize;
+    simulationWorld.addInfectedPerson();
+    //simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, simOptions);   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -972,14 +975,15 @@ class SimulationWorld {
         this.update = callback;
         this.days = days;
         this.reset = false;
-        this.modelParam = modelParam;
-
+        this.modelParam = modelParam; 
+        this.population = covidModel.generatePopulation(this.modelParam);
         this.init(canvasId);
         resetRandomGenerator();
        
     }
 
     init(canvasId) {
+       
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
 
@@ -1064,9 +1068,9 @@ class SimulationWorld {
         this.gameObjects = [...infected, ...moving, ...home];
 
         //assign people to objects
-        var population = covidModel.generatePopulation(this.modelParam);
+        var p = this.population;
         _.forEach(this.gameObjects, function (o, i) {
-            o.data = population.people[i];
+            o.data = p.people[i];
             o.data.infected = o.infectedState === 'sick';
         });
 
@@ -1074,12 +1078,10 @@ class SimulationWorld {
 
     gameLoop(timeStamp) {
         // Calculate how much time has passed
-        var d = new Date();
-        console.log(d.getMinutes() + ":" + d.getSeconds());
-      
+   
         var secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
         this.oldTimeStamp = timeStamp;
-        console.log("Seconds passed:" + secondsPassed);
+       
 
         // Loop over all game objects to update
         this.gameObjects.forEach(go => go.update(secondsPassed));
@@ -1224,6 +1226,23 @@ class SimulationWorld {
         };
     }
 
+    addInfectedPerson() {
+        this.dayCount = 0;
+        var infectedPerson = new Person(this.context, {
+            index: this.gameObjects.length,
+            movingState: 'moving',
+            infectedState: 'sick',
+            x: this.canvasRight / 2,
+            y: this.canvasBottom/2,
+            radius: 4,
+            infectedTime: Date.now(),
+            speedMultiplier:0.5
+        });
+        infectedPerson.data = this.population.people[this.gameObjects.length];
+        infectedPerson.data.infected = true;
+        this.gameObjects.push(infectedPerson);
+        
+    }
 }
 
 function IDGenerator() {

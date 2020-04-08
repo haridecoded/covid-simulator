@@ -974,9 +974,7 @@ function onQuestionSelect() {
             $(".behavGroup").prop("checked", true);
             break;
         case "symptom":
-            $(".peopleGroup").prop("checked", false);
-            $("#everyone").prop("checked", false);
-            $("#symptomatic").prop("checked", true);
+            $(".peopleGroup").prop("checked", true);
             $(".behavGroup").prop("checked", true);
             break;
         case "face":
@@ -1014,6 +1012,7 @@ function onPopulationSelectionChanged(cb) {
             }
             else {
                 $("#everyone").prop("checked", false);
+                $("#symptomatic").prop("checked", false);
             }
             break;
         case "25plus":
@@ -1024,16 +1023,18 @@ function onPopulationSelectionChanged(cb) {
             }
             else {
                 $("#everyone").prop("checked", false);
+                $("#symptomatic").prop("checked", false);
             }
             break;
         case "under25":
             if (cb.checked) {
                 if ($("#25plus").prop("checked") && $("#60plus").prop("checked")) {
                     $("#everyone").prop("checked", true);
-                };
+                }
             }
             else {
                 $("#everyone").prop("checked", false);
+                $("#symptomatic").prop("checked", false);
             }
             break;
         case "everyone":
@@ -1045,9 +1046,13 @@ function onPopulationSelectionChanged(cb) {
                 $("#60plus").prop("checked", false);
                 $("#25plus").prop("checked", false);
                 $("#under25").prop("checked", false);
+                $("#symptomatic").prop("checked", false);
             }           
             break;
         case "symptomatic":
+            if (cb.checked) {
+                $(".peopleGroup").prop("checked", true);
+            }
             break;
     }
 }

@@ -520,9 +520,12 @@ function showThreshold() {
 function setupSDSimulation() {
     //$("#btnNext").hide();
     drawSDSimulationChart();
+    reSimuluateSD = false;
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 0, null, null, defaultSimulationOptions);
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 1.5;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
 function drawSDSimulationChart() {
@@ -609,7 +612,7 @@ function drawSDSimulationChart() {
     }
 
 
-    var threshold = 30;
+    var threshold = 20;
     // hospital threshold line
     c.svg.append("line")
         .attr("id", "threshold")
@@ -635,20 +638,36 @@ function simulateSDSpread() {
     if ($(this).attr('disabled')) {
         return;
     }
-    sdSimulationData = [];
+    if (reSimuluateSD) {
+        resetSDSimulation();
+    }
+    
     function updateChart(day, count) {
         if (day > 0 && day <= defaultSimulationOptions.nDays) {
             sdSimulationData.push({ "day": day, "cases": count });
         }
         if (day === defaultSimulationOptions.nDays) {
             $("#btnNext").show();
+            document.getElementById("btnSDSim").disabled = false;
+            reSimuluateSD = true;
         }
         drawSDSimulationChart();
     }
+    simulationWorld.update = updateChart;
+    simulationWorld.days = defaultSimulationOptions.nDays + 1;
+    simulationWorld.totalPeople = defaultSimulationOptions.populationSize;
+    simulationWorld.addInfectedPerson();   
+    document.getElementById("btnSDSim").disabled = true;
+}
+
+function resetSDSimulation() {
+    document.getElementById("btnSDSim").disabled = true;
+    reSimuluateSD = false;
+    sdSimulationData = [];
+    drawSDSimulationChart();
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, defaultSimulationOptions);
-    document.getElementById("btnNormalSim").disabled = true;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, defaultSimulationOptions);
 }
 
 // PANEL 5

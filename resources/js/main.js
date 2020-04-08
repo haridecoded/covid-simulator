@@ -78,30 +78,6 @@ function resetRandomGenerator(seed){
 
 // user simulation parameters
 var sliders = {    
-    //"isolationSlider": {
-    //    "values": [0, 0.3, 0.5, 0.7, 0.95],
-    //    "labels": ["None", "Mild", "Moderate", "High", "Lockdown"],
-    //    "explanations": ["No one practices social distancing",
-    //        "",
-    //        "",
-    //        "",
-    //        ""],
-    //    "default": 0,
-    //    "optionName": "isolation",
-    //    "type": "slider"
-    ////},
-    //"infectionRateSlider": {
-    //    "values": [0, 0.5, 1.0, 1.5, 2.0, 10.0],
-    //    "labels": ["0", "0.5", "1.0", "1.5", "2.0", "10.0"],
-    //    "explanations": ["",
-    //        "",
-    //        "",
-    //        "",
-    //        ""],
-    //    "default": 2,
-    //    "optionName": "infectionMultiplier",
-    //    "type": "slider"
-    //},
     // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
     "ageSlider": {
         "values": [15.4	, 28.1, 38.1, 45.5, 53.1],
@@ -116,8 +92,7 @@ var sliders = {
         "default": 2,
         "optionName": "avgAge",
         "type": "slider"
-    }
-    //"symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
+    }   
 };
 
 var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
@@ -203,7 +178,7 @@ function initializeDrawView() {
     c.x.domain([1, d3.max(trendData, function (d) { return d.day; })]);
     c.y.domain([0, 200]);
 
-    $("#infectedText").text((d3.max(trendData, function (d) { return d.cases; }) / 200) * 100 + "%");
+    $("#infectedText").text(((d3.max(trendData, function (d) { return d.cases; }) / 200) * 100).toFixed(2) + "%");
 
     c.xAxis.ticks().tickFormat(f());
     c.yAxis.ticks(8).tickFormat(f());
@@ -246,7 +221,7 @@ function initializeDrawView() {
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
     var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveBasis);
-    var userDrawStart = 5;
+    var userDrawStart = 7;
     var clipRect = c.svg
         .append('clipPath#clip')
         .append('rect')
@@ -257,13 +232,6 @@ function initializeDrawView() {
     correctSel.append('path.area').at({ d: area(trendData) });
     correctSel.append('path.line').at({ d: line(trendData) });
     yourDataSel = c.svg.append('path.your-line');
-
-
-    //c.svg.append('circle').attrs({
-    //    "r": 5,
-    //    "cx": c.x(trendData[userDrawStart - 1].day),
-    //    "cy": c.y(trendData[userDrawStart - 1].cases)
-    //}).style("fill", "#b9003e");
 
     c.svg.append("svg:image")
         .attr("id","pencil")
@@ -1030,6 +998,7 @@ class SimulationWorld {
         });
 
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });       
+       
     }
 
     resetWorld() {
@@ -1058,9 +1027,9 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'healthy',
-                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
-                radius: Math.max(this.canvas.width / 225, 4),
+                x: randomIntFromInterval(10, this.canvasRight - 10),
+                y: randomIntFromInterval(10, this.canvasBottom -10),
+                radius: 4,
                 speedMultiplier
             });
         });
@@ -1070,9 +1039,9 @@ class SimulationWorld {
                 index,
                 movingState: 'home',
                 infectedState: 'healthy',
-                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
-                radius: Math.max(this.canvas.width / 225, 4),
+                x: randomIntFromInterval(10, this.canvasRight - 10),
+                y: randomIntFromInterval(10, this.canvasBottom - 10),
+                radius: 4,
                 speedMultiplier
             });
         });
@@ -1082,9 +1051,9 @@ class SimulationWorld {
                 index,
                 movingState: 'moving',
                 infectedState: 'sick',
-                x: Math.ceil((randomGenerator() * this.canvasRight + 1) / 10) * 10,
-                y: Math.ceil((randomGenerator() * this.canvasBottom + 1) / 10) * 10,
-                radius: Math.max(this.canvas.width / 225, 4),
+                x: randomIntFromInterval(10, this.canvasRight - 10),
+                y: randomIntFromInterval(10, this.canvasBottom - 10),
+                radius: 4,
                 infectedTime: Date.now(),
                 speedMultiplier
             });
@@ -1104,11 +1073,13 @@ class SimulationWorld {
     }
 
     gameLoop(timeStamp) {
-
-        
         // Calculate how much time has passed
+        var d = new Date();
+        console.log(d.getMinutes() + ":" + d.getSeconds());
+      
         var secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
         this.oldTimeStamp = timeStamp;
+        console.log("Seconds passed:" + secondsPassed);
 
         // Loop over all game objects to update
         this.gameObjects.forEach(go => go.update(secondsPassed));
@@ -1132,16 +1103,19 @@ class SimulationWorld {
 
         this.clearCanvas();
         this.gameObjects.forEach(go => go.draw());
-
-
+     
         if (this.days) {
             if (!this.reset && this.dayCount < this.days) {
                 window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+                
             }
         }
         else if (!this.reset) {
             window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+            
         }
+
+
         // Keep requesting new frames
         //if (!this.reset && this.days && this.dayCount < this.days) {
         //    window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
@@ -1181,9 +1155,7 @@ class SimulationWorld {
                     obj1.vy -= (impulse * obj2.mass * vCollisionNorm.y);
                     obj2.vx += (impulse * obj1.mass * vCollisionNorm.x);
                     obj2.vy += (impulse * obj1.mass * vCollisionNorm.y);
-                    if (isNaN(obj1.vx) || isNaN(obj1.vy) || isNaN(obj2.vx) || isNaN(obj2.vy)) {
-                        console.log("Detected NaN");
-                    }
+                  
                     // Uncomment this to use model to determine whether dots get infected on collision.
                     covidModel.simulateInteraction(obj1.data, obj2.data, currentSimulationOptions);
                     if (obj1.data.infected){
@@ -1217,16 +1189,13 @@ class SimulationWorld {
                 go.vx = -go.vx;
                 go.x = this.canvasLeft + go.radius;
             }
-            if (go.y + go.radius > this.canvasBottom) {
+            else if (go.y + go.radius > this.canvasBottom) {
                 go.vy = -go.vy;
                 go.y = this.canvasBottom - go.radius;
             } else if (go.y - go.radius < this.canvasTop) {
                 go.vy = -go.vy;
                 go.y = this.canvasTop + go.radius;
-            }
-            if (isNaN(go.x) || isNaN(go.y) || isNaN(go.vx) || isNaN(go.vy)) {
-                console.log("Detected NaN in constructor");
-            }
+            }           
         });
 
     }
@@ -1295,50 +1264,3 @@ function addCommas(nStr) {
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(randomGenerator() * (max - min + 1) + min);
 }
-
-
-
-
-
-
-////////// Sliders //////////
-//var sliders = {
-//    "ageSlider": { "values": [25, 35, 45, 55, 65], "default": 1, "optionName": "avgAge", "type": "slider" },
-//    "isolationSlider": { "values": [0, 0.3, 0.5, 0.7, 0.95], "labels": ["None", "Mild", "Moderate", "High", "Lockdown"], "default": 0, "optionName": "isolation", "type": "slider" },
-//    "symptomIsolationToggle": { "values": [false, true], "labels": ["People with Symptoms", "Everyone"], "default": 0, "optionName": "everyoneIsolates", "type": "toggle" },
-//};
-
-//function initializeSliders(sliders) {
-//    for (const sId in sliders) {
-//        var s = sliders[sId];
-//        $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-//        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
-//        if (s.type === "slider") {
-//            applyFill(document.getElementById(sId));
-//        }
-//    }
-//}
-
-
-//function getPossibleSimulationOptions(sliders) {
-//    return Object.values(sliders).reduce(function (possibleOptions, slider) {
-//        var options = [];
-//        if (!possibleOptions) {
-//            options = slider.values.map(function (v) {
-//                var o = {};
-//                o[slider.optionName] = v;
-//                return o;
-//            });
-//        } else {
-//            possibleOptions.forEach(function (o) {
-//                slider.values.forEach(function (v) {
-//                    var patch = {};
-//                    patch[slider.optionName] = v;
-//                    options.push(Object.assign(patch, o));
-//                });
-//            });
-//        }
-//        return options;
-//    }, null);
-//}
-////////// End Sliders //////////

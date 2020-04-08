@@ -112,14 +112,9 @@ class Person {
     }
 
     update(secondsPassed) {
-        //Move with set velocity
-        if (isNaN(this.x) || isNaN(this.y) || isNaN(this.vx) || isNaN(this.vy)) {
-            console.log("Detected NaN");
-        }
+        //Move with set velocity   
+        secondsPassed = secondsPassed % 0.1;
         this.x += this.vx * secondsPassed;
-        this.y += this.vy * secondsPassed;
-        if (isNaN(this.x) || isNaN(this.y) || isNaN(this.vx) || isNaN(this.vy)) {
-            console.log("Detected NaN");
-        }
+        this.y += this.vy * secondsPassed;             
     }
 }

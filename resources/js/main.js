@@ -524,7 +524,7 @@ function setupSDSimulation() {
     simulationWorld.resetWorld();
     simulationWorld = null;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
-    simOptions.infectionMultiplier = 1.5;
+    simOptions.infectionMultiplier = 2;
     simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
@@ -1066,7 +1066,7 @@ class SimulationWorld {
                 infectedState: 'healthy',
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom -10),
-                radius: 4,
+                radius: Math.max(this.canvas.width / 200, 3.6),
                 speedMultiplier
             });
         });
@@ -1078,7 +1078,7 @@ class SimulationWorld {
                 infectedState: 'healthy',
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom - 10),
-                radius: 4,
+                radius: Math.max(this.canvas.width / 200, 3.6),
                 speedMultiplier
             });
         });
@@ -1090,7 +1090,7 @@ class SimulationWorld {
                 infectedState: 'sick',
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom - 10),
-                radius: 4,
+                radius: Math.max(this.canvas.width / 200, 3.6),
                 infectedTime: Date.now(),
                 speedMultiplier
             });
@@ -1267,7 +1267,7 @@ class SimulationWorld {
             infectedState: 'sick',
             x: this.canvasRight / 2,
             y: this.canvasBottom/2,
-            radius: 4,
+            radius: Math.max(this.canvas.width / 200, 3.6),
             infectedTime: Date.now(),
             speedMultiplier:0.5
         });

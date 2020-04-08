@@ -221,23 +221,23 @@
                     </div> 
                     <div class="row" style="padding-top:1em;text-align:left !important;">
                         <div class="checkbox">
-                            <input class="behavGroup" id="6feet" type="checkbox" />
+                            <input class="behavGroup" id="6feet" value="6feet" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
                             <label for="6feet" class="checkbox-label" value="6feet">Six Feet Separation</label>
                         </div>
                         <div class="checkbox">
-                            <input class="behavGroup" id="handwash" type="checkbox" />
+                            <input class="behavGroup" id="handwash" value="handwash" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
                             <label for="handwash" class="checkbox-label" value="handwash">Wash Hands</label>
                         </div>
                         <div class="checkbox">
-                            <input  class="behavGroup" id="mask" type="checkbox" />
+                            <input  class="behavGroup" id="mask" type="checkbox" value="mask" onchange="onBehaviorSelectionChanged(this)"/>
                             <label for="mask" class="checkbox-label" value="mask">Wear a Mask</label>
                         </div>
                         <div class="checkbox">
-                            <input class="behavGroup" id="facetouch" type="checkbox" />
+                            <input class="behavGroup" id="facetouch" type="checkbox" value="facetouch" onchange="onBehaviorSelectionChanged(this)"/>
                             <label for="facetouch" class="checkbox-label" value="facetouch">Avoid Touching Face</label>
                         </div>
                         <div class="checkbox">
-                            <input class="behavGroup" id="shelter" type="checkbox" />
+                            <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)"/>
                             <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
                         </div>
                     </div>
@@ -249,23 +249,23 @@
                     </div>
                     <div class="row" style="padding-top:1em;text-align:left !important;">
                         <div class="checkbox">
-                            <input class="peopleGroup" id="60plus" type="checkbox" />
+                            <input class="peopleGroup" id="60plus" type="checkbox" value="60plus" onchange="onPopulationSelectionChanged(this)"/>
                             <label for="60plus" class="checkbox-label" value="60plus">60 Years +</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="25plus" type="checkbox" />
+                            <input class="peopleGroup" id="25plus" type="checkbox" value="30plus" onchange="onPopulationSelectionChanged(this)"/>
                             <label for="25plus" class="checkbox-label" value="30plus">25 Years +</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="under25" type="checkbox" />
+                            <input class="peopleGroup" id="under25" type="checkbox" value="under25" onchange="onPopulationSelectionChanged(this)"/>
                             <label for="under25" class="checkbox-label" value="under25">Under 25</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="everyone" type="checkbox" />
+                            <input class="peopleGroup" id="everyone" type="checkbox" value="everyone" onchange="onPopulationSelectionChanged(this)"/>
                             <label for="everyone" class="checkbox-label" value="everyone">All Ages</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="symptomatic" type="checkbox" />
+                            <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)"/>
                             <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
                         </div>
                     </div>                   
@@ -322,6 +322,19 @@
                     <div class="chart" id="panel5Chart2">
 
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="twelve columns alpha" style="border-top:1px solid #b9003e;padding-top:1em;">
+                    <p>
+                        All my Simulations
+                    </p>
+                </div>               
+            </div>
+            <div class="row">
+                <div class="twelve columns alpha" id="mysimulations">
+
                 </div>
             </div>
 

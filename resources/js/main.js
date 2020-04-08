@@ -224,7 +224,7 @@ function initializeDrawView() {
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
     var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveBasis);
-    var userDrawStart = 7;
+    var userDrawStart = 8;
     var clipRect = c.svg
         .append('clipPath#clip')
         .append('rect')
@@ -698,7 +698,8 @@ function setUpUserSimulation() {
     }
     simulationWorld = new SimulationWorld('userCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
     $(".behavGroup").prop("checked", true);
-    $("#everyone").prop("checked", true);
+    $(".peopleGroup").prop("checked", true);
+    $("#symptomatic").prop("checked", false);
 }
 
 function renderUserSimulationWorld() {
@@ -974,13 +975,13 @@ function onQuestionSelect() {
             break;
         case "symptom":
             $(".peopleGroup").prop("checked", false);
-            $("#everyone").prop("checked", true);
+            $("#everyone").prop("checked", false);
             $("#symptomatic").prop("checked", true);
             $(".behavGroup").prop("checked", true);
             break;
         case "face":
-            $(".peopleGroup").prop("checked", false);
-            $("#everyone").prop("checked", true);
+            $(".peopleGroup").prop("checked", true);
+            $("#symptomatic").prop("checked", false);
             $(".behavGroup").prop("checked", true);
             $("#shelter").prop("checked", false);
             break;
@@ -988,6 +989,13 @@ function onQuestionSelect() {
     }
 }
 
+function onBehaviorSelectionChanged() {
+
+}
+
+function onPopulationSelectionChanged() {
+
+}
 
 function simulateUserSelectedWorld() {
 

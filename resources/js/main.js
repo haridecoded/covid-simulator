@@ -19,6 +19,7 @@ var pid;
 var defaultRandomSeed = 1234;
 var reSimuluateNormal = false;
 var reSimuluateSD = false;
+var userSimultionOptions;
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
@@ -675,7 +676,7 @@ function resetSDSimulation() {
 function setUpUserSimulation() {
     // disable next button
     //$("#btnNext").hide();
-
+    userSimultionOptions = _.cloneDeep(defaultSimulationOptions);
     //set up controls   
     for (const sId in sliders) {
         var s = sliders[sId];
@@ -696,6 +697,8 @@ function setUpUserSimulation() {
         simulationWorld = null;
     }
     simulationWorld = new SimulationWorld('userCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
+    $(".behavGroup").prop("checked", true);
+    $("#everyone").prop("checked", true);
 }
 
 function renderUserSimulationWorld() {
@@ -953,6 +956,41 @@ function onSliderInput(slider){
 
 function onSliderChange(){
     redraw();
+}
+
+function onQuestionSelect() {
+    var question = document.getElementById("behavior").value;
+    switch (question) {
+        case "over60":            
+            $(".peopleGroup").prop("checked", false);
+            $("#60plus").prop("checked", true);
+            $(".behavGroup").prop("checked", true);
+            break;
+        case "under25":
+            $(".peopleGroup").prop("checked", false);
+            $("#60plus").prop("checked", true);
+            $("#25plus").prop("checked", true);
+            $(".behavGroup").prop("checked", true);
+            break;
+        case "symptom":
+            $(".peopleGroup").prop("checked", false);
+            $("#everyone").prop("checked", true);
+            $("#symptomatic").prop("checked", true);
+            $(".behavGroup").prop("checked", true);
+            break;
+        case "face":
+            $(".peopleGroup").prop("checked", false);
+            $("#everyone").prop("checked", true);
+            $(".behavGroup").prop("checked", true);
+            $("#shelter").prop("checked", false);
+            break;
+
+    }
+}
+
+
+function simulateUserSelectedWorld() {
+
 }
 
 

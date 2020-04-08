@@ -789,7 +789,7 @@ function drawUserSimulationChart() {
     }
 
 
-    var threshold = 30;
+    var threshold = 20;
     // hospital threshold line
     c.svg.append("line")
         .attr("id", "threshold")

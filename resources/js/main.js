@@ -17,7 +17,8 @@ var userSimulationData = [];
 var simulationWorld;
 var pid;
 var defaultRandomSeed = 1234;
-
+var reSimuluateNormal = false;
+var reSimuluateSD = false;
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
@@ -332,7 +333,7 @@ function getCovidCount() {
 function setupNormalSimulation() {
     //$("#btnNext").hide();
     drawNormalSimulationChart();
-
+    reSimuluateNormal = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
     simOptions.infectionMultiplier = 6.0;
     // initialize simulation canvas
@@ -465,33 +466,45 @@ function drawNormalSimulationChart() {
         .attr("class","threshold")
         .attr("display", "none")
         .attr("fill", "url(#hash4_4)");
-
-
-
-
 }
 
 function simulateSpreadNormal() {
     if ($(this).attr('disabled')) {
         return;
     }
-    normalSimulationData = [];
+    if (reSimuluateNormal) {
+        resetNormalSimulation();       
+    }
+   
     function updateChart(day, count) {       
         if (day > 0 && day <= defaultSimulationOptions.nDays) {
             normalSimulationData.push({ "day": day, "cases": count });
         }
         if (day === defaultSimulationOptions.nDays) {
-            $("#btnNext").show();
+            $("#btnNext").show();          
+            document.getElementById("btnNormalSim").disabled = false;
+            reSimuluateNormal = true;
         }
         drawNormalSimulationChart();
     }
-       
+    normalSimulationData = [];
     simulationWorld.update = updateChart;
     simulationWorld.days = defaultSimulationOptions.nDays + 1;
     simulationWorld.totalPeople = defaultSimulationOptions.populationSize;
-    simulationWorld.addInfectedPerson();
-    //simulationWorld = new SimulationWorld('normalCanvas', .1, 200, 1, defaultSimulationOptions.nDays + 1, updateChart, simOptions);   
+    simulationWorld.addInfectedPerson();   
     document.getElementById("btnNormalSim").disabled = true;
+}
+
+function resetNormalSimulation() {
+    document.getElementById("btnNormalSim").disabled = true;
+    reSimuluateNormal = false;
+    normalSimulationData = [];
+    drawNormalSimulationChart();
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
+    simulationWorld = new SimulationWorld('normalCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
 // PANEL 3

@@ -425,7 +425,7 @@ function drawNormalSimulationChart() {
     }
 
 
-    var threshold = 30;
+    var threshold = 20;
     // hospital threshold line
     c.svg.append("line")
         .attr("id", "threshold")
@@ -459,7 +459,7 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#03A9F4", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#13BA81", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')

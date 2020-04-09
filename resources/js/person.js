@@ -69,7 +69,7 @@ class Person {
 
         else if (this.infectedState === 'sick') color = '#b9003e';
 
-        else if (this.movingState === 'home') color = '#CCCCCC'; //'#0099b0';
+        else if (this.movingState === 'home') color = '#3a434c'; //'#0099b0';
 
         else if (this.infectedState === 'healthy') color = '#AAAAAA'; //'#0099b0';
 

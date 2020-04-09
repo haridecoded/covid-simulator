@@ -1078,7 +1078,7 @@ function simulateUserSpread() {
 }
 
 function addSmallMultipleChart() {
-    var div = $("<div  class='four columns'><div id='userchart" + userSimCount + "' class='row userSM'></div></div>");
+    var div = $("<div  class='one-third column userSM'><div id='userchart" + userSimCount + "' class='row'></div></div>");
     $("#mysimulations").append(div);
       
     var width = Math.min($("#userchart" + userSimCount).width(), 300);
@@ -1129,22 +1129,22 @@ function addSmallMultipleChart() {
     $(".behavGroup").each(function () {
         desc += $("label[for='" + $(this).val() + "']").text() + ": ";
         if ($(this).is(":checked")) {
-            desc += "Yes <br/>";
+            desc += "<b>Yes</b> <br/>";
         }
         else {
-            desc += "No  <br/>";
+            desc += "<b>No</b>  <br/>";
         }
     });
     $(".peopleGroup").each(function () {
         desc += $("label[for='" + $(this).val() + "']").text() + ": ";
         if ($(this).is(":checked")) {
-            desc += "Yes  <br/>";
+            desc += "<b>Yes</b>  <br/>";
         }
         else {
-            desc += "No  <br/>";
+            desc += "<b>No</b>  <br/>";
         }
     });
-    desc += "Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()];
+    desc += "Average population age : <b>" + sliders["ageSlider"].values[$('#ageSlider').val()] + "</b>";
     $(div).append($("<div class='row criteria'><p>" + desc + "</p></div>"));
     userSimCount++;
 }

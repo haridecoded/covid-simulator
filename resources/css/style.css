@@ -133,6 +133,11 @@ h1{
 
 .userSM  .x{
     display:none;
+
+}
+.userSM {
+    margin-left: 2% !important;
+    margin-right: 2% !important;
 }
 /*neighborhood*/
 .house {

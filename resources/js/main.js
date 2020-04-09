@@ -859,7 +859,8 @@ function onQuestionSelect() {
             $(".behavGroup").prop("checked", true);
             break;
         case "symptom":
-            $(".peopleGroup").prop("checked", true);
+            $(".peopleGroup").prop("checked", false);
+            $("#symptomatic").prop("checked", true);
             $(".behavGroup").prop("checked", true);
             break;
         case "face":
@@ -898,6 +899,7 @@ function onPopulationSelectionChanged(cb) {
                 if ($("#25plus").prop("checked") && $("#under25").prop("checked")) {
                     $("#everyone").prop("checked", true);
                 }
+                $("#symptomatic").prop("checked", false);
             }
             else {
                 $("#everyone").prop("checked", false);
@@ -909,6 +911,7 @@ function onPopulationSelectionChanged(cb) {
                 if ($("#60plus").prop("checked") && $("#under25").prop("checked")) {
                     $("#everyone").prop("checked", true);
                 }
+                $("#symptomatic").prop("checked", false);
             }
             else {
                 $("#everyone").prop("checked", false);
@@ -920,6 +923,7 @@ function onPopulationSelectionChanged(cb) {
                 if ($("#25plus").prop("checked") && $("#60plus").prop("checked")) {
                     $("#everyone").prop("checked", true);
                 }
+                $("#symptomatic").prop("checked", false);
             }
             else {
                 $("#everyone").prop("checked", false);
@@ -931,6 +935,7 @@ function onPopulationSelectionChanged(cb) {
                 $("#60plus").prop("checked", true);
                 $("#25plus").prop("checked", true);
                 $("#under25").prop("checked", true);
+                $("#symptomatic").prop("checked", false);
             } else {
                 $("#60plus").prop("checked", false);
                 $("#25plus").prop("checked", false);
@@ -940,7 +945,8 @@ function onPopulationSelectionChanged(cb) {
             break;
         case "symptomatic":
             if (cb.checked) {
-                $(".peopleGroup").prop("checked", true);
+                $(".peopleGroup").prop("checked", false);
+                $("#symptomatic").prop("checked", true);
             }
             break;
     }

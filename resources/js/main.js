@@ -1083,7 +1083,7 @@ function addSmallMultipleChart() {
       
     var width = Math.min($("#userchart" + userSimCount).width(), 300);
     var height = Math.min($("#userchart" + userSimCount).width() * 0.6, 200);
-    var margin = { left: 30, right: 0, top: 10, bottom: 10 };
+    var margin = { left: 35, right: 0, top: 10, bottom: 10 };
 
     var f = d3.f;
     var sel = d3.select("#userchart" + userSimCount);

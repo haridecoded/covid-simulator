@@ -22,6 +22,7 @@ var reSimuluateNormal = false;
 var reSimuluateSD = false;
 var reSimulateUser = false;
 var userSimultionOptions;
+var userSimCount = 0;
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
@@ -1064,6 +1065,7 @@ function simulateUserSpread() {
             document.getElementById("btnUserSim").disabled = false;
             reSimuluateSD = true;
             userPreviousSimulationData = _.cloneDeep(userSimulationData);
+            addSmallMultipleChart();
         }
         
     }
@@ -1075,6 +1077,74 @@ function simulateUserSpread() {
     document.getElementById("btnUserSim").disabled = true;
 }
 
+function addSmallMultipleChart() {
+    var div = $("<div  class='four columns'><div id='userchart" + userSimCount + "' class='row'></div></div>");
+    $("#mysimulations").append(div);
+      
+    var width = Math.min($("#userchart" + userSimCount).width(), 300);
+    var height = Math.min($("#userchart" + userSimCount).width() * 0.6, 200);
+    var margin = { left: 10, right: 10, top: 10, bottom: 10 };
+
+    var f = d3.f;
+    var sel = d3.select("#userchart" + userSimCount);
+    var c = d3.conventions({
+        parentSel: sel,
+        totalWidth: width,
+        height: height,
+        margin: margin
+    });
+    c.x.domain([1, defaultSimulationOptions.nDays + 1]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
+
+    var line = d3.line().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
+
+    c.svg.append("g")
+        .append('path.line').at({ d: line(userPreviousSimulationData) })        
+        .attr("stroke", "#13BA81");
+
+    c.svg.append("line")
+        .attr("id", "threshold")
+        .attr("class", "threshold")
+        .attr("stroke-width", 2)
+        .attr("stroke", "#b9003e")
+        .attr("x1", c.x(1))
+        .attr("y1", c.y(20))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
+        .attr("y2", c.y(20));
+
+    c.svg.append("line")
+        .attr("id", "threshold")
+        .attr("class", "threshold")
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
+        .attr("x1", c.x(1))
+        .attr("y1", c.y(0))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
+        .attr("y2", c.y(0));
+
+    var desc = "";
+    $(".behavGroup").each(function () {
+        desc += $("label[for='" + $(this).val() + "']").text() + ": ";
+        if ($(this).is(":checked")) {
+            desc += "Yes <br/>";
+        }
+        else {
+            desc += "No  <br/>";
+        }
+    });
+    $(".peopleGroup").each(function () {
+        desc += $("label[for='" + $(this).val() + "']").text() + ": ";
+        if ($(this).is(":checked")) {
+            desc += "Yes  <br/>";
+        }
+        else {
+            desc += "No  <br/>";
+        }
+    });
+    desc += "Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()];
+    $(div).append($("<div class='row criteria'><p>" + desc + "</p></div>"));
+    userSimCount++;
+}
 
 //PANEL 6
 function onCopyCodeClick() {

@@ -119,9 +119,16 @@ h1{
 
 .shadowLine {
     stroke-dasharray: 8,8;
-    stroke: #13BA81;
+    stroke: #5b6976;
     stroke-width: 3px;
     fill: none;
+}
+
+.criteria{
+    font-size:12px !important;
+    text-align:left !important;
+    line-height: 15px !important;
+    padding-left:10px;
 }
 
 

@@ -20,6 +20,7 @@ var pid;
 var defaultRandomSeed = 1234;
 var reSimuluateNormal = false;
 var reSimuluateSD = false;
+var reSimulateUser = false;
 var userSimultionOptions;
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
@@ -675,7 +676,6 @@ function resetSDSimulation() {
 // PANEL 5
 
 function setUpUserSimulation() {
-    // disable next button
     //$("#btnNext").hide();
     userSimultionOptions = _.cloneDeep(defaultSimulationOptions);
     //set up controls   
@@ -697,14 +697,7 @@ function setUpUserSimulation() {
         simulationWorld.resetWorld();
         simulationWorld = null;
     }
-    simulationWorld = new SimulationWorld('userCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
-    //$(".behavGroup").prop("checked", true);
-    //$(".peopleGroup").prop("checked", true);
-    //$("#symptomatic").prop("checked", false);
-}
-
-function renderUserSimulationWorld() {
-
+    simulationWorld = new SimulationWorld('userCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, userSimultionOptions);
 }
 
 function drawUserSimulationChart() {
@@ -777,6 +770,11 @@ function drawUserSimulationChart() {
 
     correctSel.append('path.area').at({ d: area(userSimulationData) });
     correctSel.append('path.line').at({ d: line(userSimulationData) });
+
+    if (userPreviousSimulationData.length > 0) {
+        correctSel.append('path.line').at({ d: line(userPreviousSimulationData) }).style("stroke-dasharray", ("3, 3"));
+    }
+
     yourDataSel = c.svg.append('path.your-line');
 
     // gridlines in x axis function
@@ -824,123 +822,6 @@ function applyFill(slider) {
     slider.style.background = bg;
 }
 
-function initializeFreeformGraph() {
-    $("#panel6Chart1").empty();
-    //$("#btnNext").hide();
-    var width = Math.min($("#panel6Chart1").width(), 700);
-    var height = Math.min($("#panel6Chart1").width() * 0.6, 400);
-    var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scalePow().range([height, 0]);
-    var margin = { left: 70, right: 50, top: 30, bottom: 70 };
-
-    var f = d3.f;
-
-    var sel = d3.select('#panel6Chart1');
-    var c = d3.conventions({
-        parentSel: sel,
-        totalWidth: width,
-        height: height,
-        margin: margin
-    });
-
-    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
-
-    c.x.domain([1, d3.max(freeformData, function (d) { return d.day; })]);
-    c.y.domain([0, defaultSimulationOptions.populationSize]);
-    //c.y.domain([0, d3.max(freeformData, function (d) { return d.cases; })]);
-
-
-    c.xAxis.ticks().tickFormat(f());
-    c.yAxis.ticks(5).tickFormat(f());
-    c.drawAxis();
-
-    //add the X gridlines
-    c.svg.append("g")
-        .attr("class", "grid")
-        .attr("transform", "translate(0," + height + ")")
-        .call(make_x_gridlines()
-            .tickSize(-height)
-            .tickFormat("")
-        );
-
-    // add x-axis label
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("transform", "translate(" + width * .4 + "," + (height + margin.top + 20) + ")")
-        .style("text-anchor", "middle")
-        .text("Days since first case of coronavirus");
-
-    // add the Y gridlines
-    c.svg.append("g")
-        .attr("class", "grid")
-        .call(make_y_gridlines()
-            .tickSize(-width + margin.left + margin.right)
-            .tickFormat("")
-        );
-
-    // add y-axis label
-    c.svg.append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
-        .attr("x", 0 - height / 2)
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Number of Cases");
-
-
-    var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
-    var line = d3.area().x(f('day', c.x)).y(f('cases', c.y));
-
-    var correctSel = c.svg.append('g').attr('clip-path', 'url(#clip)');
-
-    correctSel.append('path.area').at({ d: area(freeformData) });
-    correctSel.append('path.line').at({ d: line(freeformData) });
-    yourDataSel = c.svg.append('path.your-line');
-     
-    // gridlines in x axis function
-    function make_x_gridlines() {
-        return c.xAxis.ticks().tickFormat(f());
-    }
-
-    // gridlines in y axis function
-    function make_y_gridlines() {
-        return d3.axisLeft(y)
-            .ticks(10);
-    }
-
-
-    var threshold = d3.max(trendData, function (d) { return d.cases; }) * 0.15;
-    // hospital threshold line
-    c.svg.append("line")
-        .attr("id", "threshold")       
-        .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
-        .attr("x1", c.x(trendData[0].day))
-        .attr("y1", c.y(threshold))
-        .attr("x2", c.x(trendData[trendData.length - 1].day))
-        .attr("y2", c.y(threshold));
-
-    // hospital threshold text
-    c.svg.append("text")
-        .attr("class", "label")       
-        .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .2 + "," + (c.y(threshold) - 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Number of hospital beds available");
-}
-
-function redraw() {
-    var key = JSON.stringify(currentSimulationOptions);
-    if (!simulationCache.hasOwnProperty(key)){
-        simulationCache[key] = covidModel.simulateNeighborhood(currentSimulationOptions);
-    }
-    simulationData = simulationCache[key];
-    freeformData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
-    initializeFreeformGraph();
-}
-
 function onSliderInput(slider){
     var i;
     var s = sliders[slider.id];
@@ -954,10 +835,6 @@ function onSliderInput(slider){
     currentSimulationOptions[s.optionName] = v;
     $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
     $("#" + slider.id + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[i] : 'Explanation Not Found');
-}
-
-function onSliderChange(){
-    redraw();
 }
 
 function onQuestionSelect() {
@@ -1064,6 +941,131 @@ function onPopulationSelectionChanged(cb) {
 
 function simulateUserSpread() {
 
+    // if simulation is running return
+    if ($(this).attr('disabled')) {
+        return;
+    }
+    var isTransmissionChecked = false;
+    var isReceptionChecked = false;
+    var isSDChecked = false;
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
+    simOptions.transmissionMitigation.multiplier = 1;
+    simOptions.receptionMitigation.multiplier = 1;
+    simOptions.socialDistancing.multiplier = 1;
+    // age
+    simOptions.avgAge = sliders["ageSlider"].values[$('#ageSlider').val()];
+    
+    // behavior
+    if ($("#6feet").is(":checked")) {
+        simOptions.transmissionMitigation.multiplier -= 0.2;
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isTransmissionChecked = true;
+        isReceptionChecked = true;
+    }
+    if ($("#handwash").is(":checked")) {
+        simOptions.transmissionMitigation.multiplier -= 0.2;
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isTransmissionChecked = true;
+        isReceptionChecked = true;
+    }
+    if ($("#mask").is(":checked")) {
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isReceptionChecked = true;
+    }
+    if ($("#facetouch").is(":checked")) {
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isReceptionChecked = true;
+    }
+    if ($("#shelter").is(":checked")) {
+        simOptions.socialDistancing.multiplier = 0.1;
+        isSDChecked = true;
+    }
+
+
+
+    // who behavior
+    if ($("#60plus").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 59;                       
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 59;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 59;
+        }
+    }
+    if ($("#25plus").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 24;            
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 24;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 24;
+        }
+    }
+    if ($("#under25").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneUnder = 25;
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneUnder = 25;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneUnder = 25;
+        }
+    }
+    if ($("#everyone").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 0;
+            simOptions.transmissionMitigation.everyoneUnder = null;
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 0;
+            simOptions.receptionMitigation.everyoneUnder = null;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 0;
+            simOptions.socialDistancing.everyoneUnder = null;
+        }
+    }
+    if ($("#symptomatic").is(":checked")) {
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = null;
+            simOptions.socialDistancing.everyoneUnder = null;
+            simOptions.socialDistancing.symptomaticOnly = true;
+        }
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneUnder = null;
+            simOptions.transmissionMitigation.everyoneOver = null;
+            simOptions.transmissionMitigation.symptomaticOnly = true;
+        }
+    }
+
+    //reset simulation world
+  
+    // simulate
+    function updateChart(day, count) {
+        if (day > 0 && day <= defaultSimulationOptions.nDays) {
+            userSimulationData.push({ "day": day, "cases": count });
+        }
+        if (day === defaultSimulationOptions.nDays) {
+            $("#btnNext").show();
+            document.getElementById("btnUserSim").disabled = false;
+            reSimuluateSD = true;
+            userPreviousSimulationData = _.cloneDeep(userSimulationData);
+        }
+        drawUserSimulationChart();
+    }
+
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    simulationWorld = new SimulationWorld('userCanvas', isSDChecked ? 0.9:0.1, defaultSimulationOptions.populationSize-1, 0, defaultSimulationOptions.nDays + 1, updateChart, simOptions);
+    simulationWorld.addInfectedPerson();
+    document.getElementById("btnUserSim").disabled = true;
 }
 
 

@@ -36758,13 +36758,14 @@ function isParticipating(person, precaution){
     // Determine whether or not a person is participating in a precaution / mitigation behavior.
     if (precaution.symptomaticOnly && person.symptoms){
         return true
-    } else if(precaution.everyoneUnder != null || precaution.everyoneOver != null){
-        let under = person.age < (precaution.everyoneUnder | person.age + 1);
-        let over = person.age > (precaution.everyoneOver | person.age - 1);
-        return under && over
-    } else{
-        return false
     }
+    if (precaution.everyoneUnder != null &&  person.age < precaution.everyoneUnder){
+        return true
+    }
+    if(precaution.everyoneOver != null &&  person.age > precaution.everyoneOver){
+        return true
+    }
+    return false
 }
 
 function updateStatus(person){

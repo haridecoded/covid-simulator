@@ -128,16 +128,17 @@ h1{
     font-size:12px !important;
     text-align:left !important;
     line-height: 15px !important;
-    padding-left:10px;
+    padding-left:30px;
 }
 
-
+.userSM  .x{
+    display:none;
+}
 /*neighborhood*/
-
-.house{
+.house {
     fill: rgba(215, 220, 223, 0.53);
-    stroke-width:1px;
-    stroke:#333537;
+    stroke-width: 1px;
+    stroke: #333537;
 }
 
 

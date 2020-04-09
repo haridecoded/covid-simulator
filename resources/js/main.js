@@ -1078,12 +1078,12 @@ function simulateUserSpread() {
 }
 
 function addSmallMultipleChart() {
-    var div = $("<div  class='four columns'><div id='userchart" + userSimCount + "' class='row'></div></div>");
+    var div = $("<div  class='four columns'><div id='userchart" + userSimCount + "' class='row userSM'></div></div>");
     $("#mysimulations").append(div);
       
     var width = Math.min($("#userchart" + userSimCount).width(), 300);
     var height = Math.min($("#userchart" + userSimCount).width() * 0.6, 200);
-    var margin = { left: 10, right: 10, top: 10, bottom: 10 };
+    var margin = { left: 30, right: 0, top: 10, bottom: 30 };
 
     var f = d3.f;
     var sel = d3.select("#userchart" + userSimCount);
@@ -1095,6 +1095,9 @@ function addSmallMultipleChart() {
     });
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
+    c.xAxis.ticks(0).tickFormat(f());
+    c.yAxis.ticks(5).tickFormat(f());
+    c.drawAxis();
 
     var line = d3.line().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
 
@@ -1112,15 +1115,15 @@ function addSmallMultipleChart() {
         .attr("x2", c.x(defaultSimulationOptions.nDays))
         .attr("y2", c.y(20));
 
-    c.svg.append("line")
-        .attr("id", "threshold")
-        .attr("class", "threshold")
-        .attr("stroke-width", 1)
-        .attr("stroke", "black")
-        .attr("x1", c.x(1))
-        .attr("y1", c.y(0))
-        .attr("x2", c.x(defaultSimulationOptions.nDays))
-        .attr("y2", c.y(0));
+    //c.svg.append("line")
+    //    .attr("id", "threshold")
+    //    .attr("class", "threshold")
+    //    .attr("stroke-width", 1)
+    //    .attr("stroke", "black")
+    //    .attr("x1", c.x(1))
+    //    .attr("y1", c.y(0))
+    //    .attr("x2", c.x(defaultSimulationOptions.nDays))
+    //    .attr("y2", c.y(0));
 
     var desc = "";
     $(".behavGroup").each(function () {

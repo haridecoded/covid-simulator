@@ -529,7 +529,9 @@ function setupSDSimulation() {
     simulationWorld = null;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
     simOptions.infectionMultiplier = 2;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
+    simOptions.socialDistancing.everyoneOver = 0;
+    simOptions.socialDistancing.everyoneUnder = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
 function drawSDSimulationChart() {
@@ -850,18 +852,20 @@ function onQuestionSelect() {
         case "over60":            
             $(".peopleGroup").prop("checked", false);
             $("#60plus").prop("checked", true);
-            $(".behavGroup").prop("checked", true);
+            $(".behavGroup").prop("checked", false);
+            $("#shelter").prop("checked", true);
             break;
         case "under25":
             $(".peopleGroup").prop("checked", false);
-            $("#60plus").prop("checked", true);
             $("#25plus").prop("checked", true);
+            $("#60plus").prop("checked", true);
             $(".behavGroup").prop("checked", true);
             break;
         case "symptom":
             $(".peopleGroup").prop("checked", false);
             $("#symptomatic").prop("checked", true);
-            $(".behavGroup").prop("checked", true);
+            $(".behavGroup").prop("checked", false);
+            $("#shelter").prop("checked", true);
             break;
         case "face":
             $(".peopleGroup").prop("checked", true);
@@ -1188,7 +1192,7 @@ function logToDB(data) {
 
 class SimulationWorld {
 
-    constructor(canvasId, percentHome, populationSize, infectedCount, days, callback, modelParam = null) {
+    constructor(canvasId, percentHome, populationSize, infectedCount, days, callback, modelParam = null, populationObedience = 1.0) {
         this.canvas = null;
         this.context = null;
         this.oldTimeStamp = 0;
@@ -1208,6 +1212,7 @@ class SimulationWorld {
         this.days = days;
         this.reset = false;
         this.modelParam = modelParam; 
+        this.populationObedience = populationObedience;
         this.population = covidModel.generatePopulation(this.modelParam);
         this.init(canvasId);
         resetRandomGenerator();
@@ -1235,7 +1240,8 @@ class SimulationWorld {
         this.createWorld({
             percentHome: this.percentHome,
             infectedCount: this.defaultInfectedCount,
-            userMode: this.userMode
+            userMode: this.userMode,
+            populationObedience: this.populationObedience
         });
 
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });       
@@ -1257,15 +1263,14 @@ class SimulationWorld {
         });
     }
 
-    createWorld({ percentHome, infectedCount, userMode = null }) {
+    createWorld({ percentHome, infectedCount, userMode = null , populationObedience = 1.0}) {
         //let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
         //let movingCount = this.totalPeople - infectedCount - homeCount;
         let speedMultiplier = 0.5;
-
         _.initial(this.population.people).forEach((person,index) => {
             var dot = new Person(this.context, {
                 index,
-                movingState: covidModel.isParticipating(person, this.modelParam.socialDistancing) ? "home" : "moving",
+                movingState: covidModel.isParticipating(person, this.modelParam.socialDistancing) && (randomGenerator() <= populationObedience) ? "home" : "moving",
                 infectedState: 'healthy',
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom - 10),

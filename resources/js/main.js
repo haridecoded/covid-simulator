@@ -771,8 +771,14 @@ function drawUserSimulationChart() {
     correctSel.append('path.area').at({ d: area(userSimulationData) });
     correctSel.append('path.line').at({ d: line(userSimulationData) });
 
+    
+
     if (userPreviousSimulationData.length > 0) {
-        correctSel.append('path.line').at({ d: line(userPreviousSimulationData) }).style("stroke-dasharray", ("3, 3"));
+        var shadowLine = d3.line().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
+
+        c.svg.append("g")
+            .append('path.line').at({ d: shadowLine(userPreviousSimulationData) })
+            .attr("class","shadowLine");
     }
 
     yourDataSel = c.svg.append('path.your-line');
@@ -955,7 +961,7 @@ function simulateUserSpread() {
     simOptions.socialDistancing.multiplier = 1;
     // age
     simOptions.avgAge = sliders["ageSlider"].values[$('#ageSlider').val()];
-    
+    userSimulationData = [];
     // behavior
     if ($("#6feet").is(":checked")) {
         simOptions.transmissionMitigation.multiplier -= 0.2;
@@ -1051,6 +1057,7 @@ function simulateUserSpread() {
     function updateChart(day, count) {
         if (day > 0 && day <= defaultSimulationOptions.nDays) {
             userSimulationData.push({ "day": day, "cases": count });
+            drawUserSimulationChart();
         }
         if (day === defaultSimulationOptions.nDays) {
             $("#btnNext").show();
@@ -1058,7 +1065,7 @@ function simulateUserSpread() {
             reSimuluateSD = true;
             userPreviousSimulationData = _.cloneDeep(userSimulationData);
         }
-        drawUserSimulationChart();
+        
     }
 
     simulationWorld.resetWorld();

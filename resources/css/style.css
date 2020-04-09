@@ -117,6 +117,13 @@ h1{
     padding:10px;   
 }
 
+.shadowLine {
+    stroke-dasharray: 8,8;
+    stroke: #13BA81;
+    stroke-width: 3px;
+    fill: none;
+}
+
 
 /*neighborhood*/
 

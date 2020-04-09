@@ -1214,6 +1214,11 @@ class SimulationWorld {
        
     }
 
+    refreshPopulation(params) {
+        this.modelParam = params;
+        this.population = covidModel.generatePopulation(this.modelParam);
+    }
+
     init(canvasId) {
        
         this.canvas = document.getElementById(canvasId);
@@ -1257,6 +1262,7 @@ class SimulationWorld {
         let movingCount = this.totalPeople - infectedCount - homeCount;
         let speedMultiplier = 0.5;
 
+        //assign people to objects        
         let moving = Array.from(Array(movingCount)).map((val, index) => {
             let rand = (randomGenerator() * 100) - 50;
             return new Person(this.context, {
@@ -1295,15 +1301,19 @@ class SimulationWorld {
             });
         });
 
-        
 
-        this.gameObjects = [...infected, ...moving, ...home];
-
-        //assign people to objects
         var p = this.population;
+        var params = this.modelParam;
+        this.gameObjects = [...infected, ...moving, ...home];       
         _.forEach(this.gameObjects, function (o, i) {
             o.data = p.people[i];
             o.data.infected = o.infectedState === 'sick';
+            if (covidModel.isParticipating(o.data, params.socialDistancing)) {
+                o.movingState = "home";
+            }
+            else {
+                o.movingState = "moving";
+            }
         });
 
     }
@@ -1412,7 +1422,6 @@ class SimulationWorld {
         }
     }
 
-
     detectWall() {
 
         this.gameObjects.forEach(go => {
@@ -1434,7 +1443,6 @@ class SimulationWorld {
 
     }
 
-
     circleIntersect(circle1, circle2) {
 
         var dx = circle1.x - circle2.x;
@@ -1443,7 +1451,6 @@ class SimulationWorld {
 
         return distance < (circle1.radius + circle2.radius) + 2;
     }
-
 
     clearCanvas() {
         // Clear the canvas

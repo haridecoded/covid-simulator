@@ -698,9 +698,9 @@ function setUpUserSimulation() {
         simulationWorld = null;
     }
     simulationWorld = new SimulationWorld('userCanvas', .1, 200, 0, null, null, defaultSimulationOptions);
-    $(".behavGroup").prop("checked", true);
-    $(".peopleGroup").prop("checked", true);
-    $("#symptomatic").prop("checked", false);
+    //$(".behavGroup").prop("checked", true);
+    //$(".peopleGroup").prop("checked", true);
+    //$("#symptomatic").prop("checked", false);
 }
 
 function renderUserSimulationWorld() {
@@ -983,6 +983,10 @@ function onQuestionSelect() {
             $("#symptomatic").prop("checked", false);
             $(".behavGroup").prop("checked", true);
             $("#shelter").prop("checked", false);
+            break;
+        case "none":
+            $(".peopleGroup").prop("checked", false);
+            $(".behavGroup").prop("checked", false);
             break;
 
     }

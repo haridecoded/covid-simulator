@@ -1258,63 +1258,79 @@ class SimulationWorld {
     }
 
     createWorld({ percentHome, infectedCount, userMode = null }) {
-        let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
-        let movingCount = this.totalPeople - infectedCount - homeCount;
+        //let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
+        //let movingCount = this.totalPeople - infectedCount - homeCount;
         let speedMultiplier = 0.5;
 
-        //assign people to objects        
-        let moving = Array.from(Array(movingCount)).map((val, index) => {
-            let rand = (randomGenerator() * 100) - 50;
-            return new Person(this.context, {
+        _.initial(this.population.people).forEach((person,index) => {
+            var dot = new Person(this.context, {
                 index,
-                movingState: 'moving',
-                infectedState: 'healthy',
-                x: randomIntFromInterval(10, this.canvasRight - 10),
-                y: randomIntFromInterval(10, this.canvasBottom -10),
-                radius: Math.max(this.canvas.width / 200, 3.6),
-                speedMultiplier
-            });
-        });
-
-        let home = Array.from(Array(homeCount)).map((val, index) => {
-            return new Person(this.context, {
-                index,
-                movingState: 'home',
+                movingState: covidModel.isParticipating(person, this.modelParam.socialDistancing) ? "home" : "moving",
                 infectedState: 'healthy',
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom - 10),
                 radius: Math.max(this.canvas.width / 200, 3.6),
                 speedMultiplier
             });
+            dot.data = person;
+            dot.data.infected = false;
+            this.gameObjects.push(dot);
         });
-
-        let infected = Array.from(Array(+infectedCount)).map((val, index) => {
-            return new Person(this.context, {
-                index,
-                movingState: 'moving',
-                infectedState: 'sick',
-                x: randomIntFromInterval(10, this.canvasRight - 10),
-                y: randomIntFromInterval(10, this.canvasBottom - 10),
-                radius: Math.max(this.canvas.width / 200, 3.6),
-                infectedTime: Date.now(),
-                speedMultiplier
-            });
-        });
+            
+   
 
 
-        var p = this.population;
-        var params = this.modelParam;
-        this.gameObjects = [...infected, ...moving, ...home];       
-        _.forEach(this.gameObjects, function (o, i) {
-            o.data = p.people[i];
-            o.data.infected = o.infectedState === 'sick';
-            if (covidModel.isParticipating(o.data, params.socialDistancing)) {
-                o.movingState = "home";
-            }
-            else {
-                o.movingState = "moving";
-            }
-        });
+
+        ////assign people to objects        
+        //let moving = Array.from(Array(movingCount)).map((val, index) => {
+        //    let rand = (randomGenerator() * 100) - 50;
+        //    return new Person(this.context, {
+        //        index,
+        //        movingState: 'moving',
+        //        infectedState: 'healthy',
+        //        x: randomIntFromInterval(10, this.canvasRight - 10),
+        //        y: randomIntFromInterval(10, this.canvasBottom -10),
+        //        radius: Math.max(this.canvas.width / 200, 3.6),
+        //        speedMultiplier
+        //    });
+        //});
+
+        //let home = Array.from(Array(homeCount)).map((val, index) => {
+        //    return new Person(this.context, {
+        //        index,
+        //        movingState: 'home',
+        //        infectedState: 'healthy',
+        //        x: randomIntFromInterval(10, this.canvasRight - 10),
+        //        y: randomIntFromInterval(10, this.canvasBottom - 10),
+        //        radius: Math.max(this.canvas.width / 200, 3.6),
+        //        speedMultiplier
+        //    });
+        //});
+
+        //let infected = Array.from(Array(+infectedCount)).map((val, index) => {
+        //    return new Person(this.context, {
+        //        index,
+        //        movingState: 'moving',
+        //        infectedState: 'sick',
+        //        x: randomIntFromInterval(10, this.canvasRight - 10),
+        //        y: randomIntFromInterval(10, this.canvasBottom - 10),
+        //        radius: Math.max(this.canvas.width / 200, 3.6),
+        //        infectedTime: Date.now(),
+        //        speedMultiplier
+        //    });
+        //});
+        
+        //this.gameObjects = [...infected, ...moving, ...home];       
+        //_.forEach(this.gameObjects, function (o, i) {
+        //    o.data = p.people[i];
+        //    o.data.infected = o.infectedState === 'sick';
+        //    if (covidModel.isParticipating(o.data, params.socialDistancing)) {
+        //        o.movingState = "home";
+        //    }
+        //    else {
+        //        o.movingState = "moving";
+        //    }
+        //});
 
     }
 

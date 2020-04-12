@@ -162,7 +162,7 @@ function onBtnNextClick() {
 // PANEL 1
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
-    //$("#btnNext").hide();
+    $("#btnNext").hide();
     var width = Math.min($("#panel1Chart1").width(), 700);
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
@@ -336,7 +336,7 @@ function getCovidCount() {
 
 // PANEL 2
 function setupNormalSimulation() {
-    //$("#btnNext").hide();
+    $("#btnNext").hide();
     drawNormalSimulationChart();
     reSimuluateNormal = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
@@ -447,7 +447,7 @@ function drawNormalSimulationChart() {
         .attr("class", "label threshold")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 15) + ")")
+        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -523,7 +523,7 @@ function showThreshold() {
 
 // PANEL 4
 function setupSDSimulation() {
-    //$("#btnNext").hide();
+    $("#btnNext").hide();
     drawSDSimulationChart();
     reSimuluateSD = false;
     simulationWorld.resetWorld();
@@ -684,7 +684,7 @@ function resetSDSimulation() {
 // PANEL 5
 
 function setUpUserSimulation() {
-    //$("#btnNext").hide();
+    $("#btnNext").hide();
     userSimultionOptions = _.cloneDeep(defaultSimulationOptions);
     //set up controls   
     for (const sId in sliders) {

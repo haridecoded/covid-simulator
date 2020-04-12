@@ -46,7 +46,7 @@ class Person {
     }
 
     highlight() {
-        this.context.fillStyle = "#ff9800";
+        this.context.fillStyle = "#F2B138";
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fill();
@@ -67,7 +67,7 @@ class Person {
         //    color = '#b9003e';
         //}
 
-        else if (this.infectedState === 'sick') color = '#b9003e';
+        else if (this.infectedState === 'sick') color = '#8C2E26';
 
         else if (this.movingState === 'home') color = '#3a434c'; //'#0099b0';
 

@@ -436,7 +436,7 @@ function drawNormalSimulationChart() {
         .attr("class", "threshold")
         .attr("display", "none")
         .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
+        .attr("stroke", "#8C2E26")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -447,7 +447,7 @@ function drawNormalSimulationChart() {
         .attr("class", "label threshold")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .4 + "," + (c.y(threshold) + 15) + ")")
+        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 15) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -463,14 +463,15 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ff9800", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#034AA6", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
         .at({ d: diffarea(_.filter(normalSimulationData, function (t) { return t.cases >= threshold; })) })
-        .attr("class","threshold")
+        .attr("class", "threshold")
         .attr("display", "none")
-        .attr("fill", "url(#hash4_4)");
+        .attr("fill", "#F2B138");
+        //.attr("fill", "url(#hash4_4)");
 }
 
 function simulateSpreadNormal() {
@@ -552,7 +553,7 @@ function drawSDSimulationChart() {
         margin: margin
     });
 
-    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
@@ -624,7 +625,7 @@ function drawSDSimulationChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")      
         .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
+        .attr("stroke", "#8C2E26")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -634,7 +635,7 @@ function drawSDSimulationChart() {
     c.svg.append("text")
         .attr("class", "label threshold")     
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .4 + "," + (c.y(threshold) - 10) + ")")
+        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -673,7 +674,11 @@ function resetSDSimulation() {
     drawSDSimulationChart();
     simulationWorld.resetWorld();
     simulationWorld = null;
-    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, defaultSimulationOptions);
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 2;
+    simOptions.socialDistancing.everyoneOver = 0;
+    simOptions.socialDistancing.everyoneUnder = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
 // PANEL 5
@@ -721,7 +726,7 @@ function drawUserSimulationChart() {
         margin: margin
     });
 
-    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
@@ -804,7 +809,7 @@ function drawUserSimulationChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")
         .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
+        .attr("stroke", "#8C2E26")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -814,7 +819,7 @@ function drawUserSimulationChart() {
     c.svg.append("text")
         .attr("class", "label threshold")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .4 + "," + (c.y(threshold) - 10) + ")")
+        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -822,7 +827,7 @@ function drawUserSimulationChart() {
 
 function applyFill(slider) {
     const settings = {
-        fill: '#b9003e',
+        fill: '#8C2E26',
         background: '#d7dcdf'
     };
 

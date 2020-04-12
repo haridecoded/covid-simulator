@@ -206,8 +206,8 @@ input[type="button"]:focus {
     input[type="reset"].button-primary,
     input[type="button"].button-primary {
         color: #FFF;
-        background-color: #A31621;
-        border-color: #A31621;
+        background-color: #8C2E26;
+        border-color: #8C2E26;
     }
         .button.button-primary:hover,
         button.button-primary:hover,
@@ -220,9 +220,22 @@ input[type="button"]:focus {
         input[type="reset"].button-primary:focus,
         input[type="button"].button-primary:focus {
             color: #FFF;
-            background-color: #b91623;
-            border-color: #b91623;
+            background-color: #ae392f;
+            border-color: #ae392f;
         }
+
+    input[type="button"].button-secondary {
+        color: #FFF;
+        background-color: #3A4F6B;
+        border-color: #3A4F6B;
+    }
+        input[type="button"].button-secondary:focus {
+            color: #FFF;
+            background-color: #4b6e9d;
+            border-color: #4b6e9d;
+        }
+
+
 
 
 /* Forms

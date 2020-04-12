@@ -79,7 +79,7 @@
                         (2) A person may get coronavirus by touching a surface that has the virus on it and then <span class="emph"> touching their own face.</span> <br /><br />
                         Both these things happen a lot during a typical day when people are traveling, shopping, socializing with friends, etc.<br /> <br />
                         We created a simulation model based on the transmission likelihood of Coronavirus.
-                        Each moving dot ( <span class="moving"> </span> ) in the visualization represents a person in the neighborhood. There are 200 dots in total.
+                        Each moving dot ( <span class="moving"> </span> ) in the visualization represents a person in the neighborhood. There are 200 dots in total.<br/>
                     </p>
                     <p class="highlight">                     
                         Click the simulate button to see what happens when an infected person ( <span class="infected"> </span> ) enters the "fictional" neighborhood &rarr;
@@ -113,7 +113,7 @@
                     <p class="pEmph">
                         An <b>urgent</b> problem is that hospitals are unable to manage this rapid and exponential growth of coronavirus cases.
                         For every <span class="emph">10 people</span> in the neighborhood, there is <span class="emph">1 hospital bed</span> avaiable for care.
-                        This means, not everyone who is infected can get the treatment they need! <span style="font-weight:bold;color:#ff9800;">(9 out of 10 people)</span>
+                        This means, not everyone who is infected can get the treatment they need! <span style="font-weight:bold;color:#F2B138;">(9 out of 10 people)</span>
                         While this is a simulation, it is based on real data about relative numbers of hospital beds in communities. <br/> <br/>
                     </p>
                 </div>
@@ -134,78 +134,68 @@
 
         <div class="row panel" id="panel4" style="display:none;">
             <div class="row">
-                <div class="eight columns offset-by-two alpha">
-                    <p>
-                        <b>You can help slow down the rate at which coronavirus is spreading by practicing <span class="emph">Social Distancing</span>.</b>
-                    </p>
+                <div class="five columns alpha">
                     <p class="pEmph">
+                        <b>You can help slow down the rate at which coronavirus is spreading by practicing <span class="emph">Social Distancing</span>.</b><br /><br />
                         Our goal is to ensure that the number of patients are always <b>fewer</b> than the number of hospital beds available.
                         This gives hospitals enough <b>resources</b> to take care of all sick patients at any give time.
-                        This also gives us enough <b>time</b> to develop vaccines and treatment.
-                    </p>
-                    <p>
+                        This also gives us enough <b>time</b> to develop vaccines and treatment. <br /><br />
                         <span class="emph">How can you practice social distancing?</span> <br />
-                        (1) Stay put in your home and do not travel for work/school (i.e., shelter in place). 
-                        (2) Avoid large gatherings. 
+                        (1) Stay put in your home and do not travel for work/school (i.e., <span class="emph">shelter in place</span>).
+                        (2) Avoid large gatherings.
                         (3) Stay away from public places like the beach or park.
                         (4) If you go outside like the grocery store, maintain atleast 6 feet distance from others.
                     </p>
                     <p class="highlight">
-                        Click the button below to see how the infection spreads when you practice strict "shelter in place" social distancing.
+                        Click the simulate button to see how the infection spreads when you practice strict social distancing ( <span class="strict"> </span> ) &rarr;
                     </p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="six columns alpha">
-                    <div class="chart" id="panel4Chart1">
-                        <canvas id="sdCanvas" width="100" height="100" style="margin-top:30px;border:1px solid #171717; background:#fff;">
-                            Your browser does not support the HTML5 canvas tag.
-                        </canvas>
-                    </div>
-                </div>
-                <div class="six columns">
-                    <div class="chart" id="panel4Chart2">
+                <div class="six columns offset-by-one">
+                    <div class="row">
+                        <div class="chart" id="panel4Chart1">
+                            <canvas id="sdCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
+                                Your browser does not support the HTML5 canvas tag.
+                            </canvas>
+                        </div>
+                        <div class="row">
+                            <div class="chart" id="panel4Chart2">
 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
+                        </div>
                     </div>
-                </div>
+                </div>            
             </div>
         </div>
     
         <div class="row panel" id="panel5" style="display:none;">
             <div class="row">
-                <div class="eight columns offset-by-two alpha">
+                <div class="twelve columns alpha">
                     <p class="pEmph">
                         Up until now, we have looked at how <b>"shelter in place"</b> type of <span class="emph">Social Distancing</span>
-                        can greatly slow down the spread of Coronavirus. But, there are other questions you may have such as <i>What happens if only people over the age of 60 practice social distancing?</i>
-                        or <i>How washing hands or not touching your face can affect the spread of virus? </i>
+                        can greatly slow down the spread of Coronavirus. But, there are other questions you may have such as <i>What happens if only people over the age of 60 practice social distancing?</i> or <i>How washing hands or not touching your face can affect the spread of virus? </i>
                     </p>
-                    <p>
+                    <p class="highlight">
                         Choose from the list of questions below or directly change different attributes of our model to see how the spread of the virus changes.
                     </p>
                 </div>
             </div>
             <div class="row">
-                <div class="ten columns offset-by-one alpha">
-                    <select id="behavior" class="mdl-select-workaround" style="height:50px;" onchange="onQuestionSelect()">
-                        <option value="none">Select a question:</option>
-                        <option value="over60">What if only high risk individuals stay home (e.g., people over 60, people with medical conditions)?</option>
-                        <option value="under25">What if low risk individuals don't take precautions (e.g., people under 25)?</option>
-                        <option value="symptom">What if only people who exhibit COVID-19 symptoms stay at home?</option>
-                        <option value="face">What if everyone takes precautions but move about the neighborhood?</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row" >
-                <div class="six columns alpha">
+                <div class="five columns alpha">
                     <div class="row">
+                        <select id="behavior" class="mdl-select-workaround" style="height:50px;" onchange="onQuestionSelect()">
+                            <option value="none">Select a question:</option>
+                            <option value="over60">What if only high risk individuals stay home (e.g., people over 60, people with medical conditions)?</option>
+                            <option value="under25">What if low risk individuals don't take precautions (e.g., people under 25)?</option>
+                            <option value="symptom">What if only people who exhibit COVID-19 symptoms stay at home?</option>
+                            <option value="face">What if everyone takes precautions but move about the neighborhood?</option>
+                        </select>
+                    </div>
+                    <div class="row" style="text-align:left;">
                         COVID-19 Protection Behavior:
-                    </div> 
+                    </div>
                     <div class="row" style="padding-top:1em;text-align:left !important;">
                         <div class="checkbox">
                             <input class="behavGroup" id="6feet" value="6feet" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
@@ -216,104 +206,76 @@
                             <label for="handwash" class="checkbox-label" value="handwash">Wash Hands</label>
                         </div>
                         <div class="checkbox">
-                            <input  class="behavGroup" id="mask" type="checkbox" value="mask" onchange="onBehaviorSelectionChanged(this)"/>
+                            <input class="behavGroup" id="mask" type="checkbox" value="mask" onchange="onBehaviorSelectionChanged(this)" />
                             <label for="mask" class="checkbox-label" value="mask">Wear a Mask</label>
                         </div>
                         <div class="checkbox">
-                            <input class="behavGroup" id="facetouch" type="checkbox" value="facetouch" onchange="onBehaviorSelectionChanged(this)"/>
+                            <input class="behavGroup" id="facetouch" type="checkbox" value="facetouch" onchange="onBehaviorSelectionChanged(this)" />
                             <label for="facetouch" class="checkbox-label" value="facetouch">Avoid Touching Face</label>
                         </div>
                         <div class="checkbox">
-                            <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)"/>
+                            <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)" />
                             <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
                         </div>
                     </div>
-                    </div>
-
-                <div class="six columns">
-                    <div class="row">
+                    <div class="row" style="text-align:left;">
                         Who Practices Protection Behavior:
                     </div>
                     <div class="row" style="padding-top:1em;text-align:left !important;">
                         <div class="checkbox">
-                            <input class="peopleGroup" id="60plus" type="checkbox" value="60plus" onchange="onPopulationSelectionChanged(this)"/>
+                            <input class="peopleGroup" id="60plus" type="checkbox" value="60plus" onchange="onPopulationSelectionChanged(this)" />
                             <label for="60plus" class="checkbox-label" value="60plus">60 Years +</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="25plus" type="checkbox" value="25plus" onchange="onPopulationSelectionChanged(this)"/>
+                            <input class="peopleGroup" id="25plus" type="checkbox" value="25plus" onchange="onPopulationSelectionChanged(this)" />
                             <label for="25plus" class="checkbox-label" value="25plus">25 Years +</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="under25" type="checkbox" value="under25" onchange="onPopulationSelectionChanged(this)"/>
+                            <input class="peopleGroup" id="under25" type="checkbox" value="under25" onchange="onPopulationSelectionChanged(this)" />
                             <label for="under25" class="checkbox-label" value="under25">Under 25</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="everyone" type="checkbox" value="everyone" onchange="onPopulationSelectionChanged(this)"/>
+                            <input class="peopleGroup" id="everyone" type="checkbox" value="everyone" onchange="onPopulationSelectionChanged(this)" />
                             <label for="everyone" class="checkbox-label" value="everyone">All Ages</label>
                         </div>
                         <div class="checkbox">
-                            <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)"/>
+                            <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)" />
                             <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
                         </div>
-                    </div>                   
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="eight columns offset-by-two alpha">
-                    <div class="row" style="padding-top:1em;">
+                    </div>
+                    <div class="row" style="text-align:left;">
                         <span>Average Population Age:</span>
                     </div>
-                    <div class="row">
+                    <div class="row" style="text-align:left;padding-left:10px;">
                         <div class="range-slider">
                             <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
                             <span id="ageSliderText" class="range-slider__value"></span>
                         </div>
                     </div>
-                    <div class="row expl">
+                    <div class="row expl" style="text-align:left;">
                         <span id="ageSliderExplanation">Explanation about value</span>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <input id="btnUserSim" type="button" class="button-primary" value="Simulate" onclick="simulateUserSpread()" />
-            </div>
-
-               
-                <!--<div class="four columns alpha">
-                    <div class="row lbl">
-                        <span>Social Distancing:</span>
-                    </div>
                     <div class="row">
-                        <div class="range-slider">
-                            <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                            <span id="isolationSliderText" class="range-slider__value"></span>
+                        <input id="btnUserSim" type="button" class="button-primary" value="Simulate" onclick="simulateUserSpread()" />
+                    </div>
+                </div>
+                <div class="six columns offset-by-one">
+                    <div class="row">
+                        <div class="chart" id="panel5Chart1">
+                            <canvas id="userCanvas" width="100" height="100" style="margin-top:30px;border:1px solid #171717; background:#fff;">
+                                Your browser does not support the HTML5 canvas tag.
+                            </canvas>
                         </div>
                     </div>
-                    <div class="row expl">
-                        <span id="isolationSliderExplanation">Explanation about value</span>
-                    </div>
-                </div>-->
+                    <div class="row">
+                        <div class="chart" id="panel5Chart2">
 
-
-       
-            <div class="row">
-                <div class="six columns alpha">
-                    <div class="chart" id="panel5Chart1">
-                        <canvas id="userCanvas" width="100" height="100" style="margin-top:30px;border:1px solid #171717; background:#fff;">
-                            Your browser does not support the HTML5 canvas tag.
-                        </canvas>
+                        </div>
                     </div>
                 </div>
-                <div class="six columns">
-                    <div class="chart" id="panel5Chart2">
-
-                    </div>
-                </div>
-            </div>
-
+            </div>           
             <div class="row">
-                <div class="twelve columns alpha" style="border-top:1px solid #b9003e;padding-top:1em;">
+                <div class="twelve columns alpha" style="border-top:1px solid #8C2E26;padding-top:1em;">
                     <p>
                         All My Simulations
                     </p>
@@ -399,7 +361,7 @@
                 <div class="two columns progress"></div>
             </div>
             <div class="row">
-                <input class="button" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
+                <input class="button-secondary" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
             </div>            
         </div>
 

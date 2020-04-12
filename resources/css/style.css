@@ -1,14 +1,22 @@
 body {
     font-family: 'Roboto', sans-serif;
-    color: #252525;
-    background: rgba(230, 228, 221, 0.15);
+    color: #0D0C0C;
+    background: #F2F2F2;
     font-size: 18px;
 }
 
+/* Color Theme Swatches in Hex */
+/*.iN-C-Website-Color-Palette-2-1-hex { color: #FFFFFF; }
+.iN-C-Website-Color-Palette-2-2-hex { color: #CFDEE1; }
+.iN-C-Website-Color-Palette-2-3-hex { color: #7898B2; }
+.iN-C-Website-Color-Palette-2-4-hex { color: #3A4F6B; }
+.iN-C-Website-Color-Palette-2-5-hex { color: #A31621; }*/
 
-h1{
-    text-align:center;
-    font-weight:800;
+
+
+h1 {
+    text-align: center;
+    font-weight: 800;
 }
 
 .panel {
@@ -36,17 +44,36 @@ h1{
     box-shadow: 3px 1px 8px 0px rgba(0,0,0,0.4);
 }
 
-.highlight{
-    border-radius:5px;
-    padding:5px;
-    background:#f3e5e9;
+.highlight {
+    border-radius: 5px;
+    padding: 5px 15px;
+    background: #CFDEE1;
+    text-align:left;
+}
+.moving {
+    height: 8px;
+    width: 8px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
 }
 
-.pEmph {
-    background: rgba(228, 228, 228, 0.7);
-    padding:10px;
-    border-radius:4px;
+.infected {
+    height: 8px;
+    width: 8px;
+    background-color: #A31621;
+    border-radius: 50%;
+    display: inline-block;
+}
 
+
+
+.pEmph {
+    background: #3A4F6B;
+    padding: 15px;
+    border-radius: 7px;
+    color:white;
+    text-align:left;
 }
 
 
@@ -65,7 +92,7 @@ h1{
 }
 
 .area {
-    fill: rgba(228, 228, 228, 0.6);
+    fill: #CFDEE1;
 }
 
 /*.diffarea {
@@ -73,7 +100,7 @@ h1{
 }*/
 
 .your-line {
-    stroke: #b9003e;
+    stroke: #A31621;
     stroke-width: 3;
     stroke-dasharray: 5 5;
 }
@@ -82,9 +109,10 @@ h1{
     cursor:pointer;
 }
 
+
 .grid line {
-    stroke: lightgrey !important;
-    stroke-opacity: 0.7;
+    stroke: #3A4F6B !important;
+    stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
 
@@ -106,8 +134,19 @@ h1{
     text-shadow: none;
 }
 
+.button[disabled] {
+    background: #ccc !important;
+    border-color: #ccc !important;
+    text-shadow: none;
+}
+
 .emph {
-    color: #b9003e;
+    color: #9bcbd5;
+    font-weight: bold;
+}
+
+.emph1 {
+    color: #A31621;
     font-weight: bold;
 }
 

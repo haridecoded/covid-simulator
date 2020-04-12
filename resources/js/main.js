@@ -167,7 +167,7 @@ function initializeDrawView() {
     var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]).domain([0, 200]);
-    var margin = { left: 70, right: 50, top: 30, bottom: 70 };
+    var margin = { left: 50, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
 
@@ -179,7 +179,7 @@ function initializeDrawView() {
         margin: margin
     });
 
-    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill","white");
 
     c.x.domain([1, d3.max(trendData, function (d) { return d.day; })]);
     c.y.domain([0, 200]);
@@ -348,7 +348,7 @@ function setupNormalSimulation() {
 function drawNormalSimulationChart() {
     $("#panel2Chart2").empty();
     var width = Math.min($("#panel2Chart2").width(), 700);
-    var height = Math.min($("#panel2Chart2").width() * 0.6, 500);
+    var height = Math.min($("#panel2Chart2").width() * 0.5, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 50, right: 0, top: 30, bottom: 70 };
@@ -363,7 +363,7 @@ function drawNormalSimulationChart() {
         margin: margin
     });
 
-    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 0 });
+    c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
     c.y.domain([0, defaultSimulationOptions.populationSize]);
@@ -463,7 +463,7 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#13BA81", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#ff9800", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
@@ -1266,7 +1266,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null , populationObedience = 1.0}) {
         //let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
         //let movingCount = this.totalPeople - infectedCount - homeCount;
-        let speedMultiplier = 0.5;
+        let speedMultiplier = 0.8;
         _.initial(this.population.people).forEach((person,index) => {
             var dot = new Person(this.context, {
                 index,
@@ -1356,7 +1356,7 @@ class SimulationWorld {
 
         let contagiousCount = this.gameObjects.filter(person => person.infectedState === 'sick').length;
 
-        if (this.rafCounter % 30 === 0) {
+        if (this.rafCounter % 20 === 0) {
             
             if (this.update) {
                 this.update.call(this, this.dayCount, contagiousCount);

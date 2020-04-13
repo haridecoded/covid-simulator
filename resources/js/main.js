@@ -1277,8 +1277,9 @@ class SimulationWorld {
         _.initial(this.population.people).forEach((person,index) => {
             var dot = new Person(this.context, {
                 index,
-                movingState: covidModel.isParticipating(person, this.modelParam.socialDistancing) && (randomGenerator() <= populationObedience) ? "home" : "moving",
+                movingState: 'moving',
                 infectedState: 'healthy',
+                disobedient: randomGenerator() >= populationObedience,
                 x: randomIntFromInterval(10, this.canvasRight - 10),
                 y: randomIntFromInterval(10, this.canvasBottom - 10),
                 radius: Math.max(this.canvas.width / 200, 3.6),
@@ -1367,7 +1368,13 @@ class SimulationWorld {
             
             if (this.update) {
                 this.update.call(this, this.dayCount, contagiousCount);
-            }            
+            }
+            this.gameObjects.forEach(go =>{ 
+                covidModel.updateStatus(go.data);
+                go.setMovingState(covidModel.isParticipating(go.data, this.modelParam.socialDistancing)
+                ? "home"
+                : "moving");  
+            });
             this.dayCount++;
         }
 

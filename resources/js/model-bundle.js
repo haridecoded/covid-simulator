@@ -37106,7 +37106,8 @@ module.exports = {
     simulateInteraction: simulateInteractionLegacy,
     updateStatus: updateStatus,
     randomFactory: Random.randomFactory,
-    isParticipating: isParticipating
+    isParticipating: isParticipating,
+    Virus: Virus
 };
 
 },{"./people":488,"./random":489,"./virus":490,"lodash.clonedeep":485,"lodash.uniq":486}],488:[function(require,module,exports){

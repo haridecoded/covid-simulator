@@ -23,6 +23,8 @@ var reSimuluateSD = false;
 var reSimulateUser = false;
 var userSimultionOptions;
 var userSimCount = 0;
+// Prevent people from recovering for now.
+covidModel.Virus.pRecovery = 0.0;
 var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate

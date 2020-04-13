@@ -17,7 +17,7 @@ var userSimulationData = [];
 var userPreviousSimulationData = [];
 var simulationWorld;
 var pid;
-var defaultRandomSeed = 1234;
+var defaultRandomSeed = 45235;
 var reSimuluateNormal = false;
 var reSimuluateSD = false;
 var reSimulateUser = false;
@@ -27,9 +27,9 @@ var defaultSimulationOptions = {
     nDays: 30, // How many days to simulate
     populationSize: 200, // How many people to simulate
     avgAge: 38.1, // Average age of population
-    infectionMultiplier: 0.25, // Adjusts the rate of infection given exposure (use to simulate hygeine / overall susceptibility)
+    infectionMultiplier: 0.37, // Adjusts the rate of infection given exposure (use to simulate hygeine / overall susceptibility)
     propInfected: 0.001, // What proportion of people are infected at the beginning
-    randomSeed: 7,
+    randomSeed: 45235,
     transmissionMitigation: {
         multiplier: 0.5,
         symptomaticOnly: false,
@@ -63,7 +63,7 @@ var defaultSimulationOptions = {
             },
             {
                 id: "walkInPark",
-                timesPerMonth: 20, 
+                timesPerMonth: 15, 
                 pContact: 0.05
             },
             // {
@@ -108,6 +108,7 @@ $(window).on('load', function () {
     $("#panel" + currentStep).show();   
     var key = JSON.stringify(defaultSimulationOptions);
     if (!simulationCache.hasOwnProperty(key)){
+        resetRandomGenerator();
         simulationCache[key] = covidModel.simulateNeighborhood(defaultSimulationOptions);
     }
     simulationData = simulationCache[key];

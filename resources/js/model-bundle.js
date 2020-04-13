@@ -37126,7 +37126,7 @@ function generatePerson(values, options){
         recovered: false,
         name: values.hasOwnProperty("name") ? values.name : Random.sample(PersonalInfo.names, {size: 1})[0],
         occupation: values.hasOwnProperty("occupation") ? values.occupation : Random.sample(PersonalInfo.occupations, {size: 1})[0],
-        age: values.age | Math.round(Random.randLogNormal(Math.log(options.avgAge), 0.25)),
+        age: values.age | Math.round(Random.randLogNormal(Math.log(options.avgAge), 0.35)),
         houseId: null
     }, values);
     Virus.assignProgressionProbs(person, options);

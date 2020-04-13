@@ -314,7 +314,7 @@ function initializeDrawView() {
             return;
         }
         clipRect.transition().duration(1000).attr('width', c.x(defaultSimulationOptions.nDays));
-
+        freeformData = _.cloneDeep(yourData);
         $("#showMe").hide();
         $(".result").show();
         $("#btnNext").show();
@@ -1221,6 +1221,7 @@ class SimulationWorld {
         this.population = covidModel.generatePopulation(this.modelParam);
         this.init(canvasId);
         resetRandomGenerator();
+        this.mobileBreakPointWidth = 400;
        
     }
 
@@ -1271,7 +1272,7 @@ class SimulationWorld {
     createWorld({ percentHome, infectedCount, userMode = null , populationObedience = 1.0}) {
         //let homeCount = Math.ceil((this.totalPeople - infectedCount) * this.percentHome);
         //let movingCount = this.totalPeople - infectedCount - homeCount;
-        let speedMultiplier = 0.8;
+        let speedMultiplier = window.innerWidth < this.mobileBreakPointWidth ? .45 : 1;
         _.initial(this.population.people).forEach((person,index) => {
             var dot = new Person(this.context, {
                 index,

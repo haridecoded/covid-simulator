@@ -1,16 +1,32 @@
-body {
-    font-family: 'Roboto', sans-serif;
+﻿body {
+    font-family: 'Roboto Condensed', sans-serif;
     color: #0D0C0C;
     background: #F2F2F2;
-    font-size: 18px;
+    font-size: 22px;
 }
 
 /* Color Theme Swatches in Hex */
-/*.iN-C-Website-Color-Palette-2-1-hex { color: #FFFFFF; }
-.iN-C-Website-Color-Palette-2-2-hex { color: #CFDEE1; }
-.iN-C-Website-Color-Palette-2-3-hex { color: #7898B2; }
-.iN-C-Website-Color-Palette-2-4-hex { color: #3A4F6B; }
-.iN-C-Website-Color-Palette-2-5-hex { color: #A31621; }*/
+.hex1 { color: #A3DAE3; }
+.hex2 { color: #89A1C9; }
+.hex3 { color: #784C87; }
+.hex4 { color: #6F2864; }
+.hex5 { color: #530F40; }
+
+/* Color Theme Swatches in Hex */
+/*.color-theme_Capture-d’écran-2020-03-27-à-10-1-hex { color: #2A020A; }
+.color-theme_Capture-d’écran-2020-03-27-à-10-2-hex { color: #734860; }
+.color-theme_Capture-d’écran-2020-03-27-à-10-3-hex { color: #A68F9B; }
+.color-theme_Capture-d’écran-2020-03-27-à-10-4-hex { color: #F2E9E4; }
+.color-theme_Capture-d’écran-2020-03-27-à-10-5-hex { color: #FFFFFF; }*/
+
+/* Color Theme Swatches in Hex */
+/*.Color-Theme-11-1-hex { color: #F8B195; }
+.Color-Theme-11-2-hex { color: #F67280; }
+.Color-Theme-11-3-hex { color: #C06C84; }
+.Color-Theme-11-4-hex { color: #6C5B7B; }
+.Color-Theme-11-5-hex { color: #355C7D; }*/
+
+
 
 canvas{
     margin-left:2px;
@@ -21,7 +37,7 @@ canvas{
 h1 {
 
     text-align: center;
-    font-weight: 800;
+
 }
 
 .panel {
@@ -52,24 +68,37 @@ h1 {
 .highlight {
     border-radius: 5px;
     padding: 5px 15px;
-    background: #F2B138;
+    background: #F2CF66;
     text-align: left;
 }
 .moving {
-    height: 8px;
-    width: 8px;
+    height: 15px;
+    width: 15px;
+    border:1px solid #3a434c;
     background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
 }
 
 .infected {
-    height: 8px;
-    width: 8px;
-    background-color: #8C2E26;
+    height: 15px;
+    width: 15px;
+    border: 1px solid #3a434c;
+    background-color: #731D0A;
     border-radius: 50%;
     display: inline-block;
 }
+
+.newly {
+    height: 15px;
+    width: 15px;
+    border: 1px solid #3a434c;
+    background-color: #F29D35;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
 
 .strict {
     height: 8px;
@@ -82,11 +111,14 @@ h1 {
 
 
 .pEmph {
-    background: #3A4F6B;
+    background: #c4e3e6;
     padding: 15px;
     border-radius: 7px;
-    color:white;
-    text-align:left;
+    text-align: left;
+}
+
+.hint {
+    font-size: 20px;
 }
 
 
@@ -105,7 +137,7 @@ h1 {
 }
 
 .area {
-    fill: #8FBFBF;
+    fill: #F2CF66;
 }
 
 /*.diffarea {
@@ -113,7 +145,7 @@ h1 {
 }*/
 
 .your-line {
-    stroke: #A31621;
+    stroke: #BF471B;
     stroke-width: 3;
     stroke-dasharray: 5 5;
 }
@@ -154,12 +186,12 @@ h1 {
 }
 
 .emph {
-    color: #F2B138;
+    color: #BF471B;
     font-weight: bold;
 }
 
 .emph1 {
-    color: #A31621;
+    color: #BF471B;
     font-weight: bold;
 }
 

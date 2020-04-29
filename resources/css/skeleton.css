@@ -206,8 +206,8 @@ input[type="button"]:focus {
     input[type="reset"].button-primary,
     input[type="button"].button-primary {
         color: #FFF;
-        background-color: #8C2E26;
-        border-color: #8C2E26;
+        background-color: #BF471B;
+        border-color: #BF471B;
     }
         .button.button-primary:hover,
         button.button-primary:hover,
@@ -220,19 +220,19 @@ input[type="button"]:focus {
         input[type="reset"].button-primary:focus,
         input[type="button"].button-primary:focus {
             color: #FFF;
-            background-color: #ae392f;
-            border-color: #ae392f;
+            background-color: #ec602d;
+            border-color: #ec602d;
         }
 
     input[type="button"].button-secondary {
         color: #FFF;
-        background-color: #3A4F6B;
-        border-color: #3A4F6B;
+        background-color: #6197A1;
+        border-color: #6197A1;
     }
         input[type="button"].button-secondary:focus {
             color: #FFF;
-            background-color: #4b6e9d;
-            border-color: #4b6e9d;
+            background-color: #a5d6dc;
+            border-color: #a5d6dc;
         }
 
 

@@ -119,8 +119,8 @@ $(window).on('load', function () {
     freeformData = simulationData
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     pid = new IDGenerator().generate();
-    initializeDrawView();
-    getCovidCount();
+    $("#btnNext").show();
+    
 });
 
 function onBtnNextClick() {
@@ -129,9 +129,22 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            setupNormalSimulation();
+            initializeDrawView();
             break;
         case 2:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
+            $("#res2").contents().appendTo($("#res3"));
+            break;
+        case 3:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            setupNormalSimulation();
+            break;
+        case 12:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -139,7 +152,7 @@ function onBtnNextClick() {
             $("#panel2Chart2").contents().appendTo($("#panel3Chart2"));
             showThreshold();
             break;
-        case 3:
+        case 354:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -163,18 +176,22 @@ function onBtnNextClick() {
 }
 
 // PANEL 1
+
+//nothing now, the getcount service stopped working
+
+// PANEL 2
 function initializeDrawView() {
     document.getElementById("showMe").disabled = true;
     $("#btnNext").hide();
-    var width = Math.min($("#panel1Chart1").width(), 700);
-    var height = Math.min($("#panel1Chart1").width() * 0.6, 400);
+    var width = Math.min($("#panel2Chart1").width(), 700);
+    var height = Math.min($("#panel2Chart1").width() * 0.6, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]).domain([0, 200]);
     var margin = { left: 50, right: 50, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel1Chart1');
+    var sel = d3.select('#panel2Chart1');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,
@@ -319,25 +336,17 @@ function initializeDrawView() {
         clipRect.transition().duration(1000).attr('width', c.x(defaultSimulationOptions.nDays));
         freeformData = _.cloneDeep(yourData);
         $("#showMe").hide();
-        $(".result").show();
+        $(".result").delay(1000).fadeIn(0);
         $("#btnNext").show();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
 }
 
-function getCovidCount() {
-    $.ajax({
-        url: "/count",
-        type: "post",
-        contentType: "application/json",
-        success: function (data) {
-            covid_all = JSON.parse(data).count;
-            $("#caseCount").text(addCommas(covid_all));
-        }
-    });
-}
+// PANEL 3
 
-// PANEL 2
+//nothing for now
+
+// PANEL 4
 function setupNormalSimulation() {
     $("#btnNext").hide();
     drawNormalSimulationChart();
@@ -349,16 +358,16 @@ function setupNormalSimulation() {
 }
 
 function drawNormalSimulationChart() {
-    $("#panel2Chart2").empty();
-    var width = Math.min($("#panel2Chart2").width(), 700);
-    var height = Math.min($("#panel2Chart2").width() * 0.5, 400);
+    $("#panel4Chart2").empty();
+    var width = Math.min($("#panel4Chart2").width(), 700);
+    var height = Math.min($("#panel4Chart2").width() * 0.5, 400);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 50, right: 0, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel2Chart2');
+    var sel = d3.select('#panel4Chart2');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,

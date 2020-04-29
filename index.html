@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="css/skeleton.css" />
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -22,37 +21,48 @@
 
     <div class="container">
         <div class="row header">
-            <div class="ten columns offset-by-one alpha">
+            <div class="twelve columns alpha">
                 <h1 onpointerdown="window.open('/','_self')">
-                    How Social Distancing Can Help Your Neighborhood Effectively Fight Coronavirus?
+                    How Social &nbsp;&nbsp;D &nbsp;i &nbsp;s &nbsp;t &nbsp;a &nbsp;n &nbsp;c &nbsp;i &nbsp;n &nbsp;g&nbsp;&nbsp;  Can Help Your Neighborhood Effectively Fight Coronavirus?
                 </h1>
             </div>
         </div>
 
         <div class="row panel" id="panel1">
             <div class="five columns alpha">
-                <div class="row">
-                    <p class="pEmph">
-                        On December 26, 2019 four unusual cases of pneumonia was noticed by Dr. Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified as the cause.
-                        Since then, the virus has infected thousands of people all over the world at an exponential rate.<br /><span class="emph" id="caseCount">900,000+</span> cases so far!
-                        <br /><br />
-
-                        <b>
-                            To understand what is going on, let us think of a small neighborhood of <span class="emph">200 people</span>.
-                            Can you guess how coronavirus will spread in this neighborhood in the next <span class="emph">30 days</span>?
-                        </b> <br /><br />
-                                  
-
-                    </p>
-                    <p class="highlight">
-                        <span>Draw <img src="images/pencil.png" style="width:20px;" /> your guesses on the chart &rarr;</span>
-                    </p>
-                </div>              
+                <p class="pEmph">
+                    On December 26, 2019 four unusual cases of pneumonia was noticed by Dr. Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified as the cause.
+                    Since then, the virus has infected thousands of people all over the world at an exponential rate. <br /><br />
+                    <span style="font-size:30px; font-weight:bold;">3 million + cases so far!</span> <br />
+                </p>
             </div>
-            <div class="six columns offset-by-one">               
+            <div class="six columns offset-by-one">
+                <img src="images/virus.png" style="height:400px;" />
+            </div>
+        </div>
+
+        <div class="row panel" id="panel2" style="display:none;">
+            <div class="five columns alpha">
+                <p class="pEmph">
+                    To understand what is going on, let us think of a small neighborhood of 200 people.<br /> <br />
+                    Suppose there is a disease similar to Covid-19 in the rate of transmission.
+                    <b>
+                        Once the disease enters the neighborhood with the first case,
+                        what will the spread of the disease look like in
+                        30 days if people interacted with everyone as they would normally?
+                    </b>
+                    <br /><br />
+                </p>
+            </div>
+            <div class="six columns offset-by-one">
+                <div class="row">
+                    <span class="hint">
+                        Draw <img src="images/pencil.png" style="width:20px;" /> a curve on the plot below that is your best guess of how coronavirus will spread in the neighborhood.
+                    </span>
+                </div>
                 <div class="row">
                     <div class="twelve columns">
-                        <div class="chart" id="panel1Chart1">
+                        <div class="chart" id="panel2Chart1">
 
                         </div>
                     </div>
@@ -62,52 +72,73 @@
                         <input class="button-primary" id="showMe" type="button" value="Show me how I did!" disabled />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="res2">
                     <p class="result" style="display:none;">
-                        That is nearly <span class="emph1" id="infectedText"></span> of the neighborhood in 30 days!
+                        That's nearly <span style="font-weight:bold;background:#F2CF66;padding:3px;border-radius:5px;" id="infectedText"></span> of the neighborhood!
                     </p>
                 </div>
-            </div>                    
+            </div>
         </div>
 
-        <div class="row panel" id="panel2" style="display:none;">
+        <div class="row panel" id="panel3" style="display:none;">
+            <div class="five columns alpha">
+                <p class="pEmph">
+                    Here is why the number is so high: <br /><br />
+                    (1) The coronavirus spreads from person-to-person  when people are in <b> close contact</b> with one another (within 6 feet).<br/>
+                    (2) A person may get coronavirus by touching a surface that has the virus on it and then <b> touching their own face.</b> <br/><br />
+
+                    Both these things happen a lot during a typical day when people are traveling, shopping, socializing with friends, etc.<br /> 
+                </p>
+            </div>
+            <div class="six columns offset-by-one">
+                <div class="row">
+                    <div class="twelve columns">
+                        <div class="chart" id="panel3Chart1">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="res3">                   
+                </div>
+            </div>
+       </div>
+     
+        <div class="row panel" id="panel4" style="display:none;">
             <div class="row">
                 <div class="five columns alpha">
-                    <p class="pEmph">
-                        Here is why the virus spreads so quicky: <br /><br />
-                        (1) The coronavirus spreads from person-to-person  when people are in <span class="emph"> close contact</span> with one another (within 6 feet).<br />
-                        (2) A person may get coronavirus by touching a surface that has the virus on it and then <span class="emph"> touching their own face.</span> <br /><br />
-                        Both these things happen a lot during a typical day when people are traveling, shopping, socializing with friends, etc.<br /> <br />
-                        We created a simulation model based on the transmission likelihood of Coronavirus.
-                        Each moving dot ( <span class="moving"> </span> ) in the visualization represents a person in the neighborhood. There are 200 dots in total.<br/>
-                    </p>
-                    <p class="highlight">                     
-                        Click the simulate button to see what happens when an infected person ( <span class="infected"> </span> ) enters the "fictional" neighborhood &rarr;
-                    </p>
+                    <div class="row">
+                        <p class="pEmph">
+                            We created a <b>simulation model</b> of a fictional disease that has similar transmission properties
+                            as what we know about Covid-19. In the visualization, each dot <span class="moving"></span> represents a <b>person</b> in the neighborhood. (There are 200 dots in total.)<br />
+                            <br />When an <b>infected person</b> <span class="infected"> </span> enters the neighborhood,
+                            there is a chance that they will infect people they come in contact with. <b>Newly infected</b> individuals <span class="newly"> </span> may not show any symptoms for a few days but are still contageous! <br /><br />
+                        </p>
+                    </div>                  
+                    <div class="row">
+                        <input id="btnNormalSim" type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()" />
+                    </div>
                 </div>
                 <div class="six columns offset-by-one">
 
                     <div class="row">
-                        <div class="chart" id="panel2Chart1">                           
+                        <div class="chart" id="panel4Chart1">                           
                             <canvas id="normalCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
                                 Your browser does not support the HTML5 canvas tag.
                             </canvas>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="chart" id="panel2Chart2">
+                        <div class="chart" id="panel4Chart2">
 
                         </div>
                     </div>
-                    <div class="row">
-                        <input id="btnNormalSim" type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()" />
-                    </div>
+                  
 
                 </div>
             </div>           
         </div>
 
-        <div class="row panel" id="panel3" style="display:none;">
+        <div class="row panel" id="panel3ee" style="display:none;">
             <div class="row">
                 <div class="five columns alpha">
                     <p class="pEmph">
@@ -132,7 +163,7 @@
             </div>           
         </div>
 
-        <div class="row panel" id="panel4" style="display:none;">
+        <div class="row panel" id="panel444" style="display:none;">
             <div class="row">
                 <div class="five columns alpha">
                     <p class="pEmph">

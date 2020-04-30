@@ -173,8 +173,9 @@ function onBtnNextClick() {
             $(".panel").hide();
             $("#panel" + currentStep).show();
             setUpUserSimulation();
+            $("#btnNext").show();
             break;
-        case 45:
+        case 8:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -1150,7 +1151,9 @@ function addSmallMultipleChart() {
     c.drawAxis();
 
     var line = d3.line().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
+    var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
 
+    c.svg.append('path.area').at({ d: area(userPreviousSimulationData) });
     c.svg.append("g")
         .append('path.line').at({ d: line(userPreviousSimulationData) })        
         .attr("stroke", "#13BA81");
@@ -1159,11 +1162,23 @@ function addSmallMultipleChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")
         .attr("stroke-width", 2)
-        .attr("stroke", "#b9003e")
+        .attr("stroke", "#4EA6A6")
         .attr("x1", c.x(1))
         .attr("y1", c.y(20))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
         .attr("y2", c.y(20));
+    var threshold = 20;
+
+    c.svg.append("defs").append("pattern")
+        .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
+        .append("rect")
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#034AA6", opacity: 0.6 });
+
+    var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
+    c.svg.append('path.diffarea')
+        .at({ d: diffarea(_.filter(userPreviousSimulationData, function (t) { return t.cases >= threshold; })) })
+        .attr("class", "threshold")       
+        .attr("fill", "#4EA6A6");
 
     //c.svg.append("line")
     //    .attr("id", "threshold")
@@ -1176,25 +1191,53 @@ function addSmallMultipleChart() {
     //    .attr("y2", c.y(0));
 
     var desc = "";
+
+    //PEOPLE GROUP
+    if ($("#symptomatic").is(":checked")) {
+        desc += "Only symptomatic people practice ";
+    }
+    else if ($("#everyone").is(":checked")) {
+        desc += "Everyone practices ";
+    }
+    else {
+        if ($("#25plus").is(":checked")) {
+            if ($("#60plus").is(":checked")) {
+                desc += "Everyone over 25 practice ";
+            }
+            else if ($("#under25").is(":checked")) {
+                desc += "Everyone under 60 practice ";
+            }
+            else {
+                desc += "Everyone over 25 but under 60 practice ";
+            }
+        }
+        else if ($("#60plus").is(":checked")) {
+            if ($("#under25").is(":checked")) {
+                desc += "Everyone over 60 or under 25 practice ";
+            }
+            else {
+                desc += "Everyone over 60 practice ";
+            }
+        }
+        else if ($("#under25").is(":checked")) {
+            desc += "Everyone under 25 practice ";
+        }
+    }
+
+    //BEHAVIOR
+
+    notBehav = "but not ";
     $(".behavGroup").each(function () {
-        desc += $("label[for='" + $(this).val() + "']").text() + ": ";
+      
         if ($(this).is(":checked")) {
-            desc += "<b>Yes</b> <br/>";
+            desc += $("label[for='" + $(this).val() + "']").text() + "; ";
         }
         else {
-            desc += "<b>No</b>  <br/>";
+            notBehav += $("label[for='" + $(this).val() + "']").text() + "; ";
         }
     });
-    $(".peopleGroup").each(function () {
-        desc += $("label[for='" + $(this).val() + "']").text() + ": ";
-        if ($(this).is(":checked")) {
-            desc += "<b>Yes</b>  <br/>";
-        }
-        else {
-            desc += "<b>No</b>  <br/>";
-        }
-    });
-    desc += "Average population age : <b>" + sliders["ageSlider"].values[$('#ageSlider').val()] + "</b>";
+    desc += notBehav;
+    desc += " (Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()] + ")";
     $(div).append($("<div class='row criteria'><p>" + desc + "</p></div>"));
     userSimCount++;
 }

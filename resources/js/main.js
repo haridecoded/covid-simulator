@@ -1583,6 +1583,7 @@ class SimulationWorld {
             index: this.gameObjects.length,
             movingState: 'moving',
             infectedState: 'sick',
+            disobedient: true,
             x: this.canvasRight / 2,
             y: this.canvasBottom/2,
             radius: Math.max(this.canvas.width / 200, 3.6),
@@ -1591,7 +1592,7 @@ class SimulationWorld {
         });
         infectedPerson.data = this.population.people[this.gameObjects.length];
         infectedPerson.data.infected = true;
-        infectedPerson.data.symptoms = true;
+        infectedPerson.data.symptoms = false;
         this.gameObjects.push(infectedPerson);
         
     }

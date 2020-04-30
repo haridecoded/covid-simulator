@@ -548,9 +548,9 @@ function resetNormalSimulation() {
 
 // PANEL 3
 function showThreshold() {   
-    $(".threshold").fadeIn(2000);
-    $(".area").css("fill", "#731D0A");
     $(".your-line").hide();
+    $(".threshold").show();
+    $(".area").css("fill", "#731D0A");
     if (normalSimulationData && normalSimulationData.length > 0) {
         simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
     }    
@@ -1155,7 +1155,7 @@ function addSmallMultipleChart() {
     var line = d3.line().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveMonotoneX);
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
 
-    c.svg.append('path.area').at({ d: area(userPreviousSimulationData) });
+    c.svg.append('path').at({ d: area(userPreviousSimulationData) }).attr("fill","#731D0A");
     c.svg.append("g")
         .append('path.line').at({ d: line(userPreviousSimulationData) })        
         .attr("stroke", "#13BA81");
@@ -1163,7 +1163,7 @@ function addSmallMultipleChart() {
     c.svg.append("line")
         .attr("id", "threshold")
         .attr("class", "threshold")
-        .attr("stroke-width", 3)
+        .attr("stroke-width", 2)
         .attr("stroke", "#731D0A")
         .attr("x1", c.x(1))
         .attr("y1", c.y(20))
@@ -1180,7 +1180,7 @@ function addSmallMultipleChart() {
     c.svg.append('path.diffarea')
         .at({ d: diffarea(_.filter(userPreviousSimulationData, function (t) { return t.cases >= threshold; })) })
         .attr("class", "threshold")       
-        .attr("fill", "#4EA6A6");
+        .attr("fill", "#C7D989");
 
     //c.svg.append("line")
     //    .attr("id", "threshold")
@@ -1351,7 +1351,7 @@ class SimulationWorld {
                     p.highlight();
                 }
             });
-          }, 2000);
+          }, 0);
     }
 
     createWorld({ percentHome, infectedCount, userMode = null , populationObedience = 1.0}) {

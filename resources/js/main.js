@@ -77,7 +77,8 @@ var defaultSimulationOptions = {
         ]
     }
 };
-
+var smcount = 0;
+var parentDiv;
 var randomGenerator = covidModel.randomFactory.factory({'seed': defaultRandomSeed});
 
 function resetRandomGenerator(seed){
@@ -1131,8 +1132,13 @@ function simulateUserSpread() {
 }
 
 function addSmallMultipleChart() {
+    if (smcount % 3 === 0) {
+        parentDiv = $("<div class='row'></div>");
+        $("#mysimulations").append(parentDiv);
+    }
+    smcount++;
     var div = $("<div  class='one-third column userSM'><div id='userchart" + userSimCount + "' class='row'></div></div>");
-    $("#mysimulations").append(div);
+    $(parentDiv).append(div);
       
     var width = Math.min($("#userchart" + userSimCount).width(), 300);
     var height = Math.min($("#userchart" + userSimCount).width() * 0.6, 200);

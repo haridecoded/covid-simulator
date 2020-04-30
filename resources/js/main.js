@@ -5,6 +5,7 @@
 
 var currentStep = 1;
 var simulationData;
+var yourData;
 var trendData = []; 
 var freeformData = [];
 var age = 30;
@@ -136,7 +137,9 @@ function onBtnNextClick() {
             $(".panel").hide();
             $("#panel" + currentStep).show();
             $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
+            $("#btnNext").hide();            
             $("#res2").contents().appendTo($("#res3"));
+            $("#btnNext").show();
             break;
         case 3:
             currentStep++;
@@ -144,27 +147,34 @@ function onBtnNextClick() {
             $("#panel" + currentStep).show();
             setupNormalSimulation();
             break;
-        case 12:
+        case 4:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
-            $("#panel2Chart2").contents().appendTo($("#panel3Chart2"));
+            $("#panel4Chart1").contents().appendTo($("#panel5Chart1"));
+            $("#panel4Chart2").contents().appendTo($("#panel5Chart2"));
             showThreshold();
             break;
-        case 354:
+        case 5:
+            currentStep++;
+            $(".panel").hide();
+            $("#panel" + currentStep).show();
+            $("#btnNext").show();
+            break;   
+        case 6:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
             setupSDSimulation();
-            break;        
-        case 4:
+            $("#btnNext").hide();
+            break;
+        case 7:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
             setUpUserSimulation();
             break;
-        case 5:
+        case 45:
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
@@ -349,6 +359,9 @@ function initializeDrawView() {
 // PANEL 4
 function setupNormalSimulation() {
     $("#btnNext").hide();
+    _.range(7, 0).forEach(function (t) {
+        yourData.unshift({ day: trendData[t].day, cases: trendData[t].cases, defined: true });
+    });
     drawNormalSimulationChart();
     reSimuluateNormal = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
@@ -427,7 +440,7 @@ function drawNormalSimulationChart() {
 
     correctSel.append('path.area').at({ d: area(normalSimulationData) });
     correctSel.append('path.line').at({ d: line(normalSimulationData) });
-    yourDataSel = c.svg.append('path.your-line');
+ 
 
     // gridlines in x axis function
     function make_x_gridlines() {
@@ -448,7 +461,7 @@ function drawNormalSimulationChart() {
         .attr("class", "threshold")
         .attr("display", "none")
         .attr("stroke-width", 2)
-        .attr("stroke", "#8C2E26")
+        .attr("stroke", "#4EA6A6")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -459,17 +472,19 @@ function drawNormalSimulationChart() {
         .attr("class", "label threshold")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
-        .style("text-anchor", "middle")
+        .attr("transform", "translate(" + width * .05 + "," + (c.y(threshold) - 15) + ")")
+        .style("text-anchor", "left")
         .text("Total hospital beds");
 
-    c.svg.append("text")
-        .attr("class", "label threshold")
-        .attr("display", "none")
-        .attr("id", "thresholdLabel1")
-        .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(normalSimulationData, function (d) { return d.cases; })) + ")")
-        .style("text-anchor", "middle")
-        .text("Patients without treatment");
+
+
+    //c.svg.append("text")
+    //    .attr("class", "label threshold")
+    //    .attr("display", "none")
+    //    .attr("id", "thresholdLabel1")
+    //    .attr("transform", "translate(" + width * .4 + "," + c.y(d3.max(normalSimulationData, function (d) { return d.cases; })) + ")")
+    //    .style("text-anchor", "middle")
+    //    .text("Patients without treatment");
 
     // hospital threshold area
     c.svg.append("defs").append("pattern")
@@ -482,8 +497,13 @@ function drawNormalSimulationChart() {
         .at({ d: diffarea(_.filter(normalSimulationData, function (t) { return t.cases >= threshold; })) })
         .attr("class", "threshold")
         .attr("display", "none")
-        .attr("fill", "#F2B138");
+        .attr("fill", "#4EA6A6");
         //.attr("fill", "url(#hash4_4)");
+
+   
+
+    yourDataSel = c.svg.append('path.your-line');
+    yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
 }
 
 function simulateSpreadNormal() {
@@ -533,7 +553,7 @@ function showThreshold() {
     }    
 }
 
-// PANEL 4
+// PANEL 7
 function setupSDSimulation() {
     $("#btnNext").hide();
     drawSDSimulationChart();
@@ -548,16 +568,16 @@ function setupSDSimulation() {
 }
 
 function drawSDSimulationChart() {
-    $("#panel4Chart2").empty();
-    var width = Math.min($("#panel4Chart2").width(), 700);
-    var height = Math.min($("#panel4Chart2").width() * 0.6, 500);
+    $("#panel7Chart2").empty();
+    var width = Math.min($("#panel7Chart2").width(), 700);
+    var height = Math.min($("#panel7Chart2").width() * 0.6, 500);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 50, right: 0, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel4Chart2');
+    var sel = d3.select('#panel7Chart2');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,
@@ -617,7 +637,7 @@ function drawSDSimulationChart() {
 
     correctSel.append('path.area').at({ d: area(sdSimulationData) });
     correctSel.append('path.line').at({ d: line(sdSimulationData) });
-    yourDataSel = c.svg.append('path.your-line');
+   
 
     // gridlines in x axis function
     function make_x_gridlines() {
@@ -637,7 +657,7 @@ function drawSDSimulationChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")      
         .attr("stroke-width", 2)
-        .attr("stroke", "#8C2E26")
+        .attr("stroke", "#4EA6A6")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -650,6 +670,9 @@ function drawSDSimulationChart() {
         .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
+
+    yourDataSel = c.svg.append('path.your-line');
+    yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
 
 }
 
@@ -693,7 +716,7 @@ function resetSDSimulation() {
     simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
-// PANEL 5
+// PANEL 8
 
 function setUpUserSimulation() {
     $("#btnNext").hide();
@@ -721,16 +744,16 @@ function setUpUserSimulation() {
 }
 
 function drawUserSimulationChart() {
-    $("#panel5Chart2").empty();
-    var width = Math.min($("#panel5Chart2").width(), 700);
-    var height = Math.min($("#panel5Chart2").width() * 0.6, 500);
+    $("#panel8Chart2").empty();
+    var width = Math.min($("#panel8Chart2").width(), 700);
+    var height = Math.min($("#panel8Chart2").width() * 0.6, 500);
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scalePow().range([height, 0]);
     var margin = { left: 50, right: 0, top: 30, bottom: 70 };
 
     var f = d3.f;
 
-    var sel = d3.select('#panel5Chart2');
+    var sel = d3.select('#panel8Chart2');
     var c = d3.conventions({
         parentSel: sel,
         totalWidth: width,
@@ -821,7 +844,7 @@ function drawUserSimulationChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")
         .attr("stroke-width", 2)
-        .attr("stroke", "#8C2E26")
+        .attr("stroke", "#4EA6A6")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -839,7 +862,7 @@ function drawUserSimulationChart() {
 
 function applyFill(slider) {
     const settings = {
-        fill: '#8C2E26',
+        fill: '#BF471B',
         background: '#d7dcdf'
     };
 
@@ -1375,7 +1398,7 @@ class SimulationWorld {
 
         let contagiousCount = this.gameObjects.filter(person => person.infectedState === 'sick').length;
 
-        if (this.rafCounter % 20 === 0) {
+        if (this.rafCounter % 21 === 0) {
             
             if (this.update) {
                 this.update.call(this, this.dayCount, contagiousCount);
@@ -1525,6 +1548,7 @@ class SimulationWorld {
         });
         infectedPerson.data = this.population.people[this.gameObjects.length];
         infectedPerson.data.infected = true;
+        infectedPerson.data.symptoms = true;
         this.gameObjects.push(infectedPerson);
         
     }

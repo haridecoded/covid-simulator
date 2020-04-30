@@ -55,7 +55,7 @@ class Person {
     }
 
     highlight() {
-        this.context.fillStyle = "#F2B138";
+        this.context.fillStyle = "#4EA6A6";
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fill();
@@ -77,7 +77,7 @@ class Person {
         //}
 
         else if (this.infectedState === 'sick'){
-            color = this.data.symptoms ? '#8C2E26' : '#cb8b86';
+            color = this.data.symptoms ? '#731D0A' : '#F29D35';
         }
         // else if (this.movingState === 'home') color = '#3a434c'; //'#0099b0';
         else if (this.infectedState === 'healthy') color = '#AAAAAA'; //'#0099b0';

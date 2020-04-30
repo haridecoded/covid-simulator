@@ -98,13 +98,22 @@ h1 {
     display: inline-block;
 }
 
+.hospital {
+    height: 15px;
+    width: 15px;
+    border: 1px solid #3a434c;
+    background-color: #4EA6A6;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 
 
 .strict {
-    height: 8px;
-    width: 8px;
-    background-color: #3a434c;
-    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border: 1px solid #3a434c;
     display: inline-block;
 }
 
@@ -234,10 +243,10 @@ h1 {
 .mdl-select-workaround {
     border-radius: 0;
     border-style: solid;
-    border-color: #8C2E26;
+    border-color: #BF471B;
     border-width: 0 0 2px 0;
     background: transparent;
-    color: #8C2E26;
+    color: #BF471B;
     outline: 0;
     margin-bottom: 3em;
     max-width: 100%;
@@ -249,7 +258,7 @@ h1 {
 
 
     .mdl-select-workaround option:checked {
-        color: #8C2E26;
+        color: #BF471B;
     }
 
 .mdl-select-workaround option:not(:checked) {
@@ -291,18 +300,18 @@ h1 {
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: #8C2E26;
+        background: #BF471B;
         cursor: pointer;
         -webkit-transition: background 0.15s ease-in-out;
         transition: background 0.15s ease-in-out;
     }
 
         .range-slider__range::-webkit-slider-thumb:hover {
-            background: #8C2E26;
+            background: #BF471B;
         }
 
     .range-slider__range:active::-webkit-slider-thumb {
-        background: #8C2E26;
+        background: #BF471B;
     }
 
 .range-slider__range::-moz-range-thumb {
@@ -317,15 +326,15 @@ h1 {
 }
 
     .range-slider__range::-moz-range-thumb:hover {
-        background: #8C2E26;
+        background: #BF471B;
     }
 
     .range-slider__range:active::-moz-range-thumb {
-        background: #8C2E26;
+        background: #BF471B;
     }
 
     .range-slider__range:focus::-webkit-slider-thumb {
-        box-shadow: 0 0 0 3px #fff, 0 0 0 6px #8C2E26;
+        box-shadow: 0 0 0 3px #fff, 0 0 0 6px #BF471B;
     }
 
 .range-slider__value {
@@ -337,7 +346,7 @@ h1 {
     text-align: center;
     vertical-align: center;
     border-radius: 3px;
-    background: #8C2E26;
+    background: #BF471B;
     padding: 5px 10px;
     margin-left: 8px;
 }
@@ -349,7 +358,7 @@ h1 {
         width: 0;
         height: 0;
         border-top: 7px solid transparent;
-        border-right: 7px solid #8C2E26;
+        border-right: 7px solid #BF471B;
         border-bottom: 7px solid transparent;
         content: "";
     }
@@ -386,42 +395,42 @@ background-color: #ccc;
 transition: .4s;
 }
 
-    .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-    }
+.toggle-slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
 
-    input:checked + .toggle-slider {
-    background-color: #b9003e;
-    }
+input:checked + .toggle-slider {
+    background-color: #BF471B;
+}
 
-    input:focus + .toggle-slider {
-    box-shadow: 0 0 1px #b9003e;
-    }
+input:focus + .toggle-slider {
+    box-shadow: 0 0 1px #BF471B;
+}
 
-    input:checked + .toggle-slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-    }
+input:checked + .toggle-slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
 
-    .toggle-slider.round {
-    border-radius: 34px;
-    }
+.toggle-slider.round {
+border-radius: 34px;
+}
 
-    .toggle-slider.round:before {
-    border-radius: 50%;
-    }
+.toggle-slider.round:before {
+border-radius: 50%;
+}
 
 .toggle-text{
-    height: 2em;
+height: 2em;
 }
 
 
@@ -472,7 +481,7 @@ transition: .4s;
 }
 
     .checkbox input:checked + .checkbox-label {
-        background: #8C2E26;
+        background: #BF471B;
         color: white;
         transition: 150ms all linear;
     }

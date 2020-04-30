@@ -138,24 +138,24 @@
             </div>           
         </div>
 
-        <div class="row panel" id="panel3ee" style="display:none;">
+        <div class="row panel" id="panel5" style="display:none;">
             <div class="row">
                 <div class="five columns alpha">
                     <p class="pEmph">
-                        An <b>urgent</b> problem is that hospitals are unable to manage this rapid and exponential growth of coronavirus cases.
-                        For every <span class="emph">10 people</span> in the neighborhood, there is <span class="emph">1 hospital bed</span> avaiable for care.
-                        This means, not everyone who is infected can get the treatment they need! <span style="font-weight:bold;color:#F2B138;">(9 out of 10 people)</span>
-                        While this is a simulation, it is based on real data about relative numbers of hospital beds in communities. <br/> <br/>
+                        An <b>urgent</b> problem is that hospitals may be unable to manage this rapid and exponential growth of coronavirus cases.
+                        For every 10 people in the neighborhood, there is 1 hospital bed avaiable for care. <br/><br/>
+                     <b>This means that if many people get sick at once, not everyone will be able to get the treatment they need <span class="hospital"> </span>. </b><br/>
+                        (While this is a simulation, it is based on real data about relative numbers of hospital beds in communities.) <br /> <br />
                     </p>
                 </div>
                 <div class="six columns offset-by-one">
                     <div class="row">
-                        <div class="chart" id="panel3Chart1">
+                        <div class="chart" id="panel5Chart1">
 
                         </div>
                     </div>
                     <div class="row">
-                        <div class="chart" id="panel3Chart2">
+                        <div class="chart" id="panel5Chart2">
 
                         </div>
                     </div>
@@ -163,52 +163,78 @@
             </div>           
         </div>
 
-        <div class="row panel" id="panel444" style="display:none;">
+        <div class="row panel" id="panel6" style="display:none;">
             <div class="row">
-                <div class="five columns alpha">
-                    <p class="pEmph">
-                        <b>You can help slow down the rate at which coronavirus is spreading by practicing <span class="emph">Social Distancing</span>.</b><br /><br />
-                        Our goal is to ensure that the number of patients are always <b>fewer</b> than the number of hospital beds available.
-                        This gives hospitals enough <b>resources</b> to take care of all sick patients at any give time.
-                        This also gives us enough <b>time</b> to develop vaccines and treatment. <br /><br />
-                        <span class="emph">How can you practice social distancing?</span> <br />
-                        (1) Stay put in your home and do not travel for work/school (i.e., <span class="emph">shelter in place</span>).
-                        (2) Avoid large gatherings.
-                        (3) Stay away from public places like the beach or park.
-                        (4) If you go outside like the grocery store, maintain atleast 6 feet distance from others.
-                    </p>
-                    <p class="highlight">
-                        Click the simulate button to see how the infection spreads when you practice strict social distancing ( <span class="strict"> </span> ) &rarr;
-                    </p>
+                <img src="images/sd.png" style="height:200px;" />
+            </div>
+            <div class="row pEmph">
+                <p>
+                    You can help slow down the rate at which coronavirus is spreading by practicing <b>Social Distancing</b>.<br /><br />
+                    Our goal is to ensure that the number of patients are always fewer than the number of hospital beds available.
+                    This gives hospitals enough resources to take care of all sick patients at any give time.
+                    This also gives us more time to develop vaccines and treatments. <br /><br />
+                    <b>How can you practice social distancing?</b> <br />
+                </p>
+                <ul>
+                    <li>
+                        Stay put in your home and do not travel for work/school (i.e.,shelter ).
+                    </li>
+                    <li>
+                        Avoid large gatherings.
+                    </li>
+                    <li>
+                        Stay away from public places like the beach or park.
+                    </li>
+                    <li>
+                        When you have to go out (such as going to a grocery store or pharmacy), maintain at least 6 feet between all other people and wear a face mask.
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+             
+            </div>
+        </div>
+
+        <div class="row panel" id="panel7" style="display:none;">
+            <div class="row">
+                <div class="five columns alpha ">
+                    <div class="row">
+                        <p class="pEmph">
+                            <span style="font-size:32px;">Flattening the curve</span><br />
+                            Let us look at how social distancing can help keep the infection low. <br/><br/> In this simulation, people interact with one
+                            another less frequently because they are practicing social distancing <span class="strict"> </span>. Also, the likelihood of transmission is also
+                            lower because people are staying 6 feet apart even when they meet. <br />
+                        </p>
+                    </div>
+                    <div class="row">
+                        <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
+                    </div>
                 </div>
                 <div class="six columns offset-by-one">
                     <div class="row">
-                        <div class="chart" id="panel4Chart1">
+                        <div class="chart" id="panel7Chart1">
                             <canvas id="sdCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
                                 Your browser does not support the HTML5 canvas tag.
                             </canvas>
                         </div>
                         <div class="row">
-                            <div class="chart" id="panel4Chart2">
+                            <div class="chart" id="panel7Chart2">
 
                             </div>
-                        </div>
-                        <div class="row">
-                            <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
-                        </div>
+                        </div>                        
                     </div>
                 </div>            
             </div>
         </div>
     
-        <div class="row panel" id="panel5" style="display:none;">
+        <div class="row panel" id="panel8" style="display:none;">
             <div class="row">
                 <div class="twelve columns alpha">
                     <p class="pEmph" style="text-align:center !important;">
-                        Up until now, we have looked at how <b>"shelter in place"</b> type of <span class="emph">Social Distancing</span>
-                        can greatly slow down the spread of Coronavirus. But, there are other questions you may have such as <i>What happens if only people over the age of 60 practice social distancing?</i> or <i>How washing hands or not touching your face can affect the spread of virus? </i>
-                    </p>
-                  
+                        See how much more slowly the growth in cases is when everyone practices <b>Social Distancing</b>? <br/>
+                        There may be other questions you have such as <i>What happens if only people over the age of 60 practice social distancing?</i> or <i>How washing hands or not touching your face can affect the spread of virus? </i><br/>
+                        This simulation takes into account how different factors affect the rate of disease transmission. It is based on what we know now. While the exact numbers may not be accurate, the general effects of these factors are close.
+                    </p>                  
                 </div>
             </div>
             <div class="row" style="background:white;border-radius:7px 7px 0 0 ;">
@@ -221,7 +247,7 @@
 
                     <div class="five columns alpha">
                         <div class="row">
-                            <select id="behavior" class="mdl-select-workaround" style="height:50px;" onchange="onQuestionSelect()">
+                            <select id="behavior" class="mdl-select-workaround" style="height:60px;" onchange="onQuestionSelect()">
                                 <option value="none">Select a question:</option>
                                 <option value="over60">What if only high risk individuals stay home (e.g., people over 60, people with medical conditions)?</option>
                                 <option value="under25">What if low risk individuals don't take precautions (e.g., people under 25)?</option>
@@ -297,14 +323,14 @@
                     </div>
                     <div class="six columns offset-by-one">
                         <div class="row">
-                            <div class="chart" id="panel5Chart1">
+                            <div class="chart" id="panel8Chart1">
                                 <canvas id="userCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
                                     Your browser does not support the HTML5 canvas tag.
                                 </canvas>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="chart" id="panel5Chart2">
+                            <div class="chart" id="panel8Chart2">
 
                             </div>
                         </div>
@@ -373,7 +399,7 @@
     </div>-->
         </div>
 
-        <div class="row panel" id="panel6" style="display:none;">
+        <div class="row panel" id="panel9" style="display:none;">
             <div class="row">
                 <div class="eight columns offset-by-two alpha">
                     <p class="pEmph">

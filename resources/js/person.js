@@ -55,7 +55,14 @@ class Person {
     }
 
     highlight() {
-        this.context.fillStyle = "#4EA6A6";
+        this.context.fillStyle = "#C7D989";
+        this.context.beginPath();
+        this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+        this.context.fill();
+    }
+
+    makeSick() {
+        this.context.fillStyle = "#731D0A";
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fill();

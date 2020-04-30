@@ -461,8 +461,8 @@ function drawNormalSimulationChart() {
         .attr("id", "threshold")
         .attr("class", "threshold")
         .attr("display", "none")
-        .attr("stroke-width", 2)
-        .attr("stroke", "#4EA6A6")
+        .attr("stroke-width", 3)
+        .attr("stroke", "#731D0A")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -498,7 +498,7 @@ function drawNormalSimulationChart() {
         .at({ d: diffarea(_.filter(normalSimulationData, function (t) { return t.cases >= threshold; })) })
         .attr("class", "threshold")
         .attr("display", "none")
-        .attr("fill", "#4EA6A6");
+        .attr("fill", "#C7D989");
         //.attr("fill", "url(#hash4_4)");
 
    
@@ -549,6 +549,8 @@ function resetNormalSimulation() {
 // PANEL 3
 function showThreshold() {   
     $(".threshold").fadeIn(2000);
+    $(".area").css("fill", "#731D0A");
+    $(".your-line").hide();
     if (normalSimulationData && normalSimulationData.length > 0) {
         simulationWorld.showOverflow(normalSimulationData[normalSimulationData.length - 1].cases - 20);
     }    
@@ -657,8 +659,8 @@ function drawSDSimulationChart() {
     c.svg.append("line")
         .attr("id", "threshold")
         .attr("class", "threshold")      
-        .attr("stroke-width", 2)
-        .attr("stroke", "#4EA6A6")
+        .attr("stroke-width", 3)
+        .attr("stroke", "#731D0A")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -844,8 +846,8 @@ function drawUserSimulationChart() {
     c.svg.append("line")
         .attr("id", "threshold")
         .attr("class", "threshold")
-        .attr("stroke-width", 2)
-        .attr("stroke", "#4EA6A6")
+        .attr("stroke-width", 3)
+        .attr("stroke", "#731D0A")
         .attr("x1", c.x(1))
         .attr("y1", c.y(threshold))
         .attr("x2", c.x(defaultSimulationOptions.nDays))
@@ -1341,10 +1343,15 @@ class SimulationWorld {
     showOverflow(number) {
         var over = this.gameObjects.filter(person => person.infectedState === 'sick');
         over.forEach(function (p, i) {
-            if (i < number) {
-                p.highlight();
-            }
+            p.makeSick();
         });
+        setTimeout(function () {
+            over.forEach(function (p, i) {
+                if (i < number) {
+                    p.highlight();
+                }
+            });
+          }, 2000);
     }
 
     createWorld({ percentHome, infectedCount, userMode = null , populationObedience = 1.0}) {

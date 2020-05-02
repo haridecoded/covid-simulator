@@ -1198,55 +1198,76 @@ function addSmallMultipleChart() {
     //    .attr("x2", c.x(defaultSimulationOptions.nDays))
     //    .attr("y2", c.y(0));
 
-    var desc = "";
+    // var desc = "";
+    // //PEOPLE GROUP
+    // if ($("#symptomatic").is(":checked")) {
+    //     desc += "Only symptomatic people practice ";
+    // }
+    // else if ($("#everyone").is(":checked")) {
+    //     desc += "Everyone practices ";
+    // }
+    // else {
+    //     if ($("#25plus").is(":checked")) {
+    //         if ($("#60plus").is(":checked")) {
+    //             desc += "Everyone over 25 practice ";
+    //         }
+    //         else if ($("#under25").is(":checked")) {
+    //             desc += "Everyone under 60 practice ";
+    //         }
+    //         else {
+    //             desc += "Everyone over 25 but under 60 practice ";
+    //         }
+    //     }
+    //     else if ($("#60plus").is(":checked")) {
+    //         if ($("#under25").is(":checked")) {
+    //             desc += "Everyone over 60 or under 25 practice ";
+    //         }
+    //         else {
+    //             desc += "Everyone over 60 practice ";
+    //         }
+    //     }
+    //     else if ($("#under25").is(":checked")) {
+    //         desc += "Everyone under 25 practice ";
+    //     }
+    // }
 
-    //PEOPLE GROUP
-    if ($("#symptomatic").is(":checked")) {
-        desc += "Only symptomatic people practice ";
-    }
-    else if ($("#everyone").is(":checked")) {
-        desc += "Everyone practices ";
-    }
-    else {
-        if ($("#25plus").is(":checked")) {
-            if ($("#60plus").is(":checked")) {
-                desc += "Everyone over 25 practice ";
-            }
-            else if ($("#under25").is(":checked")) {
-                desc += "Everyone under 60 practice ";
-            }
-            else {
-                desc += "Everyone over 25 but under 60 practice ";
-            }
-        }
-        else if ($("#60plus").is(":checked")) {
-            if ($("#under25").is(":checked")) {
-                desc += "Everyone over 60 or under 25 practice ";
-            }
-            else {
-                desc += "Everyone over 60 practice ";
-            }
-        }
-        else if ($("#under25").is(":checked")) {
-            desc += "Everyone under 25 practice ";
-        }
-    }
+    // //BEHAVIOR
 
-    //BEHAVIOR
-
-    notBehav = "but not ";
-    $(".behavGroup").each(function () {
+    // notBehav = "but not ";
+    // $(".behavGroup").each(function () {
       
-        if ($(this).is(":checked")) {
-            desc += $("label[for='" + $(this).val() + "']").text() + "; ";
-        }
-        else {
-            notBehav += $("label[for='" + $(this).val() + "']").text() + "; ";
-        }
-    });
-    desc += notBehav;
-    desc += " (Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()] + ")";
-    $(div).append($("<div class='row criteria'><p>" + desc + "</p></div>"));
+    //     if ($(this).is(":checked")) {
+    //         desc += $("label[for='" + $(this).val() + "']").text() + "; ";
+    //     }
+    //     else {
+    //         notBehav += $("label[for='" + $(this).val() + "']").text() + "; ";
+    //     }
+    // });
+    // desc += notBehav;
+    // desc += " (Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()] + ")";
+    
+    function optionToSpan(_, tag){
+        var span = $('<span/>')
+            .addClass($(tag).is(":checked") ? "selected-sim-option": "unselected-sim-option")
+            .html($("label[for='" + $(tag).val() + "']").text()).get();
+        return span
+    }
+    $(div).append(
+        $("<div class='row criteria'></div>")
+            .append(
+                $('<div/>').append(
+                    $('<p class="criteria-group"></p>').append($(".behavGroup").map(optionToSpan).get()),
+                    $('<p class="criteria-group"></p>').append($(".peopleGroup").map(optionToSpan).get())
+                ),
+                $('<div/>').append(`
+                <p class="age-criterion">
+                    <span>
+                        <span class="unselected-sim-option">Average Population Age: </span>
+                        <span class=selected-sim-option>${sliders["ageSlider"].values[$('#ageSlider').val()]}</span>
+                    </span>
+                </p>`)
+            )
+    )
     userSimCount++;
 }
 

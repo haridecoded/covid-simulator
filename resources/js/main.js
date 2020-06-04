@@ -1,3 +1,22 @@
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyAM8_o8jO-sUSaSyH1hCMz_MQsGsP_1Z3E",
+    authDomain: "baac-covid-visualization.firebaseapp.com",
+    databaseURL: "https://baac-covid-visualization.firebaseio.com",
+    projectId: "baac-covid-visualization",
+    storageBucket: "baac-covid-visualization.appspot.com",
+    messagingSenderId: "234816545802",
+    appId: "1:234816545802:web:a5a9267639827180f9abf3"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var firestore = firebase.firestore();
+
+// Get userId from URL
+var userId = (new URLSearchParams(window.location.search)).get('user');
+var logger = new Logger(firebase, firestore, userId);
+
+
 ///////////////////////// Code adapted from////////////////////
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
@@ -122,10 +141,12 @@ $(window).on('load', function () {
         .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     pid = new IDGenerator().generate();
     $("#btnNext").show();
-    
+    logger.begin('screen' + currentStep);
 });
 
+var stepStarted = null;
 function onBtnNextClick() {
+    logger.end('screen' + currentStep);
     switch (currentStep) {
         case 1:
             currentStep++;
@@ -185,6 +206,7 @@ function onBtnNextClick() {
             break;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    logger.begin('screen' + currentStep);
 }
 
 // PANEL 1
@@ -338,7 +360,6 @@ function initializeDrawView() {
                 document.getElementById("showMe").disabled = false;              
             }
         });
-
     c.svg.call(drag);
 
     $("#showMe").on('pointerdown', function () {
@@ -347,6 +368,11 @@ function initializeDrawView() {
         }
         clipRect.transition().duration(1000).attr('width', c.x(defaultSimulationOptions.nDays));
         freeformData = _.cloneDeep(yourData);
+        logger.record({
+            // Clone the data to avoid it accidentally being modified before 
+            // the request is sent to the db.
+            guess: _.cloneDeep(yourData)
+        })
         $("#showMe").hide();
         $(".result").delay(1000).fadeIn(0);
         $("#btnNext").show();
@@ -1119,6 +1145,12 @@ function simulateUserSpread() {
             document.getElementById("btnUserSim").disabled = false;
             reSimuluateSD = true;
             userPreviousSimulationData = _.cloneDeep(userSimulationData);
+            logger.recordSimulation({
+                data: userSimulationData,
+                params: simOptions,
+                start: simulationWorld.startTime,
+                end: new Date()
+            });
             addSmallMultipleChart();
         }
         
@@ -1356,7 +1388,7 @@ class SimulationWorld {
             userMode: this.userMode,
             populationObedience: this.populationObedience
         });
-
+        this.startTime = new Date();
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp); });       
        
     }

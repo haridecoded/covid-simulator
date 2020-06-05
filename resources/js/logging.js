@@ -3,12 +3,19 @@ class Logger {
         this.firebase = firebase;
         this.firestore = firestore;
         this.userId = userId;
-        this.doc = this.firestore.collection('testCollection').doc(userId);
-        this.doc.set({ 'userId': userId });
+        this.doc = null;
+        if (this.userId){
+            this.doc = this.firestore.collection('testCollection').doc(userId);
+            this.doc.set({ 'userId': userId });
+        }
     }
 
     record(obj) {
-        this.doc.set(obj, { merge: true });
+        if (this.doc){
+            this.doc.set(obj, { merge: true });
+        } else {
+            console.log('No userId provided, logging not enabled!')
+        }
     }
 
     recordTime(screenName, simulation, start) {

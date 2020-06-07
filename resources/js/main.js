@@ -301,6 +301,23 @@ function initializeDrawView() {
         .attr('height', 48)
         .attr("xlink:href", "images/pencil.png");
 
+    // hospital threshold line
+    c.svg.append("line")     
+        .attr("class", "pencil")
+        .attr("stroke-width", 2)
+        .attr("stroke", "#BF471B")
+        .attr("x1", c.x(defaultSimulationOptions.nDays))
+        .attr("y1", c.y(0))
+        .attr("x2", c.x(defaultSimulationOptions.nDays))
+        .attr("y2", c.y(200));
+
+    c.svg.append("text")
+        .attr("fill", "#BF471B")
+        .attr("class", "pencil")
+        .attr("transform", "translate(" + (c.x(defaultSimulationOptions.nDays) + 5) + "," + c.y(160) + ")rotate(90)")
+        .style("text-anchor", "left")
+        .text("Draw to this line");
+
 
     yourData = trendData
         .map(function (d) { return { day: d.day, cases: d.cases, defined: 0 };})
@@ -325,6 +342,9 @@ function initializeDrawView() {
 
     var drag = d3.drag()
         .on('drag', function () {
+            if (completed) {
+                return;
+            }
             var pos = d3.mouse(this);
             var day = clamp(userDrawStart-1, defaultSimulationOptions.nDays, c.x.invert(pos[0]));
             var cases = clamp(0, c.y.domain()[1], c.y.invert(pos[1]));
@@ -356,7 +376,7 @@ function initializeDrawView() {
                 .attr('y', c.y(cases) - 48);
 
             if (!completed && d3.mean(yourData, f('defined')) === 1) {
-                completed = true;
+                completed = true;              
                 document.getElementById("showMe").disabled = false;              
             }
         });
@@ -376,6 +396,8 @@ function initializeDrawView() {
         $("#showMe").hide();
         $(".result").delay(1000).fadeIn(0);
         $("#btnNext").show();
+        $("#pencil").hide();
+        $(".pencil").hide();
     });
     function clamp(a, b, c) { return Math.max(a, Math.min(b, c)); }
 }
@@ -500,7 +522,7 @@ function drawNormalSimulationChart() {
         .attr("class", "label threshold")
         .attr("display", "none")
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .05 + "," + (c.y(threshold) - 15) + ")")
+        .attr("transform", "translate(" + c.x(2) + "," + (c.y(threshold) - 15) + ")")
         .style("text-anchor", "left")
         .text("Total hospital beds");
 
@@ -518,14 +540,14 @@ function drawNormalSimulationChart() {
     c.svg.append("defs").append("pattern")
         .attrs({ id: "hash4_4", width: "15", height: "8", patternUnits: "userSpaceOnUse", patternTransform: "rotate(60)" })
         .append("rect")
-        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#034AA6", opacity:0.6 });
+        .attrs({ width: "4", height: "8", transform: "translate(0,0)", fill: "#FF5722", opacity:0.6 });
 
     var diffarea = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.y(threshold));
     correctSel.append('path.diffarea')
         .at({ d: diffarea(_.filter(normalSimulationData, function (t) { return t.cases >= threshold; })) })
         .attr("class", "threshold")
         .attr("display", "none")
-        .attr("fill", "#C7D989");
+        .attr("fill", "#f5683b");
         //.attr("fill", "url(#hash4_4)");
 
    
@@ -697,7 +719,7 @@ function drawSDSimulationChart() {
     c.svg.append("text")
         .attr("class", "label threshold")     
         .attr("id", "thresholdLabel")
-        .attr("transform", "translate(" + width * .15 + "," + (c.y(threshold) - 10) + ")")
+        .attr("transform", "translate(" + c.x(2) + "," + (c.y(threshold) - 15) + ")")
         .style("text-anchor", "middle")
         .text("Total hospital beds");
 
@@ -1218,7 +1240,7 @@ function addSmallMultipleChart() {
     c.svg.append('path.diffarea')
         .at({ d: diffarea(_.filter(userPreviousSimulationData, function (t) { return t.cases >= threshold; })) })
         .attr("class", "threshold")       
-        .attr("fill", "#C7D989");
+        .attr("fill", "#f5683b");
 
     //c.svg.append("line")
     //    .attr("id", "threshold")

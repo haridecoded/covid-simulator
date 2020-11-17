@@ -31,6 +31,8 @@
 canvas{
     margin-left:2px;
     margin-right:2px;
+    border:1px solid #3a434c;
+    background:white;
 }
 
 

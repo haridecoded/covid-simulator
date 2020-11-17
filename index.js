@@ -2,7 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var http = require('http').Server(app);
-var covid = require('novelcovid');
+const worldometer = require('worldometer-coronavirus-info')
+
 
 // set the port of our application
 // process.env.PORT lets the port be set by Heroku
@@ -27,14 +28,14 @@ app.get('/neighborhood', function (req, res) {
 
 app.post('/count', function (req, res) {
     (async () => {
-        let data = await covid.getAll();
-        res.send(JSON.stringify({ "count":data.cases }));
+        let data = await worldometer.trackAll();
+        console.log(data);
+        res.send(JSON.stringify({ "count": data.totalCases }));
         // Since we are using an async function, we need to return the data.
         return console.log(`
-    Total Cases: ${data.cases}
-    Total Deaths: ${data.deaths}
-    Total Recovered: ${data.recovered}
-    Last Updated on: ${data.updated}`);
+    Total Cases: ${data.totalCases}
+    Total Deaths: ${data.totalDeaths}
+    Total Recovered: ${data.totalRecovered}`);
     })();
     
 });

@@ -88,6 +88,7 @@ $(window).on('load', function () {
     pid = new IDGenerator().generate();
     $("#btnNext").show();
     logger.begin('screen' + currentStep);
+    getCaseCount();
 });
 
 var stepStarted = null;
@@ -156,6 +157,19 @@ function onBtnNextClick() {
 }
 
 // PANEL 1
+
+function getCaseCount() {
+    $.ajax({
+        url: '/count',
+        type: 'post',
+        dataType: 'json',        
+        contentType: 'application/json',
+        success: function (data) {
+            console.log(data);
+            $("#count").text(data.count);
+        }
+    });
+}
 
 //nothing now, the getcount service stopped working
 

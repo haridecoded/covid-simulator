@@ -16,7 +16,8 @@
     <script type="text/javascript" src="js/d3v4.js"></script>
     <script type="text/javascript" src="js/lodash.min.js"></script>
     <script type="text/javascript" src="data/simulation-cache.js"></script> 
-    <script type="text/javascript" src="js/model-bundle.js"></script>   
+    <script type="text/javascript" src="js/vendors.bundle.js"></script>
+    <script type="text/javascript" src="js/simulator.bundle.js"></script>   
     <script type="text/javascript" src="js/person.js"></script>
     <script type="text/javascript" src="js/logging.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -124,11 +125,7 @@
                 <div class="six columns offset-by-one">
 
                     <div class="row">
-                        <div class="chart" id="panel4Chart1">                           
-                            <canvas id="normalCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
-                                Your browser does not support the HTML5 canvas tag.
-                            </canvas>
-                        </div>
+                        <div class="chart" id="panel4Chart1"></div>
                     </div>
                     <div class="row">
                         <div class="chart" id="panel4Chart2">
@@ -223,11 +220,7 @@
                 </div>
                 <div class="six columns offset-by-one">
                     <div class="row">
-                        <div class="chart" id="panel7Chart1">
-                            <canvas id="sdCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
-                                Your browser does not support the HTML5 canvas tag.
-                            </canvas>
-                        </div>
+                        <div class="chart" id="panel7Chart1"></div>
                         <div class="row">
                             <div class="chart" id="panel7Chart2">
 
@@ -335,11 +328,7 @@
                     </div>
                     <div class="six columns offset-by-one">
                         <div class="row">
-                            <div class="chart" id="panel8Chart1">
-                                <canvas id="userCanvas" width="100" height="100" style="border:1px solid #171717; background:#fff;">
-                                    Your browser does not support the HTML5 canvas tag.
-                                </canvas>
-                            </div>
+                            <div class="chart" id="panel8Chart1"></div>
                         </div>
                         <div class="row">
                             <div class="chart" id="panel8Chart2">
@@ -440,7 +429,7 @@
             </div>
             <div class="row">
                 <input class="button-secondary" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
-                 <!--<input class="button" id="btnNext1" type="button" value="Temp Next" onpointerdown="onBtnNextClick()"/>--> 
+                 <input class="button" id="btnNext1" type="button" value="Temp Next" onpointerdown="onBtnNextClick()"/> 
             </div>            
         </div>
 

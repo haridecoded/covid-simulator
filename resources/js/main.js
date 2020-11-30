@@ -21,9 +21,8 @@ var logger = new Logger(firebase, firestore, userId);
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
+
 var currentStep = 1;
-var world;
-var renderer;
 var simulationData;
 var yourData;
 var trendData = []; 
@@ -44,16 +43,65 @@ var reSimuluateSD = false;
 var reSimulateUser = false;
 var userSimultionOptions;
 var userSimCount = 0;
-
 // Prevent people from recovering for now.
-PandemicSimulator.Virus.pRecovery = 0.0;
-var defaultSimulationOptions = PandemicSimulator.defaultParams;
+covidModel.Virus.pRecovery = 0.0;
+var defaultSimulationOptions = {
+    nDays: 30, // How many days to simulate
+    populationSize: 200, // How many people to simulate
+    avgAge: 38.1, // Average age of population
+    infectionMultiplier: 0.37, // Adjusts the rate of infection given exposure (use to simulate hygeine / overall susceptibility)
+    propInfected: 0.001, // What proportion of people are infected at the beginning
+    randomSeed: 45235,
+    transmissionMitigation: {
+        multiplier: 0.5,
+        symptomaticOnly: false,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
+    receptionMitigation: {
+        multiplier: 0.5,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
+    socialDistancing: {
+        multiplier: 0.1,
+        symptomaticOnly: false,
+        everyoneUnder: null, // Int Age
+        everyoneOver: null // Int Age
+    },
+    user: {
+        age: 30, // User Age
+        houseSize: 7 // User House Size
+    },
+    neighborhood: {
+        nHouses: 31,
+        // neighborVisitsPerMonth: 5,
+        // pNeighborContact: 1,
+        events: [
+            {
+                id: "groceryShopping",
+                timesPerMonth: 5, // Average number of times per month people visit
+                pContact: 0.7 // If two people are here at the same time, what is the prob. they interact
+            },
+            {
+                id: "walkInPark",
+                timesPerMonth: 15, 
+                pContact: 0.05
+            },
+            // {
+            //     id: "houseParty",
+            //     timesPerMonth: 2,
+            //     pContact: 0.9
+            // }
+        ]
+    }
+};
 var smcount = 0;
 var parentDiv;
-var randomGenerator = PandemicSimulator.Random.randomFactory({'seed': defaultRandomSeed});
+var randomGenerator = covidModel.randomFactory.factory({'seed': defaultRandomSeed});
 
 function resetRandomGenerator(seed){
-    randomGenerator = PandemicSimulator.Random.randomFactory({'seed': seed | defaultRandomSeed});
+    randomGenerator = covidModel.randomFactory.factory({'seed': seed | defaultRandomSeed});
 }
 
 // user simulation parameters
@@ -80,11 +128,17 @@ var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
 
 $(window).on('load', function () {
     $(".panel").hide();
-    $("#panel" + currentStep).show();
-    simulationData = PandemicSimulator.defaultRepresentativeData;
+    $("#panel" + currentStep).show();   
+    var key = JSON.stringify(defaultSimulationOptions);
+    if (!simulationCache.hasOwnProperty(key)){
+        resetRandomGenerator();
+        simulationCache[key] = covidModel.simulateNeighborhood(defaultSimulationOptions);
+    }
+    simulationData = simulationCache[key];
     trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.counts.infected }; });
-    freeformData = _.cloneDeep(trendData);
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
+    freeformData = simulationData
+        .map(function (d) { return { day: d.day, cases: d.summary.nInfected }; });
     pid = new IDGenerator().generate();
     $("#btnNext").show();
     logger.begin('screen' + currentStep);
@@ -375,14 +429,9 @@ function setupNormalSimulation() {
     drawNormalSimulationChart();
     reSimuluateNormal = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
-    simOptions.diseaseSpread.infectionMultiplier = 6.0;
+    simOptions.infectionMultiplier = 6.0;
     // initialize simulation canvas
-    world = PandemicSimulator.defaultData.world;
-    world.reset();
-    renderer = new PandemicSimulator.Models.DotWorldRenderer(
-      simOptions,
-      document.getElementById('panel4Chart1')
-    );
+    simulationWorld = new SimulationWorld('normalCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
 function drawNormalSimulationChart() {
@@ -406,7 +455,7 @@ function drawNormalSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
-    c.y.domain([0, defaultSimulationOptions.population.size]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
     c.xAxis.ticks().tickFormat(f());
@@ -529,7 +578,7 @@ function simulateSpreadNormal() {
         resetNormalSimulation();       
     }
    
-    function updateChart(day, count) {
+    function updateChart(day, count) {       
         if (day > 0 && day <= defaultSimulationOptions.nDays) {
             normalSimulationData.push({ "day": day, "cases": count });
         }
@@ -540,16 +589,24 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    renderer.renderRealtime(world, (state) => updateChart(state.day + 1, state.counts.infected)); /////////////////////// Render state sequences instead.
+    normalSimulationData = [];
+    simulationWorld.update = updateChart;
+    simulationWorld.days = defaultSimulationOptions.nDays + 1;
+    simulationWorld.totalPeople = defaultSimulationOptions.populationSize;
+    simulationWorld.addInfectedPerson();   
     document.getElementById("btnNormalSim").disabled = true;
 }
 
 function resetNormalSimulation() {
     document.getElementById("btnNormalSim").disabled = true;
-    renderer.showLoading();
-    world.reset();
     reSimuluateNormal = false;
+    normalSimulationData = [];
     drawNormalSimulationChart();
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
+    simulationWorld = new SimulationWorld('normalCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions);
 }
 
 // PANEL 3
@@ -567,20 +624,13 @@ function setupSDSimulation() {
     $("#btnNext").hide();
     drawSDSimulationChart();
     reSimuluateSD = false;
+    simulationWorld.resetWorld();
+    simulationWorld = null;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
-    simOptions.diseaseSpread.infectionMultiplier = 2;
-    simOptions.diseaseSpread.keepDistance.everyoneOver = 0;
-    simOptions.diseaseSpread.keepDistance.everyoneUnder = undefined;
-    simOptions.diseaseSpread.wearMask.everyoneOver = 0;
-    simOptions.diseaseSpread.wearMask.everyoneUnder = undefined;
-    var results = PandemicSimulator.runSimulations(simOptions);
-    world = results.world;
-    world.reset();
-    renderer = new PandemicSimulator.Models.DotWorldRenderer(
-      simOptions,
-      document.getElementById("panel7Chart1")
-    );
-    // simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
+    simOptions.infectionMultiplier = 2;
+    simOptions.socialDistancing.everyoneOver = 0;
+    simOptions.socialDistancing.everyoneUnder = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
 function drawSDSimulationChart() {
@@ -604,7 +654,7 @@ function drawSDSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
-    c.y.domain([0, defaultSimulationOptions.population.size]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
     c.xAxis.ticks().tickFormat(f());
@@ -711,9 +761,10 @@ function simulateSDSpread() {
         }
         drawSDSimulationChart();
     }
-    renderer.renderRealtime(world, (state) =>
-      updateChart(state.day + 1, state.counts.infected)
-    );
+    simulationWorld.update = updateChart;
+    simulationWorld.days = defaultSimulationOptions.nDays + 1;
+    simulationWorld.totalPeople = defaultSimulationOptions.populationSize;
+    simulationWorld.addInfectedPerson();   
     document.getElementById("btnSDSim").disabled = true;
 }
 
@@ -722,8 +773,13 @@ function resetSDSimulation() {
     reSimuluateSD = false;
     sdSimulationData = [];
     drawSDSimulationChart();
-    world.reset();
-    renderer.showLoading();
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 2;
+    simOptions.socialDistancing.everyoneOver = 0;
+    simOptions.socialDistancing.everyoneUnder = null;
+    simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
 // PANEL 8
@@ -741,16 +797,16 @@ function setUpUserSimulation() {
             applyFill(document.getElementById(sId));
         }
     }
-   // draw linegraph
-   drawUserSimulationChart();
 
-   var results = PandemicSimulator.runSimulations(userSimultionOptions);
-   world = results.world;
-   world.reset();
-   renderer = new PandemicSimulator.Models.DotWorldRenderer(
-     userSimultionOptions,
-     document.getElementById("panel8Chart1")
-   );
+    // draw linegraph
+    drawUserSimulationChart();
+
+    // set up dot simulation world
+    if (simulationWorld) {
+        simulationWorld.resetWorld();
+        simulationWorld = null;
+    }
+    simulationWorld = new SimulationWorld('userCanvas', .1, defaultSimulationOptions.populationSize - 1, 0, null, null, userSimultionOptions);
 }
 
 function drawUserSimulationChart() {
@@ -774,7 +830,7 @@ function drawUserSimulationChart() {
     c.svg.append('rect').at({ width: c.width, height: c.height, opacity: 1 }).attr("fill", "white");
 
     c.x.domain([1, defaultSimulationOptions.nDays + 1]);
-    c.y.domain([0, defaultSimulationOptions.population.size]);
+    c.y.domain([0, defaultSimulationOptions.populationSize]);
 
 
     c.xAxis.ticks().tickFormat(f());
@@ -1007,138 +1063,140 @@ function onPopulationSelectionChanged(cb) {
 }
 
 function simulateUserSpread() {
-  // if simulation is running return
-  if ($(this).attr("disabled")) {
-    return;
-  }
-  var isTransmissionChecked = false;
-  var isReceptionChecked = false;
-  var isSDChecked = false;
-  var simOptions = _.cloneDeep(defaultSimulationOptions);
-  simOptions.diseaseSpread.infectionMultiplier = 6.0;
 
-  // age
-  simOptions.population.avgAge = sliders["ageSlider"].values[$("#ageSlider").val()];
-  userSimulationData = [];
+    // if simulation is running return
+    if ($(this).attr('disabled')) {
+        return;
+    }
+    var isTransmissionChecked = false;
+    var isReceptionChecked = false;
+    var isSDChecked = false;
+    var simOptions = _.cloneDeep(defaultSimulationOptions);
+    simOptions.infectionMultiplier = 6.0;
+    simOptions.transmissionMitigation.multiplier = 1;
+    simOptions.receptionMitigation.multiplier = 1;
+    simOptions.socialDistancing.multiplier = 1;
+    // age
+    simOptions.avgAge = sliders["ageSlider"].values[$('#ageSlider').val()];
+    userSimulationData = [];
+    // behavior
+    if ($("#6feet").is(":checked")) {
+        simOptions.transmissionMitigation.multiplier -= 0.2;
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isTransmissionChecked = true;
+        isReceptionChecked = true;
+    }
+    if ($("#handwash").is(":checked")) {
+        simOptions.transmissionMitigation.multiplier -= 0.2;
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isTransmissionChecked = true;
+        isReceptionChecked = true;
+    }
+    if ($("#mask").is(":checked")) {
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isReceptionChecked = true;
+    }
+    if ($("#facetouch").is(":checked")) {
+        simOptions.receptionMitigation.multiplier -= 0.2;
+        isReceptionChecked = true;
+    }
+    if ($("#shelter").is(":checked")) {
+        simOptions.socialDistancing.multiplier = 0.1;
+        isSDChecked = true;
+    }
 
-  // who behavior
-  if ($("#60plus").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 59;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 59;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 59;
-    }
-  }
-  if ($("#25plus").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 24;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 24;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 24;
-    }
-  }
-  if ($("#under25").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneUnder = 25;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneUnder = 25;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneUnder = 25;
-    }
-  }
-  if ($("#everyone").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 0;
-      simOptions.transmissionMitigation.everyoneUnder = null;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 0;
-      simOptions.receptionMitigation.everyoneUnder = null;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 0;
-      simOptions.socialDistancing.everyoneUnder = null;
-    }
-  }
-  if ($("#symptomatic").is(":checked")) {
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = null;
-      simOptions.socialDistancing.everyoneUnder = null;
-      simOptions.socialDistancing.symptomaticOnly = true;
-    }
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneUnder = null;
-      simOptions.transmissionMitigation.everyoneOver = null;
-      simOptions.transmissionMitigation.symptomaticOnly = true;
-    }
-  }
 
-  // behavior
-  if ($("#6feet").is(":checked")) {
-    simOptions.transmissionMitigation.multiplier -= 0.2;
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isTransmissionChecked = true;
-    isReceptionChecked = true;
-  }
-  if ($("#handwash").is(":checked")) {
-    simOptions.transmissionMitigation.multiplier -= 0.2;
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isTransmissionChecked = true;
-    isReceptionChecked = true;
-  }
-  if ($("#mask").is(":checked")) {
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isReceptionChecked = true;
-  }
-  if ($("#facetouch").is(":checked")) {
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isReceptionChecked = true;
-  }
-  if ($("#shelter").is(":checked")) {
-    simOptions.socialDistancing.multiplier = 0.1;
-    isSDChecked = true;
-  }
 
-  //reset simulation world
-
-  // simulate
-  function updateChart(day, count) {
-    if (day > 0 && day <= defaultSimulationOptions.nDays) {
-      userSimulationData.push({ day: day, cases: count });
-      drawUserSimulationChart();
+    // who behavior
+    if ($("#60plus").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 59;                       
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 59;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 59;
+        }
     }
-    if (day === defaultSimulationOptions.nDays) {
-      $("#btnNext").show();
-      document.getElementById("btnUserSim").disabled = false;
-      reSimuluateSD = true;
-      userPreviousSimulationData = _.cloneDeep(userSimulationData);
-      logger.recordSimulation({
-        data: userSimulationData,
-        params: simOptions,
-        start: simulationWorld.startTime,
-        end: new Date(),
-      });
-      addSmallMultipleChart();
+    if ($("#25plus").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 24;            
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 24;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 24;
+        }
     }
-  }
+    if ($("#under25").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneUnder = 25;
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneUnder = 25;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneUnder = 25;
+        }
+    }
+    if ($("#everyone").is(":checked")) {
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneOver = 0;
+            simOptions.transmissionMitigation.everyoneUnder = null;
+        }
+        if (isReceptionChecked) {
+            simOptions.receptionMitigation.everyoneOver = 0;
+            simOptions.receptionMitigation.everyoneUnder = null;
+        }
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = 0;
+            simOptions.socialDistancing.everyoneUnder = null;
+        }
+    }
+    if ($("#symptomatic").is(":checked")) {
+        if (isSDChecked) {
+            simOptions.socialDistancing.everyoneOver = null;
+            simOptions.socialDistancing.everyoneUnder = null;
+            simOptions.socialDistancing.symptomaticOnly = true;
+        }
+        if (isTransmissionChecked) {
+            simOptions.transmissionMitigation.everyoneUnder = null;
+            simOptions.transmissionMitigation.everyoneOver = null;
+            simOptions.transmissionMitigation.symptomaticOnly = true;
+        }
+    }
 
-  var results = PandemicSimulator.runSimulations(simOptions);
-  world = results.world;
-  world.reset();
-  renderer.renderRealtime(world, (state) =>
-    updateChart(state.day + 1, state.counts.infected)
-  );
+    //reset simulation world
+  
+    // simulate
+    function updateChart(day, count) {
+        if (day > 0 && day <= defaultSimulationOptions.nDays) {
+            userSimulationData.push({ "day": day, "cases": count });
+            drawUserSimulationChart();
+        }
+        if (day === defaultSimulationOptions.nDays) {
+            $("#btnNext").show();
+            document.getElementById("btnUserSim").disabled = false;
+            reSimuluateSD = true;
+            userPreviousSimulationData = _.cloneDeep(userSimulationData);
+            logger.recordSimulation({
+                data: userSimulationData,
+                params: simOptions,
+                start: simulationWorld.startTime,
+                end: new Date()
+            });
+            addSmallMultipleChart();
+        }
+        
+    }
 
-  document.getElementById("btnUserSim").disabled = true;
+    simulationWorld.resetWorld();
+    simulationWorld = null;
+    simulationWorld = new SimulationWorld('userCanvas', isSDChecked ? 0.9:0.1, defaultSimulationOptions.populationSize-1, 0, defaultSimulationOptions.nDays + 1, updateChart, simOptions);
+    simulationWorld.addInfectedPerson();
+    document.getElementById("btnUserSim").disabled = true;
 }
 
 function addSmallMultipleChart() {
@@ -1335,7 +1393,7 @@ class SimulationWorld {
         this.reset = false;
         this.modelParam = modelParam; 
         this.populationObedience = populationObedience;
-        this.population = PandemicSimulator.generatePopulation(this.modelParam);
+        this.population = covidModel.generatePopulation(this.modelParam);
         this.init(canvasId);
         resetRandomGenerator();
         this.mobileBreakPointWidth = 400;
@@ -1344,7 +1402,7 @@ class SimulationWorld {
 
     refreshPopulation(params) {
         this.modelParam = params;
-        this.population = PandemicSimulator.generatePopulation(this.modelParam);
+        this.population = covidModel.generatePopulation(this.modelParam);
     }
 
     init(canvasId) {
@@ -1491,8 +1549,8 @@ class SimulationWorld {
                 this.update.call(this, this.dayCount, contagiousCount);
             }
             this.gameObjects.forEach(go =>{ 
-                PandemicSimulator.updateStatus(go.data);
-                go.setMovingState(PandemicSimulator.isParticipating(go.data, this.modelParam.socialDistancing)
+                covidModel.updateStatus(go.data);
+                go.setMovingState(covidModel.isParticipating(go.data, this.modelParam.socialDistancing)
                 ? "home"
                 : "moving");  
             });
@@ -1557,7 +1615,7 @@ class SimulationWorld {
                     obj2.vy += (impulse * obj1.mass * vCollisionNorm.y);
                   
                     // Uncomment this to use model to determine whether dots get infected on collision.
-                    PandemicSimulator.simulateInteraction(obj1.data, obj2.data, currentSimulationOptions);
+                    covidModel.simulateInteraction(obj1.data, obj2.data, currentSimulationOptions);
                     if (obj1.data.infected){
                         obj1.infectedState = 'sick';
                         if (!obj1.infectedTime) obj1.infectedTime = Date.now();

@@ -21,7 +21,7 @@ var logger = new Logger(firebase, firestore, userId);
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
-var currentStep = 7;
+var currentStep = 1;
 var world;
 var renderer;
 var simulationData;
@@ -1096,7 +1096,7 @@ function simulateUserSpread() {
     sliders["maskUnderSlider"].values[$("#shelterUnderSlider").val()]; 
 
   userSimulationData = [];
-  
+
 //   var isTransmissionChecked = false;
 //   var isReceptionChecked = false;
 //   var isSDChecked = false;

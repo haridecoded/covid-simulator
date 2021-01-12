@@ -21,7 +21,7 @@ var logger = new Logger(firebase, firestore, userId);
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
-var currentStep = 1;
+var currentStep = 7;
 var world;
 var renderer;
 var simulationData;
@@ -42,12 +42,19 @@ var defaultRandomSeed = 45235;
 var reSimuluateNormal = false;
 var reSimuluateSD = false;
 var reSimulateUser = false;
-var userSimultionOptions;
 var userSimCount = 0;
 
 // Prevent people from recovering for now.
-PandemicSimulator.Virus.pRecovery = 0.0;
+PandemicSimulator.Virus.pRecovery = 0;
 var defaultSimulationOptions = PandemicSimulator.defaultParams;
+defaultSimulationOptions.diseaseSpread.infectionMultiplier = 2;
+defaultSimulationOptions.diseaseSpread.wearMask.multiplier = {
+    recieve: 0.9,
+    transmit: 0.7
+};
+defaultSimulationOptions.dots.repulsion = 0.04;
+
+
 var smcount = 0;
 var parentDiv;
 var randomGenerator = PandemicSimulator.Random.randomFactory({'seed': defaultRandomSeed});
@@ -57,33 +64,89 @@ function resetRandomGenerator(seed){
 }
 
 // user simulation parameters
-var sliders = {    
-    // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
-    "ageSlider": {
-        "values": [15.4	, 28.1, 38.1, 45.5, 53.1],
-        "labels": ["15.4", "28.1", "38.1", "45.5", "53.1"],
-        "explanations": [
-            "Median age in Niger (youngest country)",
-            "Median age in India (141st oldest country)",
-            "Median age in U.S. (61st oldest country)",
-            "Median age in Italy (5th oldest country)",
-            "Median age in Monaco (oldest Country)"
-        ],
-        "default": 2,
-        "optionName": "avgAge",
-        "type": "slider"
-    }   
+const precautionAges = [0, 25, 35, 45, 60];
+var sliders = {
+  // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
+  ageSlider: {
+    values: [15.4, 28.1, 38.1, 45.5, 53.1],
+    labels: ["15.4", "28.1", "38.1", "45.5", "53.1"],
+    explanations: [
+      "Median age in Niger (youngest country)",
+      "Median age in India (141st oldest country)",
+      "Median age in U.S. (61st oldest country)",
+      "Median age in Italy (5th oldest country)",
+      "Median age in Monaco (oldest Country)",
+    ],
+    default: 2,
+    update: function (options, value) {
+      options.population.averageAge = value;
+    },
+    type: "slider",
+  },
+  maskOverSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Over " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneOver = value;
+    },
+    type: "slider",
+  },
+  maskUnderSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Under " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneUnder = value;
+    },
+    type: "slider",
+  },
+  distanceOverSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Over " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneOver = value;
+    },
+    type: "slider",
+  },
+  distanceUnderSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Under " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneUnder = value;
+    },
+    type: "slider",
+  },
+  shelterOverSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Over " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneOver = value;
+    },
+    type: "slider",
+  },
+  shelterUnderSlider: {
+    values: precautionAges,
+    explanations: precautionAges.map((x) => "Everyone Under " + x),
+    default: 0,
+    update: function (options, value) {
+      options.diseaseSpread.everyoneUnder = value;
+    },
+    type: "slider",
+  },
 };
-
-var currentSimulationOptions = _.cloneDeep(defaultSimulationOptions);
 
 
 $(window).on('load', function () {
     $(".panel").hide();
     $("#panel" + currentStep).show();
-    simulationData = PandemicSimulator.defaultRepresentativeData;
-    trendData = simulationData
-        .map(function (d) { return { day: d.day, cases: d.counts.infected }; });
+    defaultSimulationData = PandemicSimulator.runSimulations(defaultSimulationOptions);
+    trendData = defaultSimulationData.getRepresentativeData().map(function (d) {
+      return { day: d.day, cases: d.counts.cumulativeCases };
+    });
     freeformData = _.cloneDeep(trendData);
     pid = new IDGenerator().generate();
     $("#btnNext").show();
@@ -141,7 +204,7 @@ function onBtnNextClick() {
             currentStep++;
             $(".panel").hide();
             $("#panel" + currentStep).show();
-            setUpUserSimulation();
+            setupUserSimulation();
             $("#btnNext").show();
             break;
         case 8:
@@ -377,7 +440,7 @@ function setupNormalSimulation() {
     var simOptions = _.cloneDeep(defaultSimulationOptions);
     simOptions.diseaseSpread.infectionMultiplier = 6.0;
     // initialize simulation canvas
-    world = PandemicSimulator.defaultData.world;
+    world = defaultSimulationData.world;
     world.reset();
     renderer = new PandemicSimulator.Models.DotWorldRenderer(
       simOptions,
@@ -540,7 +603,7 @@ function simulateSpreadNormal() {
         }
         drawNormalSimulationChart();
     }
-    renderer.renderRealtime(world, (state) => updateChart(state.day + 1, state.counts.infected)); /////////////////////// Render state sequences instead.
+    renderer.renderRealtime(world, (state) => updateChart(state.day + 1, state.counts.cumulativeCases)); /////////////////////// Render state sequences instead.
     document.getElementById("btnNormalSim").disabled = true;
 }
 
@@ -568,11 +631,10 @@ function setupSDSimulation() {
     drawSDSimulationChart();
     reSimuluateSD = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
-    simOptions.diseaseSpread.infectionMultiplier = 2;
     simOptions.diseaseSpread.keepDistance.everyoneOver = 0;
-    simOptions.diseaseSpread.keepDistance.everyoneUnder = undefined;
+    simOptions.diseaseSpread.keepDistance.everyoneUnder = 200;
     simOptions.diseaseSpread.wearMask.everyoneOver = 0;
-    simOptions.diseaseSpread.wearMask.everyoneUnder = undefined;
+    simOptions.diseaseSpread.wearMask.everyoneUnder = 200;
     var results = PandemicSimulator.runSimulations(simOptions);
     world = results.world;
     world.reset();
@@ -580,7 +642,6 @@ function setupSDSimulation() {
       simOptions,
       document.getElementById("panel7Chart1")
     );
-    // simulationWorld = new SimulationWorld('sdCanvas', .9, defaultSimulationOptions.populationSize - 1, 0, null, null, simOptions, 0.90);
 }
 
 function drawSDSimulationChart() {
@@ -712,7 +773,7 @@ function simulateSDSpread() {
         drawSDSimulationChart();
     }
     renderer.renderRealtime(world, (state) =>
-      updateChart(state.day + 1, state.counts.infected)
+      updateChart(state.day + 1, state.counts.cumulativeCases)
     );
     document.getElementById("btnSDSim").disabled = true;
 }
@@ -728,9 +789,8 @@ function resetSDSimulation() {
 
 // PANEL 8
 
-function setUpUserSimulation() {
+function setupUserSimulation() {
     $("#btnNext").hide();
-    userSimultionOptions = _.cloneDeep(defaultSimulationOptions);
     //set up controls   
     for (const sId in sliders) {
         var s = sliders[sId];
@@ -744,11 +804,11 @@ function setUpUserSimulation() {
    // draw linegraph
    drawUserSimulationChart();
 
-   var results = PandemicSimulator.runSimulations(userSimultionOptions);
-   world = results.world;
+   // setup dot simulation
+   world = defaultSimulationData.world;
    world.reset();
    renderer = new PandemicSimulator.Models.DotWorldRenderer(
-     userSimultionOptions,
+     defaultSimulationOptions,
      document.getElementById("panel8Chart1")
    );
 }
@@ -890,8 +950,8 @@ function onSliderInput(slider){
         i = parseInt(slider.value);
         applyFill(slider);
     }
-    var v = s.values[i];
-    currentSimulationOptions[s.optionName] = v;
+    const v = s.values[i];
+    // s.update(userSimulationOptions, v);
     $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
     $("#" + slider.id + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[i] : 'Explanation Not Found');
 }
@@ -1011,102 +1071,121 @@ function simulateUserSpread() {
   if ($(this).attr("disabled")) {
     return;
   }
-  var isTransmissionChecked = false;
-  var isReceptionChecked = false;
-  var isSDChecked = false;
   var simOptions = _.cloneDeep(defaultSimulationOptions);
-  simOptions.diseaseSpread.infectionMultiplier = 6.0;
 
-  // age
-  simOptions.population.avgAge = sliders["ageSlider"].values[$("#ageSlider").val()];
+  // Age
+  simOptions.population.avgeragAge =
+    sliders["ageSlider"].values[$("#ageSlider").val()];
+
+  // Mask
+  simOptions.diseaseSpread.wearMask.everyoneOver =
+    sliders["maskOverSlider"].values[$("#maskOverSlider").val()];
+  simOptions.diseaseSpread.wearMask.everyoneUnder =
+    sliders["maskUnderSlider"].values[$("#maskUnderSlider").val()];
+
+  // Distance
+  simOptions.diseaseSpread.keepDistance.everyoneOver =
+    sliders["maskOverSlider"].values[$("#distanceOverSlider").val()];
+  simOptions.diseaseSpread.keepDistance.everyoneUnder =
+    sliders["maskUnderSlider"].values[$("#distanceUnderSlider").val()];
+
+  // Shelter
+  simOptions.diseaseSpread.shelterInPlace.everyoneOver =
+    sliders["maskOverSlider"].values[$("#shelterOverSlider").val()];
+  simOptions.diseaseSpread.shelterInPlace.everyoneUnder =
+    sliders["maskUnderSlider"].values[$("#shelterUnderSlider").val()]; 
+
   userSimulationData = [];
+  
+//   var isTransmissionChecked = false;
+//   var isReceptionChecked = false;
+//   var isSDChecked = false;
+//   // who behavior
+//   if ($("#60plus").is(":checked")) {
+//     if (isTransmissionChecked) {
+//       simOptions.transmissionMitigation.everyoneOver = 59;
+//     }
+//     if (isReceptionChecked) {
+//       simOptions.receptionMitigation.everyoneOver = 59;
+//     }
+//     if (isSDChecked) {
+//       simOptions.socialDistancing.everyoneOver = 59;
+//     }
+//   }
+//   if ($("#25plus").is(":checked")) {
+//     if (isTransmissionChecked) {
+//       simOptions.transmissionMitigation.everyoneOver = 24;
+//     }
+//     if (isReceptionChecked) {
+//       simOptions.receptionMitigation.everyoneOver = 24;
+//     }
+//     if (isSDChecked) {
+//       simOptions.socialDistancing.everyoneOver = 24;
+//     }
+//   }
+//   if ($("#under25").is(":checked")) {
+//     if (isTransmissionChecked) {
+//       simOptions.transmissionMitigation.everyoneUnder = 25;
+//     }
+//     if (isReceptionChecked) {
+//       simOptions.receptionMitigation.everyoneUnder = 25;
+//     }
+//     if (isSDChecked) {
+//       simOptions.socialDistancing.everyoneUnder = 25;
+//     }
+//   }
+//   if ($("#everyone").is(":checked")) {
+//     if (isTransmissionChecked) {
+//       simOptions.transmissionMitigation.everyoneOver = 0;
+//       simOptions.transmissionMitigation.everyoneUnder = null;
+//     }
+//     if (isReceptionChecked) {
+//       simOptions.receptionMitigation.everyoneOver = 0;
+//       simOptions.receptionMitigation.everyoneUnder = null;
+//     }
+//     if (isSDChecked) {
+//       simOptions.socialDistancing.everyoneOver = 0;
+//       simOptions.socialDistancing.everyoneUnder = null;
+//     }
+//   }
+//   if ($("#symptomatic").is(":checked")) {
+//     if (isSDChecked) {
+//       simOptions.socialDistancing.everyoneOver = null;
+//       simOptions.socialDistancing.everyoneUnder = null;
+//       simOptions.socialDistancing.symptomaticOnly = true;
+//     }
+//     if (isTransmissionChecked) {
+//       simOptions.transmissionMitigation.everyoneUnder = null;
+//       simOptions.transmissionMitigation.everyoneOver = null;
+//       simOptions.transmissionMitigation.symptomaticOnly = true;
+//     }
+//   }
 
-  // who behavior
-  if ($("#60plus").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 59;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 59;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 59;
-    }
-  }
-  if ($("#25plus").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 24;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 24;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 24;
-    }
-  }
-  if ($("#under25").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneUnder = 25;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneUnder = 25;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneUnder = 25;
-    }
-  }
-  if ($("#everyone").is(":checked")) {
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneOver = 0;
-      simOptions.transmissionMitigation.everyoneUnder = null;
-    }
-    if (isReceptionChecked) {
-      simOptions.receptionMitigation.everyoneOver = 0;
-      simOptions.receptionMitigation.everyoneUnder = null;
-    }
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = 0;
-      simOptions.socialDistancing.everyoneUnder = null;
-    }
-  }
-  if ($("#symptomatic").is(":checked")) {
-    if (isSDChecked) {
-      simOptions.socialDistancing.everyoneOver = null;
-      simOptions.socialDistancing.everyoneUnder = null;
-      simOptions.socialDistancing.symptomaticOnly = true;
-    }
-    if (isTransmissionChecked) {
-      simOptions.transmissionMitigation.everyoneUnder = null;
-      simOptions.transmissionMitigation.everyoneOver = null;
-      simOptions.transmissionMitigation.symptomaticOnly = true;
-    }
-  }
-
-  // behavior
-  if ($("#6feet").is(":checked")) {
-    simOptions.transmissionMitigation.multiplier -= 0.2;
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isTransmissionChecked = true;
-    isReceptionChecked = true;
-  }
-  if ($("#handwash").is(":checked")) {
-    simOptions.transmissionMitigation.multiplier -= 0.2;
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isTransmissionChecked = true;
-    isReceptionChecked = true;
-  }
-  if ($("#mask").is(":checked")) {
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isReceptionChecked = true;
-  }
-  if ($("#facetouch").is(":checked")) {
-    simOptions.receptionMitigation.multiplier -= 0.2;
-    isReceptionChecked = true;
-  }
-  if ($("#shelter").is(":checked")) {
-    simOptions.socialDistancing.multiplier = 0.1;
-    isSDChecked = true;
-  }
+//   // behavior
+//   if ($("#6feet").is(":checked")) {
+//     simOptions.transmissionMitigation.multiplier -= 0.2;
+//     simOptions.receptionMitigation.multiplier -= 0.2;
+//     isTransmissionChecked = true;
+//     isReceptionChecked = true;
+//   }
+//   if ($("#handwash").is(":checked")) {
+//     simOptions.transmissionMitigation.multiplier -= 0.2;
+//     simOptions.receptionMitigation.multiplier -= 0.2;
+//     isTransmissionChecked = true;
+//     isReceptionChecked = true;
+//   }
+//   if ($("#mask").is(":checked")) {
+//     simOptions.receptionMitigation.multiplier -= 0.2;
+//     isReceptionChecked = true;
+//   }
+//   if ($("#facetouch").is(":checked")) {
+//     simOptions.receptionMitigation.multiplier -= 0.2;
+//     isReceptionChecked = true;
+//   }
+//   if ($("#shelter").is(":checked")) {
+//     simOptions.socialDistancing.multiplier = 0.1;
+//     isSDChecked = true;
+//   }
 
   //reset simulation world
 
@@ -1135,7 +1214,7 @@ function simulateUserSpread() {
   world = results.world;
   world.reset();
   renderer.renderRealtime(world, (state) =>
-    updateChart(state.day + 1, state.counts.infected)
+    updateChart(state.day + 1, state.counts.cumulativeCases)
   );
 
   document.getElementById("btnUserSim").disabled = true;

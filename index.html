@@ -261,6 +261,69 @@
                             </select>
                         </div>
                         <div class="row" style="text-align:left;">
+                            Who wears a mask?
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="maskOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="maskOverSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="maskOverSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="maskUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="maskUnderSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="maskUnderSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;">
+                            Who tries to keep 6 feet apart?
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="distanceOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="distanceOverSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="distanceOverSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="distanceUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="distanceUnderSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="distanceUnderSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;">
+                            Who shelters in place?
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="shelterOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="shelterOverSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="shelterOverSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;padding-left:10px;">
+                            <div class="range-slider">
+                                <input id="shelterUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <span id="shelterUnderSliderText" class="range-slider__value"></span>
+                            </div>
+                            <div class="row expl" style="text-align:left;">
+                                <span id="shelterUnderSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                        <!-- <div class="row" style="text-align:left;">
                             COVID-19 Protection Behavior:
                         </div>
                         <div class="row" style="padding-top:1em;text-align:left !important;">
@@ -284,8 +347,8 @@
                                 <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)" />
                                 <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
                             </div>
-                        </div>
-                        <div class="row" style="text-align:left;">
+                        </div> -->
+                        <!-- <div class="row" style="text-align:left;">
                             Who Practices Protection Behavior:
                         </div>
                         <div class="row" style="padding-top:1em;text-align:left !important;">
@@ -309,7 +372,7 @@
                                 <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)" />
                                 <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row" style="text-align:left;">
                             <span>Average Population Age:</span>
                         </div>

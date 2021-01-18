@@ -21,7 +21,7 @@ var logger = new Logger(firebase, firestore, userId);
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
-var currentStep = 1;
+var currentStep = 7;
 var world;
 var renderer;
 var simulationData;
@@ -36,6 +36,8 @@ var normalSimulationData = [];
 var sdSimulationData = [];
 var userSimulationData = [];
 var userPreviousSimulationData = [];
+var userPreviousSimulationOptions;
+var userSimulationStartTime;
 var simulationWorld;
 var pid;
 var defaultRandomSeed = 45235;
@@ -1191,19 +1193,20 @@ function simulateUserSpread() {
 
   // simulate
   function updateChart(day, count) {
-    if (day > 0 && day <= defaultSimulationOptions.nDays) {
+    if (day > 0 && day <= simOptions.nDays) {
       userSimulationData.push({ day: day, cases: count });
       drawUserSimulationChart();
     }
-    if (day === defaultSimulationOptions.nDays) {
+    if (day === simOptions.nDays) {
       $("#btnNext").show();
       document.getElementById("btnUserSim").disabled = false;
       reSimuluateSD = true;
       userPreviousSimulationData = _.cloneDeep(userSimulationData);
-      logger.recordSimulation({
+      userPreviousSimulationOptions = _.cloneDeep(simOptions);
+      userSimulationStartTime = logger.recordSimulation({
         data: userSimulationData,
         params: simOptions,
-        start: simulationWorld.startTime,
+        start: userSimulationStartTime,
         end: new Date(),
       });
       addSmallMultipleChart();
@@ -1211,12 +1214,13 @@ function simulateUserSpread() {
   }
 
   var results = PandemicSimulator.runSimulations(simOptions);
+  console.log(results);
   world = results.world;
   world.reset();
+  userSimulationStartTime = new Date();
   renderer.renderRealtime(world, (state) =>
     updateChart(state.day + 1, state.counts.cumulativeCases)
   );
-
   document.getElementById("btnUserSim").disabled = true;
 }
 
@@ -1241,8 +1245,8 @@ function addSmallMultipleChart() {
         height: height,
         margin: margin
     });
-    c.x.domain([1, defaultSimulationOptions.nDays + 1]);
-    c.y.domain([0, defaultSimulationOptions.populationSize]);
+    c.x.domain([1, userPreviousSimulationOptions.nDays + 1]);
+    c.y.domain([0, userPreviousSimulationOptions.population.size]);
     c.xAxis.ticks(0).tickFormat(f());
     c.yAxis.ticks(5).tickFormat(f());
     c.drawAxis();
@@ -1255,15 +1259,16 @@ function addSmallMultipleChart() {
         .append('path.line').at({ d: line(userPreviousSimulationData) })        
         .attr("stroke", "#13BA81");
 
-    c.svg.append("line")
-        .attr("id", "threshold")
-        .attr("class", "threshold")
-        .attr("stroke-width", 2)
-        .attr("stroke", "#731D0A")
-        .attr("x1", c.x(1))
-        .attr("y1", c.y(20))
-        .attr("x2", c.x(defaultSimulationOptions.nDays))
-        .attr("y2", c.y(20));
+    c.svg
+      .append("line")
+      .attr("id", "threshold")
+      .attr("class", "threshold")
+      .attr("stroke-width", 2)
+      .attr("stroke", "#731D0A")
+      .attr("x1", c.x(1))
+      .attr("y1", c.y(20))
+      .attr("x2", c.x(userPreviousSimulationOptions.nDays))
+      .attr("y2", c.y(20));
     var threshold = 20;
 
     c.svg.append("defs").append("pattern")
@@ -1335,28 +1340,28 @@ function addSmallMultipleChart() {
     // desc += notBehav;
     // desc += " (Average population age : " + sliders["ageSlider"].values[$('#ageSlider').val()] + ")";
     
-    function optionToSpan(_, tag){
-        var span = $('<span/>')
-            .addClass($(tag).is(":checked") ? "selected-sim-option": "unselected-sim-option")
-            .html($("label[for='" + $(tag).val() + "']").text()).get();
-        return span
-    }
-    $(div).append(
-        $("<div class='row criteria'></div>")
-            .append(
-                $('<div/>').append(
-                    $('<p class="criteria-group"></p>').append($(".behavGroup").map(optionToSpan).get()),
-                    $('<p class="criteria-group"></p>').append($(".peopleGroup").map(optionToSpan).get())
-                ),
-                $('<div/>').append(`
-                <p class="age-criterion">
-                    <span>
-                        <span class="unselected-sim-option">Average Population Age: </span>
-                        <span class=selected-sim-option>${sliders["ageSlider"].values[$('#ageSlider').val()]}</span>
-                    </span>
-                </p>`)
-            )
-    )
+    // function optionToSpan(_, tag){
+    //     var span = $('<span/>')
+    //         .addClass($(tag).is(":checked") ? "selected-sim-option": "unselected-sim-option")
+    //         .html($("label[for='" + $(tag).val() + "']").text()).get();
+    //     return span
+    // }
+    // $(div).append(
+    //     $("<div class='row criteria'></div>")
+    //         .append(
+    //             $('<div/>').append(
+    //                 $('<p class="criteria-group"></p>').append($(".behavGroup").map(optionToSpan).get()),
+    //                 $('<p class="criteria-group"></p>').append($(".peopleGroup").map(optionToSpan).get())
+    //             ),
+    //             $('<div/>').append(`
+    //             <p class="age-criterion">
+    //                 <span>
+    //                     <span class="unselected-sim-option">Average Population Age: </span>
+    //                     <span class=selected-sim-option>${sliders["ageSlider"].values[$('#ageSlider').val()]}</span>
+    //                 </span>
+    //             </p>`)
+    //         )
+    // )
     userSimCount++;
 }
 

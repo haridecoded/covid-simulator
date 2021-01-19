@@ -76,8 +76,8 @@ h1 {
 .moving {
     height: 15px;
     width: 15px;
-    border:1px solid #3a434c;
-    background-color: #bbb;
+    border: 1px solid #3a434c;
+    background-color: #75abdc;
     border-radius: 50%;
     display: inline-block;
 }
@@ -86,16 +86,20 @@ h1 {
     height: 15px;
     width: 15px;
     border: 1px solid #3a434c;
-    background-color: #731D0A;
+    background-color: #f2684a;
     border-radius: 50%;
     display: inline-block;
+}
+
+#pencil{
+    cursor:grab;
 }
 
 .newly {
     height: 15px;
     width: 15px;
     border: 1px solid #3a434c;
-    background-color: #F29D35;
+    background-color: #faaa6d;
     border-radius: 50%;
     display: inline-block;
 }

@@ -147,7 +147,7 @@ $(window).on('load', function () {
     $("#panel" + currentStep).show();
     defaultSimulationData = PandemicSimulator.runSimulations(defaultSimulationOptions);
     trendData = defaultSimulationData.getRepresentativeData().map(function (d) {
-      return { day: d.day, cases: d.counts.cumulativeCases };
+      return { day: d.day+1, cases: d.counts.cumulativeCases };
     });
     freeformData = _.cloneDeep(trendData);
     pid = new IDGenerator().generate();
@@ -306,7 +306,7 @@ function initializeDrawView() {
 
     var area = d3.area().x(f('day', c.x)).y0(f('cases', c.y)).y1(c.height);
     var line = d3.area().x(f('day', c.x)).y(f('cases', c.y)).curve(d3.curveBasis);
-    var userDrawStart = 8;
+    var userDrawStart = 10;
     var clipRect = c.svg
         .append('clipPath#clip')
         .append('rect')
@@ -320,8 +320,8 @@ function initializeDrawView() {
 
     c.svg.append("svg:image")
         .attr("id","pencil")
-        .attr('x', c.x(trendData[userDrawStart - 1].day))
-        .attr('y', c.y(trendData[userDrawStart - 1].cases)-48)
+        .attr('x', c.x(trendData[userDrawStart].day-1))
+        .attr('y', c.y(trendData[userDrawStart].cases)-38)
         .attr('width', 48)
         .attr('height', 48)
         .attr("xlink:href", "images/pencil.png");
@@ -554,7 +554,7 @@ function drawNormalSimulationChart() {
         .attr("id", "thresholdLabel")
         .attr("transform", "translate(" + c.x(2) + "," + (c.y(threshold) - 15) + ")")
         .style("text-anchor", "left")
-        .text("Total hospital beds");
+        .text("Total hospital beds = 20");
 
     // hospital threshold area
     c.svg.append("defs").append("pattern")
@@ -731,11 +731,11 @@ function drawSDSimulationChart() {
 
     // hospital threshold text
     c.svg.append("text")
-        .attr("class", "label threshold")     
+        .attr("class", "label threshold")       
         .attr("id", "thresholdLabel")
         .attr("transform", "translate(" + c.x(2) + "," + (c.y(threshold) - 15) + ")")
-        .style("text-anchor", "middle")
-        .text("Total hospital beds");
+        .style("text-anchor", "left")
+        .text("Total hospital beds = 20");
 
     yourDataSel = c.svg.append('path.your-line');
     yourDataSel.at({ d: line.defined(f('defined'))(yourData) });

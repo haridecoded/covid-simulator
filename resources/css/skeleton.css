@@ -298,7 +298,7 @@ textarea {
         border: 1px solid #b9003e;
         outline: 0;
     }
-label,
+/*label,*/
 legend {
   display: block;
   margin-bottom: .5rem;

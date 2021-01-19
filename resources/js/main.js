@@ -920,14 +920,14 @@ function drawUserSimulationChart() {
 }
 
 function applyFill(slider) {
-    const settings = {
-        fill: '#BF471B',
-        background: '#d7dcdf'
-    };
+    //const settings = {
+    //    fill: '#BF471B',
+    //    background: '#d7dcdf'
+    //};
 
-    const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
-    const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
-    slider.style.background = bg;
+    //const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+    //const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+    //slider.style.background = bg;
 }
 
 function onSliderInput(slider){

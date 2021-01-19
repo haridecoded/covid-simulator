@@ -28,14 +28,14 @@ app.get('/neighborhood', function (req, res) {
 
 app.post('/count', function (req, res) {
     (async () => {
-        let data = await worldometer.trackAll();
+        //let data = await worldometer.trackAll();
+        let data = await worldometer.trackCountry('united states');
         console.log(data);
-        res.send(JSON.stringify({ "count": data.totalCases }));
+        res.send(JSON.stringify({ "count": data.cases.total }));
         // Since we are using an async function, we need to return the data.
         return console.log(`
-    Total Cases: ${data.totalCases}
-    Total Deaths: ${data.totalDeaths}
-    Total Recovered: ${data.totalRecovered}`);
+    Total Cases: ${data.cases.total}
+    Total Deaths: ${data.cases.deaths}`);
     })();
     
 });

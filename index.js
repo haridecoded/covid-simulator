@@ -26,6 +26,10 @@ app.get('/neighborhood', function (req, res) {
     res.sendFile(__dirname + '/neighborhood.html');
 });
 
+app.get('/sim1', function (req, res) {
+    res.sendFile(__dirname + '/sim1.html');
+});
+
 app.post('/count', function (req, res) {
     (async () => {
         //let data = await worldometer.trackAll();

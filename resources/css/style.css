@@ -265,6 +265,11 @@ iframe {
     padding-top: 5em;
 }
 
+
+.sim {
+    margin-top: 3.5em;   
+}
+
 .clip-circle {
     clip-path: circle(60px at center);
     width: 120px;
@@ -297,12 +302,21 @@ h1 {
     text-align:center;
 }
 
+.paraEmph {
+    color: #fff;
+    background: #0fa0ce;
+    padding: 0 !important;
+}
+
 .panel {
-    padding-top: 1em;
     text-align: center;
     overflow: auto;
     flex: 1;
     padding-bottom: 100px;
+}
+
+.chart1{
+    margin-top:1em;
 }
 
 .label{
@@ -381,11 +395,11 @@ h1 {
 
 
 
-.pEmph {
-    background: #c4e3e6;
-    padding: 15px;
+.pEmph {    
+    padding: 1em;
     border-radius: 7px;
     text-align: left;
+    text-align:center;
 }
 
 .hint {
@@ -423,6 +437,12 @@ h1 {
 
 #panel1Chart1{
     cursor:pointer;
+}
+
+.configCard {
+    border: 1px solid #ec602d;
+    border-radius: 3px;
+    padding: 1em;
 }
 
 
@@ -518,7 +538,7 @@ h1 {
     background: transparent;
     color: #BF471B;
     outline: 0;
-    margin-bottom: 3em;
+    margin-bottom: 10px;
     max-width: 100%;
     overflow: hidden;
     word-wrap: break-word !important;

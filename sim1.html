@@ -23,243 +23,253 @@
     <script type="text/javascript" src="js/main.js"></script>
 
     <div class="container">
-        <div class="row header">
-            <div class="twelve columns alpha">
-                <h1 onpointerdown="window.open('/','_self')">
+        <div class="row">
+            <header class="header">
+                <a href="#" id="logo" onclick="window.open('/','_self')" class="logo">Pandemic Simulations</a>
+                <!--<input class="menu-btn" type="checkbox" id="menu-btn" />
+                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+                <ul class="menu">
+                    <li><a href="#" onclick="window.open('/','_self')">Home</a></li>
+                    <li><a class="active" href="#" onclick="window.open('/sim1','_self')">Simulation</a></li>
+                </ul>-->
+            </header>
+        </div>
+        <div class="row sim">
+            <div class="row">
+                <h1>
                     How Does A Pandemic Develop?
-                    <!--How Social &nbsp;&nbsp;D &nbsp;i &nbsp;s &nbsp;t &nbsp;a &nbsp;n &nbsp;c &nbsp;i &nbsp;n &nbsp;g&nbsp;&nbsp;Can Help You <br/>Fight A Pandemic-->
                 </h1>
             </div>
         </div>
+        <!--<div class="row panel" id="panel1">
+        <div class="five columns alpha">
+            <p class="pEmph">
+                On December 26, 2019 four unusual cases of pneumonia was noticed by Dr. Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified as the cause.
+                Since then, the virus has infected millions of people in the US and is spreading at an exponential rate.<br /><br />
+                <span style="font-size:30px; font-weight:bold;"><span id="count">10 million</span> + cases so far!</span> <br />
+            </p>
+        </div>
+        <div class="six columns offset-by-one">
+            <img src="images/virus.png" style="height:400px;" />
+        </div>
+    </div>
 
-        <div class="row panel" id="panel1">
-            <div class="five columns alpha">
-                <p class="pEmph">
-                    On December 26, 2019 four unusual cases of pneumonia was noticed by Dr. Jixian Xhang. On January 7th, <b>Coronavirus (COVID-19)</b> was identified as the cause.
-                    Since then, the virus has infected millions of people in the US and is spreading at an exponential rate.<br /><br />
-                    <span style="font-size:30px; font-weight:bold;"><span id="count">10 million</span> + cases so far!</span> <br />
-                </p>
+    <div class="row panel" id="panel2" style="display:none;">
+        <div class="five columns alpha">
+            <p class="pEmph">
+                To understand what is going on, let's consider a small neighborhood of 200 people.<br /> <br />
+                Suppose there is a disease with a similar transmission rate to COVID-19.
+                <b>
+                    Once the disease enters the neighborhood with the first case,
+                    what will the spread of the disease look like in
+                    30 days if people interacted with everyone as they would normally?
+                </b>
+                <br /><br />
+            </p>
+        </div>
+        <div class="six columns offset-by-one">
+            <div class="row">
+                <span class="hint" style="color:#886262;">
+                    Draw <img src="images/pencil.png" style="width:20px;" /> a curve on the plot below that is your best guess of how a virus with transmission rates similar to COVID-19 will spread in the neighborhood.
+                </span>
             </div>
-            <div class="six columns offset-by-one">
-                <img src="images/virus.png" style="height:400px;" />
+            <div class="row">
+                <div class="twelve columns">
+                    <div class="chart" id="panel2Chart1">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <input class="button-primary" id="showMe" type="button" value="Show me how I did!" disabled />
+                </div>
+            </div>
+            <div class="row" id="res2">
+                <p class="result" style="display:none;">
+                    That's nearly <span style="font-weight:bold;background:#F2CF66;padding:3px;border-radius:5px;" id="infectedText"></span> of the neighborhood!
+                </p>
             </div>
         </div>
+    </div>-->
+        <!--<div class="row panel" id="panel3" style="display:none;">
+        <div class="five columns alpha">
+            <p class="pEmph">
+                Here is why so many people are infected so quickly: <br /><br />
+                (1) The fictional virus, like COVID-19, spreads from person-to-person  when people are in <b> close contact</b> with one another (within 6 feet).<br />
+                (2) A person can get infected by touching a surface that has the virus on it and then <b> touching their own face.</b> <br /><br />
 
-        <div class="row panel" id="panel2" style="display:none;">
-            <div class="five columns alpha">
-                <p class="pEmph">
-                    To understand what is going on, let's consider a small neighborhood of 200 people.<br /> <br />
-                    Suppose there is a disease with a similar transmission rate to COVID-19.
-                    <b>
-                        Once the disease enters the neighborhood with the first case,
-                        what will the spread of the disease look like in
-                        30 days if people interacted with everyone as they would normally?
-                    </b>
-                    <br /><br />
-                </p>
+                Both these things happen a lot during a typical day when people are traveling, shopping, socializing with friends, etc.<br />
+            </p>
+        </div>
+        <div class="six columns offset-by-one">
+            <div class="row">
+                <div class="twelve columns">
+                    <div class="chart" id="panel3Chart1">
+
+                    </div>
+                </div>
             </div>
-            <div class="six columns offset-by-one">
-                <div class="row">
-                    <span class="hint" style="color:#886262;">
-                        Draw <img src="images/pencil.png" style="width:20px;" /> a curve on the plot below that is your best guess of how a virus with transmission rates similar to COVID-19 will spread in the neighborhood.
-                    </span>
-                </div>
-                <div class="row">
-                    <div class="twelve columns">
-                        <div class="chart" id="panel2Chart1">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="twelve columns">
-                        <input class="button-primary" id="showMe" type="button" value="Show me how I did!" disabled />
-                    </div>
-                </div>
-                <div class="row" id="res2">
-                    <p class="result" style="display:none;">
-                        That's nearly <span style="font-weight:bold;background:#F2CF66;padding:3px;border-radius:5px;" id="infectedText"></span> of the neighborhood!
-                    </p>
-                </div>
+            <div class="row" id="res3">
             </div>
         </div>
-     
-        <div class="row panel" id="panel3" style="display:none;">
-            <div class="five columns alpha">
-                <p class="pEmph">
-                    Here is why so many people are infected so quickly: <br /><br />
-                    (1) The fictional virus, like COVID-19, spreads from person-to-person  when people are in <b> close contact</b> with one another (within 6 feet).<br/>
-                    (2) A person can get infected by touching a surface that has the virus on it and then <b> touching their own face.</b> <br/><br />
+    </div>-->
 
-                    Both these things happen a lot during a typical day when people are traveling, shopping, socializing with friends, etc.<br /> 
-                </p>
-            </div>
-            <div class="six columns offset-by-one">
-                <div class="row">
-                    <div class="twelve columns">
-                        <div class="chart" id="panel3Chart1">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="row" id="res3">                   
-                </div>
-            </div>
-       </div>
-     
         <div class="row panel" id="panel4" style="display:none;">
             <div class="row">
-                <div class="five columns alpha">
+                <p class="pEmph">
+                    We created a <b>simulation model</b> of a <b>fictional disease</b> that has transmission properties
+                    similar to COVID-19. In the visualization, each dot <span class="moving"></span> represents a <b>person</b> in the neighborhood. (There are 200 dots in total.)<br />
+                </p>
+            </div>
+            <div class="row" id="legend4">
+                When an <b>infected person</b> (orange dot <span class="infected"> </span>) enters the neighborhood,
+                there is a chance that they will infect people they come in contact with. <b>Newly infected</b> individuals (yellow dot <span class="newly"> </span>) may not show any symptoms for a few days but are still contagious! <br /><br />
+            </div>
+            <div class="row" style="margin-bottom:1em;">
+                <input id="btnNormalSim" type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()" />
+            </div>
+            <div class="row">
+                <div class="ten columns offset-by-one alpha">
                     <div class="row">
-                        <p class="pEmph">
-                            We created a <b>simulation model</b> of a <b>fictional disease</b> that has transmission properties
-                            similar to COVID-19. In the visualization, each dot <span class="moving"></span> represents a <b>person</b> in the neighborhood. (There are 200 dots in total.)<br />
-                            <br />When an <b>infected person</b> (orange dot <span class="infected"> </span>) enters the neighborhood,
-                            there is a chance that they will infect people they come in contact with. <b>Newly infected</b> individuals (yellow dot <span class="newly"> </span>) may not show any symptoms for a few days but are still contagious! <br /><br />
-                        </p>
-                    </div>                  
-                    <div class="row">
-                        <input id="btnNormalSim" type="button" class="button-primary" value="Simulate Neighborhood Spread" onclick="simulateSpreadNormal()" />
-                    </div>
-                </div>
-                <div class="six columns offset-by-one">
+                        <div class="six columns alpha">
+                            <div class="chart chart1" id="panel4Chart1">
 
-                    <div class="row">
-                        <div class="chart" id="panel4Chart1"></div>
-                    </div>
-                    <div class="row">
-                        <div class="chart" id="panel4Chart2">
+                            </div>
+                        </div>
+                        <div class="six columns">
+                            <div class="chart chart2" id="panel4Chart2">
 
+                            </div>
                         </div>
                     </div>
-                  
-
                 </div>
-            </div>           
+            </div>
         </div>
 
         <div class="row panel" id="panel5" style="display:none;">
             <div class="row">
-                <div class="five columns alpha">
-                    <p class="pEmph">
-                        An <b>urgent</b> problem is that hospitals may be unable to manage this rapid and exponential growth of coronavirus cases.
-                        For every 10 people in the neighborhood, there is 1 hospital bed avaiable for care. <br/><br/>
-                     <b>This means that if many people get sick at once (orange dot <span class="infected"> </span>), not everyone will be able to get the treatment they need. </b><br/>
-                        (While this is a simulation, it is based on real data about relative numbers of hospital beds in communities.) <br /> <br />
-                    </p>
-                </div>
-                <div class="six columns offset-by-one">
+                <p class="pEmph">
+                    An <b>urgent</b> problem is that hospitals may be unable to manage this rapid and exponential growth of coronavirus cases.
+                    For every 10 people in the neighborhood, there is 1 hospital bed avaiable for care. <br /><br />
+                    <b>This means that if many people get sick at once (orange dot <span class="infected"> </span>), not everyone will be able to get the treatment they need. </b><br />
+                    (While this is a simulation, it is based on real data about relative numbers of hospital beds in communities.) <br /> <br />
+                </p>
+            </div>
+            <div class="row">
+                <div class="ten columns offset-by-one alpha">
                     <div class="row">
-                        <div class="chart" id="panel5Chart1">
+                        <div class="six columns alpha">
+                            <div class="chart chart1" id="panel5Chart1">
 
+                            </div>
+                        </div>
+                        <div class="six columns">
+                            <div class="chart chart2" id="panel5Chart2">
+
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="chart" id="panel5Chart2">
-
-                        </div>
-                    </div>
                 </div>
-            </div>           
+            </div>
         </div>
 
         <div class="row panel" id="panel6" style="display:none;">
             <div class="row">
                 <img src="images/sd.png" style="height:200px;" />
             </div>
-            <div class="row pEmph">
+            <div class="row">
                 <p>
                     You can help slow down the rate at which coronavirus is spreading by practicing <b>Social Distancing</b>.<br /><br />
-                    Our goal is to ensure that the number of patients are always fewer than the number of hospital beds available.
-                    This gives hospitals enough resources to take care of all sick patients at any give time.
-                    This also gives us more time to develop vaccines and treatments. <br /><br />
-                    <b>How can you practice social distancing?</b><br />
                 </p>
-                <ul>
-                    <li>
-                        Stay at home and only leave for essential purposes, like groceries or medicine (shelter in place).
-                    </li>
-                    <li>
-                        When you have to go out (such as going to a grocery store or pharmacy):
-                        <ul>
-                            <li>
-                                Maintain at least 6 feet distance</b> from all other people.
-                            </li>
-                            <li>
-                                Wear a face mask at all times.
-                            </li>
-                            <li>
-                                Wash your hands frequently and thoroughly (especially before &amp; after touching your mask).
-                            </li>
-                            <li>
-                                Do not touch your face.
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+
+                <div class="row" style="background:#0fa0ce;color:#fff;">
+                    <p>
+                        Our goal is to ensure that the number of patients are always fewer than the number of hospital beds available.
+                        This gives hospitals enough resources to take care of all sick patients at any give time.
+                        This also gives us more time to develop vaccines and treatments. <br /><br />
+                    </p>
+                    <p>
+                        <b>How can you practice social distancing?</b><br />
+                    </p>
+                    <ul>
+                        <li>
+                            When you have to go out (such as going to a grocery store or pharmacy):
+                            <ul>
+                                <li>
+                                    Maintain at least 6 feet distance</b> from all other people.
+                                </li>
+                                <li>
+                                    Wear a face mask at all times.
+                                </li>
+                                <li>
+                                    Wash your hands frequently and thoroughly (especially before &amp; after touching your mask).
+                                </li>
+                                <li>
+                                    Do not touch your face.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="row">
-             
+
             </div>
         </div>
 
         <div class="row panel" id="panel7" style="display:none;">
             <div class="row">
-                <div class="five columns alpha ">
+                <p class="pEmph">
+                    <b>Let us now look at how social distancing can help keep the infection low.</b> <br /><br /> In this simulation, people interact with one
+                    another less frequently because they are practicing social distancing (grey circle around each person <img src="images/sdlegend.png" style="width:20px;" />). Also, when people do interact
+                    they are taking precautions such as wearing a mask (white dot at the center of each person <img src="images/masklegend.png" style="width:12px;" />), so even if they meet an infected person, the chance of infection is lower. <br />
+                </p>
+            </div>
+            <div class="row">
+                <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
+            </div>
+            <div class="row">
+                <div class="ten columns offset-by-one alpha">
                     <div class="row">
-                        <p class="pEmph">
-                            <span style="font-size:32px;">Flattening the curve</span><br />
-                            Let us look at how social distancing can help keep the infection low. <br/><br/> In this simulation, people interact with one
-                            another less frequently because they are practicing social distancing (grey circle around each person <img src="images/sdlegend.png" style="width:20px;"/>). Also, when people do interact
-                            they are taking precautions such as wearing a mask (white dot at the center of each person <img src="images/masklegend.png" style="width:12px;" />), so even if they meet an infected person, the chance of infection is lower. <br />
-                        </p>
-                    </div>
-                    <div class="row">
-                        <input id="btnSDSim" type="button" class="button-primary" value="Simulate Social Distancing Spread" onclick="simulateSDSpread()" />
-                    </div>
-                </div>
-                <div class="six columns offset-by-one">
-                    <div class="row">
-                        <div class="chart" id="panel7Chart1"></div>
-                        <div class="row">
-                            <div class="chart" id="panel7Chart2">
+                        <div class="six columns alpha">
+                            <div class="chart chart1" id="panel7Chart1">
 
                             </div>
-                        </div>                        
+                        </div>
+                        <div class="six columns">
+                            <div class="chart chart2" id="panel7Chart2">
+
+                            </div>
+                        </div>
                     </div>
-                </div>            
+                </div>
             </div>
         </div>
-    
+
         <div class="row panel" id="panel8" style="display:none;">
-            <div class="row">
-                <div class="twelve columns alpha">
-                    <p class="pEmph" style="text-align:center !important;">
-                        See how much more slowly the growth in cases is when everyone practices <b>Social Distancing</b>? <br/>
-                        There may be other questions you have such as <i>What happens if only people over the age of 60 practice social distancing?</i> or <i>How washing your hands or not touching your face can affect the spread of the virus? </i><br/>
-                        This simulation takes into account how different factors affect the rate of disease transmission. It is based on what we know now. While the exact numbers may not be accurate, the general effects of these factors are close.
-                    </p>                  
-                </div>
-            </div>
-            <div class="row" style="background:white;border-radius:7px 7px 0 0 ;">
+            <div class="row" style="background:white;padding:5px; margin-bottom:1em;">
                 <div class="row">
-                    <p class="highlight" style="text-align:center !important;border-radius:7px 7px 0 0 ;">
-                        Choose from the list of questions below or directly change model attributes to observe neighborhood spread. 
-                        [uninfected - <span class="moving"> </span>, infected asymptomatic - <span class="newly"> </span>, infected symptomatic -  <span class="infected"> </span>, shelter in place - <span class="strict"> </span> ]
+                    <p>
+                        <b>You Try It: </b>Choose from the list of questions below or directly change model attributes to observe neighborhood spread.
                     </p>
                 </div>
-                <div class="row" style="padding:30px 10px;">
-
-                    <div class="five columns alpha">
-                        <div class="row">
-                            <select id="behavior" class="mdl-select-workaround" style="height:60px;" onchange="onQuestionSelect()">
-                                <option value="none">Select a question:</option>
-                                <option value="over60">What if only high risk individuals stay home (e.g., people over 60, people with medical conditions)?</option>
-                                <option value="under25">What if low risk individuals don't take precautions (e.g., people under 25)?</option>
-                                <option value="symptom">What if only people who exhibit COVID-19 symptoms stay at home?</option>
-                                <option value="face">What if everyone takes precautions but move about the neighborhood?</option>
-                            </select>
-                        </div>
+                <div class="row">
+                    <div class="ten columns offset-by-one alpha">
+                        <select id="behavior" class="mdl-select-workaround" style="height:60px;background:white;" onchange="onQuestionSelect()">
+                            <option value="none">Select a question:</option>
+                            <option value="over60">What if only high risk individuals stay home (e.g., people over 60, people with medical conditions)?</option>
+                            <option value="under25">What if low risk individuals don't take precautions (e.g., people under 25)?</option>
+                            <option value="symptom">What if only people who exhibit COVID-19 symptoms stay at home?</option>
+                            <option value="face">What if everyone takes precautions but move about the neighborhood?</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="padding:5px;">
+                    <span>OR-- Choose your own Social Distancing Behavior for the neighboorhood! </span>
+                </div>
+                <div class="row">
+                    <div class="four columns alpha configCard">
                         <div class="row" style="text-align:left;">
                             Who wears a mask?
                         </div>
@@ -276,15 +286,8 @@
                             <input name="symp" type="checkbox" value="Symptomatic" />
                             <label for="symp">Symptomatic Only</label>
                         </div>
-                        <!--<div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="maskUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="maskUnderSliderText" class="range-slider__value"></span>
-        </div>
-        <div class="row expl" style="text-align:left;">
-            <span id="maskUnderSliderExplanation">Explanation about value</span>
-        </div>
-    </div>-->
+                    </div>
+                    <div class="four columns alpha configCard">
                         <div class="row" style="text-align:left;">
                             Who tries to keep 6 feet apart?
                         </div>
@@ -301,24 +304,8 @@
                             <input name="symp" type="checkbox" value="Symptomatic" />
                             <label for="symp">Symptomatic Only</label>
                         </div>
-                        <!--<div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="distanceOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="distanceOverSliderText" class="range-slider__value"></span>
-        </div>
-        <div class="row expl" style="text-align:left;">
-            <span id="distanceOverSliderExplanation">Explanation about value</span>
-        </div>
-    </div>
-    <div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="distanceUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="distanceUnderSliderText" class="range-slider__value"></span>
-        </div>
-        <div class="row expl" style="text-align:left;">
-            <span id="distanceUnderSliderExplanation">Explanation about value</span>
-        </div>
-    </div>-->
+                    </div>
+                    <div class="four columns alpha configCard">
                         <div class="row" style="text-align:left;">
                             Who shelters in place?
                         </div>
@@ -335,180 +322,250 @@
                             <input name="symp" type="checkbox" value="Symptomatic" />
                             <label for="symp">Symptomatic Only</label>
                         </div>
-                        <!--<div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="shelterOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="shelterOverSliderText" class="range-slider__value"></span>
-        </div>
-        <div class="row expl" style="text-align:left;">
-            <span id="shelterOverSliderExplanation">Explanation about value</span>
-        </div>
-    </div>
-    <div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="shelterUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="shelterUnderSliderText" class="range-slider__value"></span>
-        </div>
-        <div class="row expl" style="text-align:left;">
-            <span id="shelterUnderSliderExplanation">Explanation about value</span>
-        </div>
-    </div>-->
-                        <!-- <div class="row" style="text-align:left;">
-        COVID-19 Protection Behavior:
-    </div>
-    <div class="row" style="padding-top:1em;text-align:left !important;">
-        <div class="checkbox">
-            <input class="behavGroup" id="6feet" value="6feet" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
-            <label for="6feet" class="checkbox-label" value="6feet">Six Feet Separation</label>
-        </div>
-        <div class="checkbox">
-            <input class="behavGroup" id="handwash" value="handwash" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
-            <label for="handwash" class="checkbox-label" value="handwash">Wash Hands</label>
-        </div>
-        <div class="checkbox">
-            <input class="behavGroup" id="mask" type="checkbox" value="mask" onchange="onBehaviorSelectionChanged(this)" />
-            <label for="mask" class="checkbox-label" value="mask">Wear a Mask</label>
-        </div>
-        <div class="checkbox">
-            <input class="behavGroup" id="facetouch" type="checkbox" value="facetouch" onchange="onBehaviorSelectionChanged(this)" />
-            <label for="facetouch" class="checkbox-label" value="facetouch">Avoid Touching Face</label>
-        </div>
-        <div class="checkbox">
-            <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)" />
-            <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
-        </div>
-    </div> -->
-                        <!-- <div class="row" style="text-align:left;">
-        Who Practices Protection Behavior:
-    </div>
-    <div class="row" style="padding-top:1em;text-align:left !important;">
-        <div class="checkbox">
-            <input class="peopleGroup" id="60plus" type="checkbox" value="60plus" onchange="onPopulationSelectionChanged(this)" />
-            <label for="60plus" class="checkbox-label" value="60plus">60 Years +</label>
-        </div>
-        <div class="checkbox">
-            <input class="peopleGroup" id="25plus" type="checkbox" value="25plus" onchange="onPopulationSelectionChanged(this)" />
-            <label for="25plus" class="checkbox-label" value="25plus">25 Years +</label>
-        </div>
-        <div class="checkbox">
-            <input class="peopleGroup" id="under25" type="checkbox" value="under25" onchange="onPopulationSelectionChanged(this)" />
-            <label for="under25" class="checkbox-label" value="under25">Under 25</label>
-        </div>
-        <div class="checkbox">
-            <input class="peopleGroup" id="everyone" type="checkbox" value="everyone" onchange="onPopulationSelectionChanged(this)" />
-            <label for="everyone" class="checkbox-label" value="everyone">All Ages</label>
-        </div>
-        <div class="checkbox">
-            <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)" />
-            <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
-        </div>
-    </div> -->
-                        <div class="row" style="text-align:left;">
-                            <span>Average Population Age:</span>
-                        </div>
-                        <!--<div class="row" style="text-align:left;padding-left:10px;">
-        <div class="range-slider">
-            <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
-            <span id="ageSliderText" class="range-slider__value"></span>
-        </div>
-    </div>-->
-                        <div class="row expl" style="text-align:left;">
-                            <span id="ageSliderExplanation">Explanation about value</span>
-                        </div>
-                        <div class="row">
-                            <input id="btnUserSim" type="button" class="button-primary" value="Simulate" style="padding-bottom:20px;" onclick="simulateUserSpread()" />
-                        </div>
                     </div>
-                    <div class="six columns offset-by-one">
-                        <div class="row">
-                            <div class="chart" id="panel8Chart1"></div>
-                        </div>
-                        <div class="row">
-                            <div class="chart" id="panel8Chart2">
+                </div>
+
+            </div>
+            <div class="row">
+                <input id="btnUserSim" type="button" class="button-primary" value="Simulate" style="padding-bottom:20px;" onclick="simulateUserSpread()" />
+            </div>
+            <div>
+                <p> [uninfected - <span class="moving"> </span>, infected asymptomatic - <span class="newly"> </span>, infected symptomatic -  <span class="infected"> </span>, shelter in place - <span class="strict"> </span> ]</p>
+            </div>
+            <div class="row">
+                <div class="ten columns offset-by-one alpha">
+                    <div class="row">
+                        <div class="six columns alpha">
+                            <div class="chart chart1" id="panel8Chart1">
 
                             </div>
                         </div>
-                        <div class="row">
-                            <span style="color:rgb(191, 71, 27);">(Scroll down to see all your simulations)</span>
+                        <div class="six columns">
+                            <div class="chart chart2" id="panel8Chart2">
+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>           
-            <div class="row">
-                <div class="twelve columns alpha" style="border-top:1px solid #8C2E26;padding-top:1em;">
+            </div>
+            <div class="row" style="border-top: 1px solid #0fa0ce; background:#fff; padding-top: 1em;">
+                <div class="row">
                     <p>
                         All My Simulations
                     </p>
-                </div>               
-            </div>
-            <div class="row">
-                <div class="twelve columns alpha" id="mysimulations">
-
                 </div>
+                <div class="row">
+                    <div class="twelve columns alpha" id="mysimulations">
+
+                    </div>
+                </div>
+
             </div>
 
+
+            <!--<div class="row" style="padding:30px 10px;">
+        <div class="five columns alpha">
+            <div class="row">
+
+            </div>-->
+            <!--<div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="maskUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="maskUnderSliderText" class="range-slider__value"></span>
+            </div>
+            <div class="row expl" style="text-align:left;">
+                <span id="maskUnderSliderExplanation">Explanation about value</span>
+            </div>
+        </div>-->
+            <!--<div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="distanceOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="distanceOverSliderText" class="range-slider__value"></span>
+            </div>
+            <div class="row expl" style="text-align:left;">
+                <span id="distanceOverSliderExplanation">Explanation about value</span>
+            </div>
+        </div>
+        <div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="distanceUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="distanceUnderSliderText" class="range-slider__value"></span>
+            </div>
+            <div class="row expl" style="text-align:left;">
+                <span id="distanceUnderSliderExplanation">Explanation about value</span>
+            </div>
+        </div>-->
             <!--<div class="row">
-        <div id="panel6Chart1">
+            <div class="twelve columns alpha">
+                <p class="pEmph" style="text-align:center !important;">
+                    See how much more slowly the growth in cases is when everyone practices <b>Social Distancing</b>? <br />
+                    There may be other questions you have such as <i>What happens if only people over the age of 60 practice social distancing?</i> or <i>How washing your hands or not touching your face can affect the spread of the virus? </i><br />
+                    This simulation takes into account how different factors affect the rate of disease transmission. It is based on what we know now. While the exact numbers may not be accurate, the general effects of these factors are close.
+                </p>
+            </div>
+        </div>-->
+            <!--<div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="shelterOverSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="shelterOverSliderText" class="range-slider__value"></span>
+            </div>
+            <div class="row expl" style="text-align:left;">
+                <span id="shelterOverSliderExplanation">Explanation about value</span>
+            </div>
+        </div>
+        <div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="shelterUnderSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="shelterUnderSliderText" class="range-slider__value"></span>
+            </div>
+            <div class="row expl" style="text-align:left;">
+                <span id="shelterUnderSliderExplanation">Explanation about value</span>
+            </div>
+        </div>-->
+            <!-- <div class="row" style="text-align:left;">
+            COVID-19 Protection Behavior:
+        </div>
+        <div class="row" style="padding-top:1em;text-align:left !important;">
+            <div class="checkbox">
+                <input class="behavGroup" id="6feet" value="6feet" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
+                <label for="6feet" class="checkbox-label" value="6feet">Six Feet Separation</label>
+            </div>
+            <div class="checkbox">
+                <input class="behavGroup" id="handwash" value="handwash" type="checkbox" onchange="onBehaviorSelectionChanged(this)" />
+                <label for="handwash" class="checkbox-label" value="handwash">Wash Hands</label>
+            </div>
+            <div class="checkbox">
+                <input class="behavGroup" id="mask" type="checkbox" value="mask" onchange="onBehaviorSelectionChanged(this)" />
+                <label for="mask" class="checkbox-label" value="mask">Wear a Mask</label>
+            </div>
+            <div class="checkbox">
+                <input class="behavGroup" id="facetouch" type="checkbox" value="facetouch" onchange="onBehaviorSelectionChanged(this)" />
+                <label for="facetouch" class="checkbox-label" value="facetouch">Avoid Touching Face</label>
+            </div>
+            <div class="checkbox">
+                <input class="behavGroup" id="shelter" type="checkbox" value="shelter" onchange="onBehaviorSelectionChanged(this)" />
+                <label for="shelter" class="checkbox-label" value="shelter">Shelter in Place</label>
+            </div>
+        </div> -->
+            <!-- <div class="row" style="text-align:left;">
+            Who Practices Protection Behavior:
+        </div>
+        <div class="row" style="padding-top:1em;text-align:left !important;">
+            <div class="checkbox">
+                <input class="peopleGroup" id="60plus" type="checkbox" value="60plus" onchange="onPopulationSelectionChanged(this)" />
+                <label for="60plus" class="checkbox-label" value="60plus">60 Years +</label>
+            </div>
+            <div class="checkbox">
+                <input class="peopleGroup" id="25plus" type="checkbox" value="25plus" onchange="onPopulationSelectionChanged(this)" />
+                <label for="25plus" class="checkbox-label" value="25plus">25 Years +</label>
+            </div>
+            <div class="checkbox">
+                <input class="peopleGroup" id="under25" type="checkbox" value="under25" onchange="onPopulationSelectionChanged(this)" />
+                <label for="under25" class="checkbox-label" value="under25">Under 25</label>
+            </div>
+            <div class="checkbox">
+                <input class="peopleGroup" id="everyone" type="checkbox" value="everyone" onchange="onPopulationSelectionChanged(this)" />
+                <label for="everyone" class="checkbox-label" value="everyone">All Ages</label>
+            </div>
+            <div class="checkbox">
+                <input class="peopleGroup" id="symptomatic" type="checkbox" value="symptomatic" onchange="onPopulationSelectionChanged(this)" />
+                <label for="symptomatic" class="checkbox-label" value="symptomatic">Symptomatic People</label>
+            </div>
+        </div> -->
+            <!--<div class="row" style="text-align:left;">
+            <span>Average Population Age:</span>
+        </div>-->
+            <!--<div class="row" style="text-align:left;padding-left:10px;">
+            <div class="range-slider">
+                <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                <span id="ageSliderText" class="range-slider__value"></span>
+            </div>
+        </div>-->
+            <!--<div class="row expl" style="text-align:left;">
+            <span id="ageSliderExplanation">Explanation about value</span>
+        </div>-->
+            <!--</div>
+            <div class="six columns offset-by-one">
+                <div class="row">
+                    <div class="chart" id="panel8Chart1"></div>
+                </div>
+                <div class="row">
+                    <div class="chart" id="panel8Chart2">
 
-        </div>
-    </div>
-    <div class="row">
-        <div class=" four columns alpha ">
-            <div class="row" style="text-align:left;">
-                Average Population Age:
-            </div>
-            <div class="row">
-                <div class="range-slider">
-                    <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                    <span id="ageSliderText" class="range-slider__value"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <span style="color:rgb(191, 71, 27);">(Scroll down to see all your simulations)</span>
                 </div>
             </div>
-        </div>
-        <div class="four columns">
-            <div class="row" style="text-align:left;">
-                Social Distancing:
-            </div>
-            <div class="row">
-                <div class="range-slider">
-                    <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                    <span id="isolationSliderText" class="range-slider__value"></span>
-                </div>
+        </div>-->
+            <!--<div class="row">
+            <div id="panel6Chart1">
+
             </div>
         </div>
-        <div class="two columns">
-        </div>
-    </div>
-    <div class="row">
-        <div class="four columns">
-            <div class="row">
+        <div class="row">
+            <div class=" four columns alpha ">
                 <div class="row" style="text-align:left;">
-                    Who stays home?
+                    Average Population Age:
                 </div>
-                <div class="toggle-container">
-                    <label class="switch">
-                        <input id="symptomIsolationToggle" type="checkbox" oninput="onSliderInput(this)" onchange="onSliderChange()">
-                        <span class="toggle-slider round"></span>
-                    </label>
-                    <span id="symptomIsolationToggleText" class="range-slider__value toggle-text"></span>
+                <div class="row">
+                    <div class="range-slider">
+                        <input id="ageSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                        <span id="ageSliderText" class="range-slider__value"></span>
+                    </div>
                 </div>
             </div>
+            <div class="four columns">
+                <div class="row" style="text-align:left;">
+                    Social Distancing:
+                </div>
+                <div class="row">
+                    <div class="range-slider">
+                        <input id="isolationSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                        <span id="isolationSliderText" class="range-slider__value"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="two columns">
+            </div>
         </div>
-    </div>-->
+        <div class="row">
+            <div class="four columns">
+                <div class="row">
+                    <div class="row" style="text-align:left;">
+                        Who stays home?
+                    </div>
+                    <div class="toggle-container">
+                        <label class="switch">
+                            <input id="symptomIsolationToggle" type="checkbox" oninput="onSliderInput(this)" onchange="onSliderChange()">
+                            <span class="toggle-slider round"></span>
+                        </label>
+                        <span id="symptomIsolationToggleText" class="range-slider__value toggle-text"></span>
+                    </div>
+                </div>
+            </div>
+        </div>-->
         </div>
 
         <div class="row panel" id="panel9" style="display:none;">
             <div class="row">
-                <div class="eight columns offset-by-two alpha">
-                    <p class="pEmph">
-                        Please copy the below code and paste in the Qualtrics survey. <br />
-                        <h3 id="surveyCode"></h3>
-                    </p>
-                </div>
+                <p class="pEmph">
+                    Did you enjoy the simulation? We'd really like to know what you liked, what questions you still have,
+                    and what you would like to see in our NEXT simulation? <br /><br />
+
+                    Take a few minutes to let us know your thoughts by filling out this short survey:
+                </p>
             </div>
             <div class="row">
-                <input class="button-primary" type="button" id="btnCopyCode" value="Copy code to clipboard" onpointerdown="onCopyCodeClick()"/>
-            </div>
-          
+                <input class="button-primary" type="button" id="btnCopyCode" value="Take Survey" onpointerdown="onCopyCodeClick()" />                            
+            </div>      
+            <!--<div class="row">
+                <p class="pEmph">
+                    Please copy the below code and paste in the Qualtrics survey. <br />
+                    <h3 id="surveyCode"></h3>
+                </p>
+            </div>-->
         </div>
 
         <div class="row footer" style="text-align:center;">
@@ -521,9 +578,8 @@
                 <div class="two columns progress"></div>
             </div>
             <div class="row">
-                <input class="button-secondary" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
-                 <input class="button" id="btnNext1" type="button" value="Temp Next" onpointerdown="onBtnNextClick()"/> 
-            </div>            
+                <input class="button-secondary" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />               
+            </div>
         </div>
 
     </div>

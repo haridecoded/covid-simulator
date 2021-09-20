@@ -21,7 +21,7 @@ var logger = new Logger(firebase, firestore, userId);
 // https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e
 // http://covid19simulator.com/
 ///////////////////////////////////////////////////////////////
-var currentStep = 1;
+var currentStep = 3;
 var world;
 var renderer;
 var simulationData;
@@ -145,6 +145,7 @@ var sliders = {
 $(window).on('load', function () {
     $(".panel").hide();
     $("#panel" + currentStep).show();
+    
     defaultSimulationData = PandemicSimulator.runSimulations(defaultSimulationOptions);
     trendData = defaultSimulationData.getRepresentativeData().map(function (d) {
       return { day: d.day+1, cases: d.counts.cumulativeCases };
@@ -153,66 +154,67 @@ $(window).on('load', function () {
     pid = new IDGenerator().generate();
     $("#btnNext").show();
     logger.begin('screen' + currentStep);
-    getCaseCount();
+    onBtnNextClick();
 });
 
 var stepStarted = null;
 function onBtnNextClick() {
     logger.end('screen' + currentStep);
     switch (currentStep) {
-        case 1:
-            currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
-            initializeDrawView();
-            break;
-        case 2:
-            currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
-            $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
-            $("#btnNext").hide();            
-            $("#res2").contents().appendTo($("#res3"));
-            $("#btnNext").show();
-            break;
+        //case 1:
+        //    currentStep++;
+        //    $(".panel").hide();
+        //    $("#panel" + currentStep).show();
+        //    initializeDrawView();
+        //    break;
+        //case 2:
+        //    currentStep++;
+        //    $(".panel").hide();
+        //    $("#panel" + currentStep).show();
+        //    $("#panel2Chart1").contents().appendTo($("#panel3Chart1"));
+        //    $("#btnNext").hide();            
+        //    $("#res2").contents().appendTo($("#res3"));
+        //    $("#btnNext").show();
+        //    break;
         case 3:
             currentStep++;
-            $(".panel").hide();
+            $(".panel").hide(1000);
             $("#panel" + currentStep).show();
             setupNormalSimulation();
             break;
         case 4:
-            currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
+            currentStep++;           
+            $(".panel").fadeOut(100);
+            $("#panel" + currentStep).fadeToggle(1000);
             $("#panel4Chart1").contents().appendTo($("#panel5Chart1"));
-            $("#panel4Chart2").contents().appendTo($("#panel5Chart2"));
+            $("#panel4Chart2").contents().appendTo($("#panel5Chart2"));          
             showThreshold();
+            
             break;
         case 5:
             currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
+            $(".panel").fadeOut(100);
+            $("#panel" + currentStep).fadeToggle(1000);
             $("#btnNext").show();
             break;   
         case 6:
             currentStep++;
-            $(".panel").hide();
+            $(".panel").fadeOut(100);
             $("#panel" + currentStep).show();
             setupSDSimulation();
             $("#btnNext").hide();
             break;
         case 7:
             currentStep++;
-            $(".panel").hide();
+            $(".panel").fadeOut(100);
             $("#panel" + currentStep).show();
             setupUserSimulation();
             $("#btnNext").show();
             break;
         case 8:
             currentStep++;
-            $(".panel").hide();
-            $("#panel" + currentStep).show();
+            $(".panel").fadeOut(100);
+            $("#panel" + currentStep).fadeToggle(1000);
             $("#btnNext").hide();
             $("#surveyCode").text(pid);
             break;
@@ -434,9 +436,9 @@ function initializeDrawView() {
 // PANEL 4
 function setupNormalSimulation() {
     $("#btnNext").hide();
-    _.range(7, 0).forEach(function (t) {
-        yourData.unshift({ day: trendData[t].day, cases: trendData[t].cases, defined: true });
-    });
+    //_.range(7, 0).forEach(function (t) {
+    //    yourData.unshift({ day: trendData[t].day, cases: trendData[t].cases, defined: true });
+    //});
     drawNormalSimulationChart();
     reSimuluateNormal = false;
     var simOptions = _.cloneDeep(defaultSimulationOptions);
@@ -569,8 +571,8 @@ function drawNormalSimulationChart() {
         .attr("display", "none")
         .attr("fill", "#f5683b");
 
-    yourDataSel = c.svg.append('path.your-line');
-    yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
+    //yourDataSel = c.svg.append('path.your-line');
+    //yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
 }
 
 function simulateSpreadNormal() {
@@ -737,8 +739,8 @@ function drawSDSimulationChart() {
         .style("text-anchor", "left")
         .text("Total hospital beds = 20");
 
-    yourDataSel = c.svg.append('path.your-line');
-    yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
+    //yourDataSel = c.svg.append('path.your-line');
+    //yourDataSel.at({ d: line.defined(f('defined'))(yourData) });
 
 }
 

@@ -31,9 +31,9 @@
 .container {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  /*max-width: 960px;*/
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0;
   box-sizing: border-box; }
 .column,
 .columns {
@@ -44,14 +44,14 @@
 /* For devices larger than 400px */
 @media (min-width: 400px) {
   .container {
-    width: 85%;
+    width: 100%;
     padding: 0; }
 }
 
 /* For devices larger than 550px */
 @media (min-width: 550px) {
   .container {
-    width: 80%; }
+    width: 100%; }
   .column,
   .columns {
     margin-left: 4%; }
@@ -71,7 +71,7 @@
   .nine.columns                   { width: 74.0%;          }
   .ten.columns                    { width: 82.6666666667%; }
   .eleven.columns                 { width: 91.3333333333%; }
-  .twelve.columns                 { width: 100%; margin-left: 0; }
+  .twelve.columns                 { width: 100%; margin: 0; }
 
   .one-third.column               { width: 30.6666666667%; }
   .two-thirds.column              { width: 65.3333333333%; }
@@ -121,9 +121,9 @@ are based on 10px sizing. So basically 1.5rem = 15px :) */
 html {
   font-size: 62.5%; }
 body {
-  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  font-size: 1.6em; /* currently ems cause chrome bug misinterpreting rems on body element */
   line-height: 1.6;
-  font-weight: 400;
+  font-weight: 500;
   font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #222; }
 
@@ -158,9 +158,11 @@ p {
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
-  color: #1EAEDB; }
-a:hover {
-  color: #0FA0CE; }
+    color: #445459;
+}
+    a:hover {
+        color: #445459;
+    }
 
 
 /* Buttons
@@ -175,7 +177,7 @@ input[type="button"] {
   padding: 0 30px;
   color: #555;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 38px;
   letter-spacing: .1rem;
@@ -206,8 +208,8 @@ input[type="button"]:focus {
     input[type="reset"].button-primary,
     input[type="button"].button-primary {
         color: #FFF;
-        background-color: #BF471B;
-        border-color: #BF471B;
+        background-color: #1e7b96;
+        border-color: #1e7b96;
     }
         .button.button-primary:hover,
         button.button-primary:hover,
@@ -220,37 +222,11 @@ input[type="button"]:focus {
         input[type="reset"].button-primary:focus,
         input[type="button"].button-primary:focus {
             color: #FFF;
-            background-color: #ec602d;
-            border-color: #ec602d;
+            background-color: #2c99b8;
+            border-color: #2c99b8;
         }
 
-    input[type="button"].button-secondary {
-        color: #FFF;
-        background-color: #6197A1;
-        border-color: #6197A1;
-        cursor:pointer;
-    }
 
-        /*.button.button-secondary:hover,
-        button.button-secondary:hover,
-        input[type="submit"].button-secondary:hover,
-        input[type="reset"].button-secondary:hover,
-        input[type="button"].button-secondary:hover,
-        .button.button-secondary:focus,
-        button.button-secondary:focus,
-        input[type="submit"].button-secondary:focus,
-        input[type="reset"].button-secondary:focus,
-        input[type="button"].button-secondary:focus {
-            color: #FFF;
-            background-color: #a5d6dc;
-            border-color: #a5d6dc;
-        }
-
-        input[type="button"].button-secondary:blur {
-            color: #FFF;
-            background-color: #6197A1;
-            border-color: #6197A1;
-        }*/
 /* Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 input[type="email"],
@@ -261,15 +237,14 @@ input[type="tel"],
 input[type="url"],
 input[type="password"],
 textarea,
-/*select*/ {
-    height: 38px;
-    padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
-    background-color: #fff;
-    border: 1px solid #D1D1D1;
-    border-radius: 4px;
-    box-shadow: none;
-    box-sizing: border-box;
-}
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
 /* Removes awkward default styles on some inputs for iOS */
 input[type="email"],
 input[type="number"],
@@ -286,19 +261,18 @@ textarea {
   min-height: 65px;
   padding-top: 6px;
   padding-bottom: 6px; }
-    input[type="email"]:focus,
-    input[type="number"]:focus,
-    input[type="search"]:focus,
-    input[type="text"]:focus,
-    input[type="tel"]:focus,
-    input[type="url"]:focus,
-    input[type="password"]:focus,
-    textarea:focus,
-    /*select:focus*/ {
-        border: 1px solid #b9003e;
-        outline: 0;
-    }
-/*label,*/
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
 legend {
   display: block;
   margin-bottom: .5rem;

@@ -450,6 +450,7 @@ function setupNormalSimulation() {
       simOptions,
       document.getElementById('panel4Chart1')
     );
+    renderer.renderState(world.getSummary(true));
 }
 
 function drawNormalSimulationChart() {
@@ -633,6 +634,7 @@ function setupSDSimulation() {
       simOptions,
       document.getElementById("panel7Chart1")
     );
+    renderer.renderState(world.getSummary(true));
 }
 
 function drawSDSimulationChart() {
@@ -802,6 +804,7 @@ function setupUserSimulation() {
      defaultSimulationOptions,
      document.getElementById("panel8Chart1")
    );
+   renderer.renderState(world.getSummary(true));
 }
 
 function drawUserSimulationChart() {

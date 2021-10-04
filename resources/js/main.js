@@ -36,6 +36,7 @@ var normalSimulationData = [];
 var sdSimulationData = [];
 var userSimulationData = [];
 var userPreviousSimulationData = [];
+var userSimulationOptions;
 var userPreviousSimulationOptions;
 var userSimulationStartTime;
 var simulationWorld;
@@ -56,7 +57,6 @@ defaultSimulationOptions.diseaseSpread.wearMask.multiplier = {
 };
 defaultSimulationOptions.dots.repulsion = 0.04;
 
-
 var smcount = 0;
 var parentDiv;
 var randomGenerator = PandemicSimulator.Random.randomFactory({'seed': defaultRandomSeed});
@@ -66,79 +66,108 @@ function resetRandomGenerator(seed){
 }
 
 // user simulation parameters
-const precautionAges = [0, 25, 35, 45, 60];
+// const precautionAges = [0, 25, 35, 45, 60];
+const precautionPercentages = [0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0];
+const precautionPercentageLabels = ["Nobody", "1 in 10 people", "1 in 4 people", "Half of the people", "3 in 4 people", "9 in 10 people", "Everyone"];
 var sliders = {
+    maskSlider: {
+        values: precautionPercentages,
+        explanations: precautionPercentageLabels,
+        default: 0,
+        update: function (options, value) {
+            options.diseaseSpread.wearMask.percentOfPopulation = value;
+        },
+        type: "slider",
+    },
+    vaccineSlider: {
+        values: precautionPercentages,
+        explanations: precautionPercentageLabels,
+        default: 0,
+        update: function (options, value) {
+            options.diseaseSpread.vaccinated.percentOfPopulation = value;
+        },
+        type: "slider",
+    },
+    shelterSlider: {
+        values: precautionPercentages,
+        explanations: precautionPercentageLabels,
+        default: 0,
+        update: function (options, value) {
+            options.diseaseSpread.shelterInPlace.percentOfPopulation = value;
+        },
+        type: "slider",
+    },
   // Options based on: https://en.wikipedia.org/wiki/List_of_countries_by_median_age
-  ageSlider: {
-    values: [15.4, 28.1, 38.1, 45.5, 53.1],
-    labels: ["15.4", "28.1", "38.1", "45.5", "53.1"],
-    explanations: [
-      "Median age in Niger (youngest country)",
-      "Median age in India (141st oldest country)",
-      "Median age in U.S. (61st oldest country)",
-      "Median age in Italy (5th oldest country)",
-      "Median age in Monaco (oldest Country)",
-    ],
-    default: 2,
-    update: function (options, value) {
-      options.population.averageAge = value;
-    },
-    type: "slider",
-  },
-  maskOverSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Over " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneOver = value;
-    },
-    type: "slider",
-  },
-  maskUnderSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Under " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneUnder = value;
-    },
-    type: "slider",
-  },
-  distanceOverSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Over " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneOver = value;
-    },
-    type: "slider",
-  },
-  distanceUnderSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Under " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneUnder = value;
-    },
-    type: "slider",
-  },
-  shelterOverSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Over " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneOver = value;
-    },
-    type: "slider",
-  },
-  shelterUnderSlider: {
-    values: precautionAges,
-    explanations: precautionAges.map((x) => "Everyone Under " + x),
-    default: 0,
-    update: function (options, value) {
-      options.diseaseSpread.everyoneUnder = value;
-    },
-    type: "slider",
-  },
+//   ageSlider: {
+//     values: [15.4, 28.1, 38.1, 45.5, 53.1],
+//     labels: ["15.4", "28.1", "38.1", "45.5", "53.1"],
+//     explanations: [
+//       "Median age in Niger (youngest country)",
+//       "Median age in India (141st oldest country)",
+//       "Median age in U.S. (61st oldest country)",
+//       "Median age in Italy (5th oldest country)",
+//       "Median age in Monaco (oldest Country)",
+//     ],
+//     default: 2,
+//     update: function (options, value) {
+//       options.population.averageAge = value;
+//     },
+//     type: "slider",
+//   },
+//   maskOverSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Over " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneOver = value;
+//     },
+//     type: "slider",
+//   },
+//   maskUnderSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Under " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneUnder = value;
+//     },
+//     type: "slider",
+//   },
+//   distanceOverSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Over " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneOver = value;
+//     },
+//     type: "slider",
+//   },
+//   distanceUnderSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Under " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneUnder = value;
+//     },
+//     type: "slider",
+//   },
+//   shelterOverSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Over " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneOver = value;
+//     },
+//     type: "slider",
+//   },
+//   shelterUnderSlider: {
+//     values: precautionAges,
+//     explanations: precautionAges.map((x) => "Everyone Under " + x),
+//     default: 0,
+//     update: function (options, value) {
+//       options.diseaseSpread.everyoneUnder = value;
+//     },
+//     type: "slider",
+//   },
 };
 
 
@@ -784,27 +813,28 @@ function resetSDSimulation() {
 
 function setupUserSimulation() {
     $("#btnNext").hide();
-    //set up controls   
+    // Set default options
+    userSimulationOptions = _.cloneDeep(defaultSimulationOptions);
+
+    //set up controls
     for (const sId in sliders) {
         var s = sliders[sId];
         $("#" + sId).attr("min", 0).attr("max", s.values.length - 1).attr("value", s.default);
-        $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
+        // $("#" + sId + "Text").text(s.hasOwnProperty('labels') ? s.labels[s.default] : s.values[s.default]);
         $("#" + sId + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[s.default] : 'Explanation Not Found');
         if (s.type === "slider") {
             applyFill(document.getElementById(sId));
         }
+        s.update(userSimulationOptions, s.values[s.default]);
     }
    // draw linegraph
    drawUserSimulationChart();
 
    // setup dot simulation
-   world = defaultSimulationData.world;
-   world.reset();
-   renderer = new PandemicSimulator.Models.DotWorldRenderer(
-     defaultSimulationOptions,
-     document.getElementById("panel8Chart1")
-   );
-   renderer.renderState(world.getSummary(true));
+    renderer = new PandemicSimulator.Models.DotWorldRenderer(
+        userSimulationOptions,
+        document.getElementById("panel8Chart1")
+    );
 }
 
 function drawUserSimulationChart() {
@@ -925,14 +955,14 @@ function drawUserSimulationChart() {
 }
 
 function applyFill(slider) {
-    //const settings = {
-    //    fill: '#BF471B',
-    //    background: '#d7dcdf'
-    //};
+    const settings = {
+       fill: '#BF471B',
+       background: '#d7dcdf'
+    };
 
-    //const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
-    //const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
-    //slider.style.background = bg;
+    const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+    const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+    slider.style.background = bg;
 }
 
 function onSliderInput(slider){
@@ -945,8 +975,8 @@ function onSliderInput(slider){
         applyFill(slider);
     }
     const v = s.values[i];
-    // s.update(userSimulationOptions, v);
-    $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
+    s.update(userSimulationOptions, v);
+    // $("#" + slider.id + "Text").text(s.hasOwnProperty('labels') ? s.labels[i] : v);
     $("#" + slider.id + "Explanation").text(s.hasOwnProperty('explanations') ? s.explanations[i] : 'Explanation Not Found');
 }
 
@@ -1065,47 +1095,23 @@ function simulateUserSpread() {
   if ($(this).attr("disabled")) {
     return;
   }
-  var simOptions = _.cloneDeep(defaultSimulationOptions);
-
-  // Age
-  simOptions.population.avgeragAge =
-    sliders["ageSlider"].values[$("#ageSlider").val()];
-
-  // Mask
-  simOptions.diseaseSpread.wearMask.everyoneOver =
-    sliders["maskOverSlider"].values[$("#maskOverSlider").val()];
-  simOptions.diseaseSpread.wearMask.everyoneUnder =
-    sliders["maskUnderSlider"].values[$("#maskUnderSlider").val()];
-
-  // Distance
-  simOptions.diseaseSpread.keepDistance.everyoneOver =
-    sliders["maskOverSlider"].values[$("#distanceOverSlider").val()];
-  simOptions.diseaseSpread.keepDistance.everyoneUnder =
-    sliders["maskUnderSlider"].values[$("#distanceUnderSlider").val()];
-
-  // Shelter
-  simOptions.diseaseSpread.shelterInPlace.everyoneOver =
-    sliders["maskOverSlider"].values[$("#shelterOverSlider").val()];
-  simOptions.diseaseSpread.shelterInPlace.everyoneUnder =
-    sliders["maskUnderSlider"].values[$("#shelterUnderSlider").val()]; 
-
   userSimulationData = [];
 
   // simulate
   function updateChart(day, count) {
-    if (day > 0 && day <= simOptions.nDays) {
+    if (day > 0 && day <= userSimulationOptions.nDays) {
       userSimulationData.push({ day: day, cases: count });
       drawUserSimulationChart();
     }
-    if (day === simOptions.nDays) {
+    if (day === userSimulationOptions.nDays) {
       $("#btnNext").show();
       document.getElementById("btnUserSim").disabled = false;
       reSimuluateSD = true;
       userPreviousSimulationData = _.cloneDeep(userSimulationData);
-      userPreviousSimulationOptions = _.cloneDeep(simOptions);
+      userPreviousSimulationOptions = _.cloneDeep(userSimulationOptions);
       userSimulationStartTime = logger.recordSimulation({
         data: userSimulationData,
-        params: simOptions,
+        params: userSimulationOptions,
         start: userSimulationStartTime,
         end: new Date(),
       });
@@ -1113,7 +1119,7 @@ function simulateUserSpread() {
     }
   }
 
-  var results = PandemicSimulator.runSimulations(simOptions);
+  var results = PandemicSimulator.runSimulations(userSimulationOptions);
   console.log(results);
   world = results.world;
   world.reset();

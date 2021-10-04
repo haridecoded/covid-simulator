@@ -222,7 +222,7 @@
             <div class="row">
                 <p class="pEmph">
                     <b>Let us now look at how social distancing can help keep the infection low.</b> <br /><br /> In this simulation, people interact with one
-                    another less frequently because they are practicing social distancing (grey circle around each person <img src="images/sdlegend.png" style="width:20px;" />). Also, when people do interact
+                    another less frequently because they are practicing social distancing (notice that the people try to avoid bumping into each other). Also, when people do interact
                     they are taking precautions such as wearing a mask (white dot at the center of each person <img src="images/masklegend.png" style="width:12px;" />), so even if they meet an infected person, the chance of infection is lower. <br />
                 </p>
             </div>
@@ -249,9 +249,10 @@
 
         <div class="row panel" id="panel8" style="display:none;">
             <div class="row" style="background:white;padding:5px; margin-bottom:1em;">
-                <div class="row">
+                <!-- <div class="row">
                     <p>
                         <b>You Try It: </b>Choose from the list of questions below or directly change model attributes to observe neighborhood spread.
+                        (grey circle around each person <img src="images/sdlegend.png" style="width:20px;" />)
                     </p>
                 </div>
                 <div class="row">
@@ -264,12 +265,12 @@
                             <option value="face">What if everyone takes precautions but move about the neighborhood?</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="row" style="padding:5px;">
-                    <span>OR-- Choose your own Social Distancing Behavior for the neighboorhood! </span>
+                    <span>Choose your own policy for the neighboorhood!</span>
                 </div>
                 <div class="row">
-                    <div class="four columns alpha configCard">
+                    <!-- <div class="four columns alpha configCard">
                         <div class="row" style="text-align:left;">
                             Who wears a mask?
                         </div>
@@ -321,6 +322,50 @@
                         <div class="row" style="text-align:left;padding-left:10px;">
                             <input name="symp" type="checkbox" value="Symptomatic" />
                             <label for="symp">Symptomatic Only</label>
+                        </div>
+                    </div> -->
+                    <div class="four columns alpha configCard">
+                        <div class="row" style="text-align:center;">
+                            How many people wear a mask?
+                        </div>
+                        <div class="row" style="text-align:center;padding-left:10px;">
+                            <div>
+                                <input id="maskSlider" class="range-slider__range" type="range" oninput="onSliderInput(this)">
+                                <!-- <span id="maskSliderText" class="range-slider__value"></span> -->
+                            </div>
+                            <div class="row expl" style="text-align:center;">
+                                <span id="maskSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="four columns alpha configCard">
+                        <div class="row" style="text-align:center;">
+                            How many people are vaccinated?
+                        </div>
+                        <div class="row" style="text-align:center;padding-left:10px;">
+                            <div>
+                                <input id="vaccineSlider" type="range" oninput="onSliderInput(this)">
+                                <!-- <span id="vaccineSliderText"></span> -->
+                            </div>
+                            <div class="row expl" style="text-align:center;">
+                                <span id="vaccineSliderExplanation">Explanation about value</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="four columns alpha configCard">
+                        <div class="row" style="text-align:center;">
+                            How many people stay at home?
+                        </div>
+                        <div class="row" style="text-align:center;padding-left:10px;">
+                            <div>
+                                <input id="shelterSlider" type="range" oninput="onSliderInput(this)">
+                                <!-- <span id="shelterSliderText"></span> -->
+                            </div>
+                            <div class="row expl" style="text-align:center;">
+                                <span id="shelterSliderExplanation">Explanation about value</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -579,7 +624,7 @@
             </div>
             <div class="row">
                 <input class="button-secondary" id="btnNext" type="button" value="Next" onpointerdown="onBtnNextClick()" />
-                <!--<input class="button" id="btnNext1" type="button" value="Temp Next" onpointerdown="onBtnNextClick()" />-->
+                <!-- <input class="button" id="btnNext1" type="button" value="Temp Next" onpointerdown="onBtnNextClick()" /> -->
             </div>
         </div>
 
